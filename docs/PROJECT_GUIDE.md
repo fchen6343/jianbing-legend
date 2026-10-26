@@ -1,7 +1,7 @@
 # 煎饼摊传奇 · 街角烟火 / Jianbing Legend · Street Corner
 
-第一视角煎饼摊经营网页游戏，当前版本 v0.4.0。游戏支持中英文切换，并记住当前浏览器的选择。
-A first-person Chinese pancake-stall game, currently v0.4.0. Switch between Chinese and English at any time; the browser remembers your choice.
+第一视角煎饼摊经营网页游戏，当前版本 v0.5.0。游戏支持中英文切换，并记住当前浏览器的选择。
+A first-person Chinese pancake-stall game, currently v0.5.0. Switch between Chinese and English at any time; the browser remembers your choice.
 
 ## 试玩 / Play
 
@@ -19,7 +19,7 @@ Development: install Node.js, run `npm ci`, then `npm test`. `npm run dev` serve
 | --- | --- | --- |
 | 1 | 点击顾客接单，查看铁板上方完整清单。 | Select a customer and read the full order above the griddle. |
 | 2 | 点击面糊，在铁板内按住拖动至摊匀。 | Click batter, then drag inside the griddle until evenly spread. |
-| 3 | 按订单加入一或两个鸡蛋，可加葱花、芝麻，然后点击铲子翻面。 | Add one or two eggs as ordered, optionally add scallions or sesame, then flip. |
+| 3 | 按订单重复加鸡蛋和小料，拖动抹匀蛋液后点击铲子翻面。 | Add ordered portions of eggs and herbs, drag to spread the egg, then flip. |
 | 4 | 加入指定酱料、肉类、小料，在饼上拖动刷匀酱料。 | Add the requested sauces, proteins and toppings; drag to spread sauce. |
 | 5 | 折叠，等待动作完成，装袋，点击顾客交餐。 | Fold, wait for the fold to finish, bag, then click a customer to serve. |
 | 6 | 点击老板补货，耗时五秒；拍回伸来的手，否则最多损失两份库存。 | Ask the boss to restock in five seconds. Tap sneaking hands or lose up to two portions. |
@@ -51,8 +51,8 @@ GitHub Pages serves `/docs` on `main`. Each `npm run build` copies the latest st
 `npm test` 执行严格编译和自动测试。语言切换覆盖界面、订单、食材、提示、结算、页面标题与辅助文字；保留背景图片里的装饰性中文招牌。
 `npm test` runs strict compilation and automated tests. Switching language updates UI, orders, ingredients, hints, results, page title and accessible text. Decorative Chinese shop signs remain in the background artwork.
 
-尚未完成全面手机、触屏、帧率和音频兼容验收；人物、食材与工具已改为生成的统一手绘素材。动作仍需要完善，无真实蛋液物理或专业录音；存档仅记录最近一天结算，暂无长期升级，街道背景静态。
-Full mobile, touch, frame-rate and audio compatibility testing remains outstanding. Characters, ingredients and tools now use consistent generated illustrations. Animations still need refinement; there is no egg-fluid physics or professional audio. Storage records only the latest day, with no long-term upgrades. The street background is static.
+尚未完成全面手机、触屏、帧率和音频兼容验收；人物、食材与工具已改为生成的统一手绘素材。动作仍需要完善，无真实蛋液物理或专业录音；钱包、装饰、模式和节日进度保存在本机；街道背景静态。
+Full mobile, touch, frame-rate and audio compatibility testing remains outstanding. Characters, ingredients and tools now use consistent generated illustrations. Animations still need refinement; there is no egg-fluid physics or professional audio. Wallet, decorations, mode and festival progress save locally. The street background is static.
 
 [开发日志 / Development log](../DEVLOG.md) · [路线图 / Roadmap](ROADMAP.md)
 
@@ -66,3 +66,14 @@ The top toolbar provides pause, sound and language controls. Pause freezes day t
 
 素材映射：`assets/neighbors-v2.png` 为四名街坊 / 老板图集；`assets/kitchen-v2.png` 为食材与工具图集。渲染器按实际透明间隙裁切，不依赖图片中的文字，游戏文案全部由代码绘制。
 Asset mapping: `assets/neighbors-v2.png` holds four neighbor/owner portraits; `assets/kitchen-v2.png` holds ingredients and tools. The renderer samples actual transparent gaps. UI text is drawn in code rather than baked into images.
+
+## 经营与教学 / Progression and tutorial
+
+`src/systems/progress.ts` 管理钱包、装饰购买/装备、开店、魅力、节日奖励与经过校验的存档恢复。存档键为 `jianbing-legend:progress`，版本 1；旧版最近一日成绩保留，不作为累计资产导入。
+`src/systems/progress.ts` handles wallet, purchases/equipment, shop upgrades, charm, event rewards and validated save restoration. The save key is `jianbing-legend:progress`, version 1. Older last-day records are retained but are not imported as cumulative assets.
+
+商店打开时冻结游戏；关闭后恢复之前的暂停状态。玩法模式及活动只能在开局前或收摊后切换，避免订单途中改变规则。装饰的耐心加成在新顾客到来时计算。开店提高队列上限（三到五）并缩短来客间隔（九到五秒）。
+The shop pauses play and restores the previous pause state on close. Modes and festivals change only before or after a day. Patience bonuses apply to newly arriving customers. A shop raises queue capacity from three to five and cuts arrival intervals from nine to five seconds.
+
+教程使用固定双蛋、双脆、甜面酱订单，保留真实库存与制作动作，但不耗时间、耐心，不出现偷吃，不发收入或活动奖励；正确交餐后标记完成。可丢弃重做、补货，或退出重来。
+The tutorial uses a fixed two-egg, two-crisp, sweet-sauce order with real inventory and cooking. It has no time/patience loss, theft, income or event rewards. Correct service marks completion. Discard, restock or exit to retry.

@@ -2,6 +2,7 @@ let language = 'zh';
 export function getLanguage() { return language; }
 export function setLanguage(value) { language = value; }
 const english = {
+    "配料不对哦……请清空铁板重试": "Wrong recipe. Try another pancake.", "果篦儿，加好了": "Guobier added", "装饰与经营": "Decorate & grow", "新手教程": "Tutorial", "退出教程": "Exit tutorial", "游戏控制": "Game controls", "每种最多五份": "Up to five portions of each ingredient", "天津模式不提供这种配料": "This ingredient is unavailable in Tianjin mode", "纯血天津人模式": "Tianjin Purist Mode", "街角小店": "Neighborhood shop", "街角煎饼摊": "Street stall", "手作热煎饼": "Fresh Jianbing", "实操新手教程": "HANDS-ON TUTORIAL", "抹匀鸡蛋": "Spread the egg", "按住饼面来回拖动，把蛋液抹匀再翻面": "Drag over the pancake to spread the egg before flipping", "先加鸡蛋，并拖动抹匀蛋液": "Add egg, then drag to spread it evenly", "浏览器无法保存，进度仅在本次打开期间保留": "Storage unavailable: progress lasts only while this page is open", "教程完成": "Tutorial complete", "完成练习，准备正式开摊！": "Practice complete. Ready for business!", "练习不计收入，也不消耗顾客耐心": "Practice has no income or patience loss", "进入正式营业": "Start real service", "福": "FU",
     "煎饼摊传奇": "JIANBING LEGEND",
     "街角烟火 · 第一天": "STREET CORNER · DAY 1",
     "今日收入": "REVENUE",
@@ -31,12 +32,12 @@ const english = {
     "关闭声音": "Turn sound off",
     "横屏体验更好，转动手机后再开摊": "Turn your phone sideways for a better cooking experience",
     "倒入面糊": "Pour the batter",
-    "点击面糊壶，开始制作": "Tap the batter pitcher to begin",
+    "点击面糊桶，开始制作": "Tap the batter pail to begin",
     "摊开煎饼": "Spread the pancake",
     "按住铁板，来回拖动摊匀": "Hold and drag across the griddle to spread evenly",
     "加入蛋与小料": "Add egg and toppings",
     "可以翻面了": "Ready to flip",
-    "按订单加入鸡蛋、葱花和芝麻": "Add egg, scallions and sesame as ordered",
+    "按订单加入鸡蛋和小料": "Add the ordered eggs and herbs",
     "点击铲子，把煎饼翻过来": "Tap the spatula to flip the pancake",
     "补齐订单配料": "Complete the filling",
     "刷匀酱料": "Brush the sauce",
@@ -107,11 +108,12 @@ const english = {
     "直接按住铁板移动，摊饼或刷酱": "Drag on the griddle to spread batter or brush sauce",
     "不要香菜": "NO cilantro",
     "煎饼摊传奇：点击食材、拖动摊饼、点击工具和顾客": "Jianbing Legend: select ingredients, drag to spread, and click tools or customers",
-    "鼠标或触屏操作。点击面糊，在铁板上拖动摊饼，加蛋后点击铲子翻面，添加订单配料并拖动刷酱，折叠、装袋后点击顾客。点击老板补货，点击偷吃的手阻止偷吃。": "Use a mouse or touchscreen. Click batter and drag on the griddle. Add egg, flip, add ordered toppings, drag to brush sauce, fold, bag, and serve. Click the boss to restock and tap sneaking hands."
+    "鼠标或触屏操作。点击面糊，在铁板上拖动摊饼，加蛋后拖动抹匀，再点击铲子翻面，添加订单配料并拖动刷酱，折叠、装袋后点击顾客。点击老板补货，点击偷吃的手阻止偷吃。": "Use a mouse or touchscreen. Click batter and drag on the griddle. Add egg, drag to spread it, flip, add ordered toppings, drag to brush sauce, fold, bag, and serve. Click the boss to restock and tap sneaking hands."
 };
-const foodEnglish = { batter: 'Batter', egg: 'Egg', scallion: 'Scallions', cilantro: 'Cilantro', sesame: 'Sesame', sweet: 'Sweet sauce', chili: 'Chili sauce', crisp: 'Crisp', ham: 'Ham', pork: 'Pork', sausage: 'Sausage', lettuce: 'Lettuce', chicken: 'Chicken' };
-const foodChinese = { batter: '面糊', egg: '鸡蛋', scallion: '葱花', cilantro: '香菜', sesame: '芝麻', sweet: '甜面酱', chili: '辣椒酱', crisp: '薄脆', ham: '火腿', pork: '里脊', sausage: '烤肠', lettuce: '生菜', chicken: '鸡柳' };
-export function foodLabel(id) { return (language === 'en' ? foodEnglish : foodChinese)[id] || id; }
+const foodEnglish = { batter: 'Batter', egg: 'Egg', scallion: 'Scallions', cilantro: 'Cilantro', sesame: 'Sesame', sweet: 'Sweet sauce', chili: 'Chili sauce', crisp: 'Crisp', ham: 'Ham', pork: 'Pork', sausage: 'Sausage', lettuce: 'Lettuce', chicken: 'Chicken', youtiao: 'Youtiao' };
+const foodChinese = { batter: '面糊', egg: '鸡蛋', scallion: '葱花', cilantro: '香菜', sesame: '芝麻', sweet: '甜面酱', chili: '辣椒酱', crisp: '薄脆', ham: '火腿', pork: '里脊', sausage: '烤肠', lettuce: '生菜', chicken: '鸡柳', youtiao: '果子' };
+export function foodLabel(id, tianjin = false) { if (tianjin && id === 'crisp')
+    return language === 'en' ? 'Guobier' : '果篦儿'; return (language === 'en' ? foodEnglish : foodChinese)[id] || id; }
 export function t(text) {
     if (language === 'zh')
         return text;

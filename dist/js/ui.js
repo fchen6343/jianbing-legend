@@ -7,12 +7,14 @@ export function toolRect(index) { return { x: 364 + index * 112, y: 619, w: 104,
 export function nextAction(g) {
     const p = g.cooking, c = g.target;
     if (p.stage === 'empty')
-        return { step: 1, key: '倒入面糊', detail: '点击面糊壶，开始制作', focus: ['food:batter'], progress: 0 };
+        return { step: 1, key: '倒入面糊', detail: '点击面糊桶，开始制作', focus: ['food:batter'], progress: 0 };
     if (p.stage === 'batter')
         return { step: 1, key: '摊开煎饼', detail: '按住铁板，来回拖动摊匀', focus: ['scrape'], progress: p.spread };
     if (p.stage === 'egg') {
-        const needed = foods.filter(([id]) => ['egg', 'scallion', 'sesame'].includes(id) && (c?.recipe[id] || 0) > (p.ingredients[id] || 0)).map(([id]) => 'food:' + id);
-        return { step: 2, key: needed.length ? '加入蛋与小料' : '可以翻面了', detail: needed.length ? '按订单加入鸡蛋、葱花和芝麻' : '点击铲子，把煎饼翻过来', focus: needed.length ? needed : ['flip'], progress: 0 };
+        const needed = foods.filter(([id]) => ['egg', 'scallion', 'sesame', 'cilantro'].includes(id) && (c?.recipe[id] || 0) > (p.ingredients[id] || 0)).map(([id]) => 'food:' + id);
+        if (!needed.length && p.eggSpread < 1)
+            return { step: 2, key: '抹匀鸡蛋', detail: '按住饼面来回拖动，把蛋液抹匀再翻面', focus: ['scrape'], progress: p.eggSpread };
+        return { step: 2, key: needed.length ? '加入蛋与小料' : '可以翻面了', detail: needed.length ? '按订单加入鸡蛋和小料' : '点击铲子，把煎饼翻过来', focus: needed.length ? needed : ['flip'], progress: 0 };
     }
     if (p.stage === 'flipped') {
         const needed = foods.filter(([id]) => id !== 'batter' && (c?.recipe[id] || 0) > (p.ingredients[id] || 0)).map(([id]) => 'food:' + id);
@@ -24,4 +26,5 @@ export function nextAction(g) {
     return { step: 5, key: '交给这位顾客', detail: '点击正在制作的顾客完成交餐', focus: g.target ? ['customer:' + g.target.id] : [], progress: 1 };
 }
 export function ingredientStatus(g, id) { const expected = g.target?.recipe[id] || 0, actual = g.cooking.ingredients[id] || 0; return actual > expected ? 'extra' : actual >= expected && expected > 0 ? 'done' : 'needed'; }
-export function toolEnabled(g, id) { const p = g.cooking; return id === 'discard' ? p.stage !== 'empty' : id === 'scrape' ? ['batter', 'flipped'].includes(p.stage) : id === 'flip' ? p.stage === 'egg' && !!p.ingredients.egg : id === 'fold' ? p.stage === 'flipped' && (!(p.ingredients.sweet || p.ingredients.chili) || p.sauce >= 1) : id === 'bag' ? p.stage === 'folded' && p.foldTime >= .65 : true; }
+export function toolEnabled(g, id) { const p = g.cooking; return id === 'discard' ? p.stage !== 'empty' : id === 'scrape' ? ['batter', 'egg', 'flipped'].includes(p.stage) : id === 'flip' ? p.stage === 'egg' && !!p.ingredients.egg && p.eggSpread >= 1 : id === 'fold' ? p.stage === 'flipped' && (!(p.ingredients.sweet || p.ingredients.chili) || p.sauce >= 1) : id === 'bag' ? p.stage === 'folded' && p.foldTime >= .65 : true; }
+export function customerX(index, shop) { return shop ? 373 + index * 137 : 445 + index * 190; }

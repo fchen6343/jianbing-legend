@@ -18,11 +18,11 @@ test('switching language translates active messages, all ingredients and a full 
    assert.equal(t(label+' 8'),foodLabel(id)+' 8');
   }
   assert.doesNotMatch(t(game.message),/\p{Script=Han}/u);
-  assert.match(recipeText(game.target),/Double Egg/);
+  assert.match(recipeText(game.target),/Egg ×2/);
   assert.doesNotMatch(recipeText(game.target),/\p{Script=Han}/u);
   setLanguage('zh');
   assert.equal(t(message),message);
-  assert.match(recipeText(game.target),/双份鸡蛋/);
+  assert.match(recipeText(game.target),/鸡蛋 ×2/);
   assert.equal(game.message,message);
  }finally{setLanguage('zh');}
 });

@@ -138,3 +138,17 @@ The cooking loop included pouring batter, dragging to spread, adding eggs, flipp
 Strict compilation and four gameplay tests passed. Real browser acceptance was not completed: local ports and local-file navigation were blocked in that environment. Rules tests were not treated as visual or interaction tests. The npm registry was unavailable at the time, so Phaser/Vite were not installed; the actual renderer used Canvas 2D and cached TypeScript 5.8.2. GitHub publishing was originally blocked at login and no repository or live URL was falsely recorded as complete.
 
 The next priorities were browser testing, layout and input fixes, consistent character and ingredient artwork, fuller animation and a moving street. The prototype was not described as matching the finished quality of Shawarma Legend.
+
+
+## 2026-10-27 · v0.5.0 · 制作修正与经营成长 / Cooking fixes and progression
+
+- 根据用户九项反馈实现：折叠与偷吃手动作、小铁桶台面、鸡蛋抹匀门槛、翻面背面隐藏、单一装袋成品、多份配料、可重玩实操教程、天津限定菜单、持久经营与节日装饰。
+  Implemented the nine requested areas: folds/hands, steel pails, egg spreading, hidden back-side toppings, single bagged output, multiple portions, replayable tutorial, Tianjin menu, persistent progression and festival decorations.
+- 钱包逐单保存；装饰可装备/卸下，魅力每点 +2% 新顾客等待（最高 +50%）；¥180 开店扩展到五客、五秒来客。三节日按主题累计六份正确订单送限定装饰；教学不发钱或活动奖励。
+  Wallet saves per order. Equipped charm adds 2% new-customer patience per point (max 50%). A ¥180 shop expands to five customers and five-second arrivals. Six correct themed orders grant a festival reward; tutorials cannot farm money or rewards.
+- 模式及活动仅局间切换，商店打开自动暂停；损坏存档安全回退，未知装饰不会进入装备列表。
+  Modes/events change between days; shopping pauses play. Corrupt saves fall back safely and unknown decorations are excluded.
+- 13 项自动测试通过：原有制作、库存、偷吃、结算、翻译、暂停，加上持久购买/奖励、开店与耐心、天津菜单、重复鸡蛋抹匀、多份扣库存和完整教程；严格 TypeScript 编译通过。真实浏览器上线验收将在部署后补记。
+  All 13 automated tests pass, including existing rules plus progression, purchases/rewards, shop/patience, Tianjin restrictions, repeated egg spreading, quantities and the complete tutorial. Strict TypeScript compilation passes. Live browser validation will be recorded after deployment.
+- 新增造型使用原生 Canvas；未复制参考照片或商业游戏素材，未增加第三方运行库。手机实机、长时平衡性与音频体验仍待进一步测试。
+  New shapes use native Canvas; no reference-photo or commercial-game assets were copied and no runtime dependency was added. Physical mobile, long-session balance and audio review remain pending.

@@ -6,12 +6,14 @@
 <title>煎饼摊传奇 · 街角烟火</title>
 <style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#241e19;color:#ffdf9f;font-family:system-ui}body{display:grid;place-items:center;background:radial-gradient(ellipse at center,#594431,#241e19 75%)}#game-shell{position:relative;width:min(100vw,177.777vh);height:min(56.25vw,100vh);box-shadow:0 0 80px #0008}canvas{width:100%;height:100%;display:block;touch-action:none;outline:none}#toolbar{position:absolute;right:1.6%;top:3.5%;display:flex;gap:6px}#toolbar button{border:1px solid #efddb344;border-radius:9px;background:#48392deF;color:#fff0cc;min-width:clamp(26px,3vw,38px);height:clamp(28px,3.2vw,39px);padding:0 9px;cursor:pointer;font:600 clamp(10px,1.05vw,13px) system-ui;box-shadow:0 3px 8px #20140e33;transition:background .15s,transform .15s}#toolbar button:hover{background:#805436;transform:translateY(-1px)}#toolbar button:focus-visible{outline:2px solid #ffe0a2;outline-offset:3px}#toolbar button:disabled{opacity:.45;cursor:default;transform:none}#orientation{display:none}#accessible{position:absolute;left:-9999px}@media(orientation:portrait){#orientation{display:block;position:fixed;bottom:14px;left:10px;right:10px;text-align:center;font-size:13px;color:#e3c29a}#toolbar{gap:3px}#toolbar button{padding:0 5px}}
+#management{position:absolute;right:1.6%;top:13%;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;max-width:23%}#management button,dialog button{font:600 13px system-ui;background:#805239;color:#fff5dd;border:1px solid #c59d6d;border-radius:8px;padding:9px 12px;cursor:pointer}#management button{font-size:clamp(9px,1vw,13px);padding:6px 9px}button:disabled{opacity:.45;cursor:default}dialog{width:min(920px,94vw);max-height:90vh;overflow:auto;border:1px solid #d6b788;border-radius:20px;padding:25px;background:#fff5df;color:#563c2b;box-shadow:0 15px 100px #0008}dialog::backdrop{background:#21190edb}dialog h2{margin:0}dialog p{line-height:1.5;font-size:13px}dialog header{display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:-25px;padding:12px 0;background:#fff5df;z-index:1}.shop-balance{font-weight:bold;font-size:19px!important}.shop-settings{display:grid;grid-template-columns:1fr 1fr;gap:20px}.decor-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}.decor-grid article{background:#efdfbd;border-radius:12px;padding:15px}.decor-grid h3{font-size:16px}.festival-tabs{display:flex;gap:8px;flex-wrap:wrap}button[aria-pressed=true]{background:#b95d38!important}#save-status{position:fixed;bottom:0;background:#6d312b;color:white;font-size:12px;margin:0}@media(max-width:600px){.decor-grid{grid-template-columns:1fr 1fr}.shop-settings{grid-template-columns:1fr}dialog{padding:15px}dialog header{top:-15px}}
 </style>
-<main id="game-shell"><canvas id="game" width="1280" height="720" aria-label="煎饼摊传奇：点击食材、拖动摊饼、点击工具和顾客" tabindex="0"></canvas><nav id="toolbar" aria-label="Game controls"><button id="language" type="button" aria-label="Switch to English">EN / 中文</button><button id="sound" type="button" aria-label="关闭声音">♪</button><button id="pause" type="button" aria-label="暂停" disabled>Ⅱ</button></nav></main>
-<p id="orientation">横屏体验更好，转动手机后再开摊</p><p id="accessible">鼠标或触屏操作。点击面糊，在铁板上拖动摊饼，加蛋后点击铲子翻面，添加订单配料并拖动刷酱，折叠、装袋后点击顾客。点击老板补货，点击偷吃的手阻止偷吃。</p><script>(()=>{let language = 'zh';
+<main id="game-shell"><canvas id="game" width="1280" height="720" aria-label="煎饼摊传奇：点击食材、拖动摊饼、点击工具和顾客" tabindex="0"></canvas><nav id="toolbar" aria-label="Game controls"><button id="language" type="button" aria-label="Switch to English">EN / 中文</button><button id="sound" type="button" aria-label="关闭声音">♪</button><button id="pause" type="button" aria-label="暂停" disabled>Ⅱ</button></nav><nav id="management"><button id="shop-open" type="button">装饰与经营</button><button id="learn" type="button">新手教程</button></nav></main><dialog id="shop-dialog" aria-labelledby="shop-title"><header><h2 id="shop-title">装饰与经营</h2><button id="shop-close" type="button">返回煎饼摊</button></header><div id="shop-body"></div></dialog><p id="save-status" role="status"></p>
+<p id="orientation">横屏体验更好，转动手机后再开摊</p><p id="accessible">鼠标或触屏操作。点击面糊，在铁板上拖动摊饼，加蛋后拖动抹匀，再点击铲子翻面，添加订单配料并拖动刷酱，折叠、装袋后点击顾客。点击老板补货，点击偷吃的手阻止偷吃。</p><script>(()=>{let language = 'zh';
 function getLanguage() { return language; }
 function setLanguage(value) { language = value; }
 const english = {
+    "配料不对哦……请清空铁板重试": "Wrong recipe. Try another pancake.", "果篦儿，加好了": "Guobier added", "装饰与经营": "Decorate & grow", "新手教程": "Tutorial", "退出教程": "Exit tutorial", "游戏控制": "Game controls", "每种最多五份": "Up to five portions of each ingredient", "天津模式不提供这种配料": "This ingredient is unavailable in Tianjin mode", "纯血天津人模式": "Tianjin Purist Mode", "街角小店": "Neighborhood shop", "街角煎饼摊": "Street stall", "手作热煎饼": "Fresh Jianbing", "实操新手教程": "HANDS-ON TUTORIAL", "抹匀鸡蛋": "Spread the egg", "按住饼面来回拖动，把蛋液抹匀再翻面": "Drag over the pancake to spread the egg before flipping", "先加鸡蛋，并拖动抹匀蛋液": "Add egg, then drag to spread it evenly", "浏览器无法保存，进度仅在本次打开期间保留": "Storage unavailable: progress lasts only while this page is open", "教程完成": "Tutorial complete", "完成练习，准备正式开摊！": "Practice complete. Ready for business!", "练习不计收入，也不消耗顾客耐心": "Practice has no income or patience loss", "进入正式营业": "Start real service", "福": "FU",
     "煎饼摊传奇": "JIANBING LEGEND",
     "街角烟火 · 第一天": "STREET CORNER · DAY 1",
     "今日收入": "REVENUE",
@@ -41,12 +43,12 @@ const english = {
     "关闭声音": "Turn sound off",
     "横屏体验更好，转动手机后再开摊": "Turn your phone sideways for a better cooking experience",
     "倒入面糊": "Pour the batter",
-    "点击面糊壶，开始制作": "Tap the batter pitcher to begin",
+    "点击面糊桶，开始制作": "Tap the batter pail to begin",
     "摊开煎饼": "Spread the pancake",
     "按住铁板，来回拖动摊匀": "Hold and drag across the griddle to spread evenly",
     "加入蛋与小料": "Add egg and toppings",
     "可以翻面了": "Ready to flip",
-    "按订单加入鸡蛋、葱花和芝麻": "Add egg, scallions and sesame as ordered",
+    "按订单加入鸡蛋和小料": "Add the ordered eggs and herbs",
     "点击铲子，把煎饼翻过来": "Tap the spatula to flip the pancake",
     "补齐订单配料": "Complete the filling",
     "刷匀酱料": "Brush the sauce",
@@ -117,11 +119,12 @@ const english = {
     "直接按住铁板移动，摊饼或刷酱": "Drag on the griddle to spread batter or brush sauce",
     "不要香菜": "NO cilantro",
     "煎饼摊传奇：点击食材、拖动摊饼、点击工具和顾客": "Jianbing Legend: select ingredients, drag to spread, and click tools or customers",
-    "鼠标或触屏操作。点击面糊，在铁板上拖动摊饼，加蛋后点击铲子翻面，添加订单配料并拖动刷酱，折叠、装袋后点击顾客。点击老板补货，点击偷吃的手阻止偷吃。": "Use a mouse or touchscreen. Click batter and drag on the griddle. Add egg, flip, add ordered toppings, drag to brush sauce, fold, bag, and serve. Click the boss to restock and tap sneaking hands."
+    "鼠标或触屏操作。点击面糊，在铁板上拖动摊饼，加蛋后拖动抹匀，再点击铲子翻面，添加订单配料并拖动刷酱，折叠、装袋后点击顾客。点击老板补货，点击偷吃的手阻止偷吃。": "Use a mouse or touchscreen. Click batter and drag on the griddle. Add egg, drag to spread it, flip, add ordered toppings, drag to brush sauce, fold, bag, and serve. Click the boss to restock and tap sneaking hands."
 };
-const foodEnglish = { batter: 'Batter', egg: 'Egg', scallion: 'Scallions', cilantro: 'Cilantro', sesame: 'Sesame', sweet: 'Sweet sauce', chili: 'Chili sauce', crisp: 'Crisp', ham: 'Ham', pork: 'Pork', sausage: 'Sausage', lettuce: 'Lettuce', chicken: 'Chicken' };
-const foodChinese = { batter: '面糊', egg: '鸡蛋', scallion: '葱花', cilantro: '香菜', sesame: '芝麻', sweet: '甜面酱', chili: '辣椒酱', crisp: '薄脆', ham: '火腿', pork: '里脊', sausage: '烤肠', lettuce: '生菜', chicken: '鸡柳' };
-function foodLabel(id) { return (language === 'en' ? foodEnglish : foodChinese)[id] || id; }
+const foodEnglish = { batter: 'Batter', egg: 'Egg', scallion: 'Scallions', cilantro: 'Cilantro', sesame: 'Sesame', sweet: 'Sweet sauce', chili: 'Chili sauce', crisp: 'Crisp', ham: 'Ham', pork: 'Pork', sausage: 'Sausage', lettuce: 'Lettuce', chicken: 'Chicken', youtiao: 'Youtiao' };
+const foodChinese = { batter: '面糊', egg: '鸡蛋', scallion: '葱花', cilantro: '香菜', sesame: '芝麻', sweet: '甜面酱', chili: '辣椒酱', crisp: '薄脆', ham: '火腿', pork: '里脊', sausage: '烤肠', lettuce: '生菜', chicken: '鸡柳', youtiao: '果子' };
+function foodLabel(id, tianjin = false) { if (tianjin && id === 'crisp')
+    return language === 'en' ? 'Guobier' : '果篦儿'; return (language === 'en' ? foodEnglish : foodChinese)[id] || id; }
 function t(text) {
     if (language === 'zh')
         return text;
@@ -155,9 +158,57 @@ function t(text) {
     return text;
 }
 
+const decorations = [
+    { id: 'sign', zh: '手写招牌', en: 'Hand-painted sign', cost: 35, charm: 2, festival: '' },
+    { id: 'plant', zh: '桌边绿植', en: 'Counter plants', cost: 60, charm: 3, festival: '' },
+    { id: 'awning', zh: '暖色遮阳棚', en: 'Warm canvas awning', cost: 100, charm: 5, festival: '' },
+    { id: 'spring', zh: '春节限定 · 红灯笼', en: 'Spring Festival · Lanterns', cost: 45, charm: 4, festival: 'spring' },
+    { id: 'dragon', zh: '端午限定 · 粽叶挂饰', en: 'Dragon Boat · Leaf charms', cost: 45, charm: 4, festival: 'dragon' },
+    { id: 'autumn', zh: '中秋限定 · 月兔灯', en: 'Mid-Autumn · Moon lantern', cost: 45, charm: 4, festival: 'autumn' },
+    { id: 'spring-reward', zh: '春节奖励 · 福字', en: 'Spring reward · Fortune', cost: 0, charm: 3, festival: 'spring' },
+    { id: 'dragon-reward', zh: '端午奖励 · 彩绳', en: 'Dragon Boat reward · Ribbons', cost: 0, charm: 3, festival: 'dragon' },
+    { id: 'autumn-reward', zh: '中秋奖励 · 星灯', en: 'Mid-Autumn reward · Stars', cost: 0, charm: 3, festival: 'autumn' }
+];
+function freshProfile() { return { version: 1, wallet: 0, shop: false, owned: [], equipped: [], festival: 'spring', events: { spring: 0, dragon: 0, autumn: 0 }, mode: 'classic', days: 1, tutorial: false }; }
+function restoreProfile(raw) { const p = freshProfile(); try {
+    const v = JSON.parse(raw || 'null');
+    if (!v || v.version !== 1)
+        return p;
+    const n = (x) => typeof x === 'number' && Number.isFinite(x) ? Math.min(1e8, Math.max(0, Math.floor(x))) : 0;
+    p.wallet = n(v.wallet);
+    p.shop = v.shop === true;
+    p.days = Math.max(1, n(v.days));
+    p.tutorial = v.tutorial === true;
+    p.mode = v.mode === 'tianjin' ? 'tianjin' : 'classic';
+    p.festival = ['spring', 'dragon', 'autumn'].includes(v.festival) ? v.festival : 'spring';
+    p.owned = Array.isArray(v.owned) ? [...new Set(v.owned.filter((id) => decorations.some(d => d.id === id)))] : [];
+    p.equipped = Array.isArray(v.equipped) ? [...new Set(v.equipped.filter((id) => p.owned.includes(id)))] : [];
+    for (const f of ['spring', 'dragon', 'autumn'])
+        p.events[f] = n(v.events?.[f]);
+    return p;
+}
+catch {
+    return p;
+} }
+function charm(p) { return decorations.filter(d => p.equipped.includes(d.id)).reduce((sum, d) => sum + d.charm, 0); }
+function patienceMultiplier(p) { return 1 + Math.min(50, charm(p) * 2) / 100; }
+function purchase(p, id) { const d = decorations.find(d => d.id === id); if (!d || p.owned.includes(id) || d.id.endsWith('-reward') || p.wallet < d.cost || (d.festival && d.festival !== p.festival))
+    return false; p.wallet -= d.cost; p.owned.push(id); p.equipped.push(id); return true; }
+function openShop(p) { if (p.shop || p.wallet < 180)
+    return false; p.wallet -= 180; p.shop = true; return true; }
+function rewardService(p, earned, correct) { p.wallet += earned; if (correct) {
+    p.events[p.festival]++;
+    const id = p.festival + '-reward';
+    if (p.events[p.festival] >= 6 && !p.owned.includes(id)) {
+        p.owned.push(id);
+        p.equipped.push(id);
+    }
+} }
+
+
 
 const foods = [
-    ['batter', '面糊', '#efcf84'], ['egg', '鸡蛋', '#ffca46'], ['scallion', '葱花', '#74a638'], ['cilantro', '香菜', '#397842'], ['sesame', '芝麻', '#f6dd9c'], ['sweet', '甜面酱', '#814127'], ['chili', '辣椒酱', '#ce472c'], ['crisp', '薄脆', '#e5a243'], ['ham', '火腿', '#d97d70'], ['pork', '里脊', '#b97945'], ['sausage', '烤肠', '#a94d30'], ['lettuce', '生菜', '#83ad43'], ['chicken', '鸡柳', '#dca154']
+    ['batter', '面糊', '#efcf84'], ['egg', '鸡蛋', '#ffca46'], ['scallion', '葱花', '#74a638'], ['cilantro', '香菜', '#397842'], ['sesame', '芝麻', '#f6dd9c'], ['sweet', '甜面酱', '#814127'], ['chili', '辣椒酱', '#ce472c'], ['crisp', '薄脆', '#e5a243'], ['ham', '火腿', '#d97d70'], ['pork', '里脊', '#b97945'], ['sausage', '烤肠', '#a94d30'], ['lettuce', '生菜', '#83ad43'], ['chicken', '鸡柳', '#dca154'], ['youtiao', '果子', '#dba751']
 ];
 class Inventory {
     constructor() {
@@ -179,6 +230,8 @@ class Cooking {
     constructor() {
         this.stage = 'empty';
         this.ingredients = {};
+        this.underside = {};
+        this.eggSpread = 0;
         this.spread = 0;
         this.sauce = 0;
         this.strokes = [];
@@ -193,22 +246,24 @@ class Cooking {
         else if (id === 'egg') {
             if (this.stage !== 'egg')
                 return '先倒面糊，拖动刮板摊匀';
-            if ((this.ingredients.egg || 0) >= 2)
-                return '最多加两个鸡蛋';
         }
-        else if (id === 'scallion' || id === 'sesame') {
+        else if (id === 'scallion' || id === 'sesame' || id === 'cilantro') {
             if (this.stage !== 'egg' && this.stage !== 'flipped')
                 return '摊开饼后再撒料';
         }
         else if (this.stage !== 'flipped')
             return '先加鸡蛋，用铲子翻面';
-        if (id !== 'egg' && this.ingredients[id])
-            return '这一份已经加过啦';
+        if ((this.ingredients[id] || 0) >= 5)
+            return '每种最多五份';
         if (!inventory.take(id))
             return '用完了，叫右侧老板补货';
         this.ingredients[id] = (this.ingredients[id] || 0) + 1;
         if (id === 'batter')
             this.stage = 'batter';
+        if (id === 'egg')
+            this.eggSpread = 0;
+        if (this.stage === 'egg')
+            this.underside[id] = (this.underside[id] || 0) + 1;
         return `${foods.find(f => f[0] === id)[1]}，加好了`;
     }
     drag(x, y, distance) { if (this.stage === 'batter') {
@@ -216,13 +271,16 @@ class Cooking {
         if (this.spread >= 1)
             this.stage = 'egg';
     }
+    else if (this.stage === 'egg' && this.ingredients.egg) {
+        this.eggSpread = Math.min(1, this.eggSpread + distance / 700);
+    }
     else if (this.stage === 'flipped' && (this.ingredients.sweet || this.ingredients.chili)) {
         this.sauce = Math.min(1, this.sauce + distance / 550);
         this.strokes.push({ x, y });
         if (this.strokes.length > 100)
             this.strokes.shift();
     } }
-    flip() { if (this.stage !== 'egg' || !this.ingredients.egg)
+    flip() { if (this.stage !== 'egg' || !this.ingredients.egg || this.eggSpread < 1)
         return false; this.stage = 'flipped'; return true; }
     fold() { if (this.stage !== 'flipped' || ((this.ingredients.sweet || this.ingredients.chili) && this.sauce < 1))
         return false; this.stage = 'folded'; this.foldTime = 0; return true; }
@@ -233,8 +291,10 @@ class Cooking {
         this.foldTime += dt; }
 }
 class Game {
-    constructor(random = Math.random) {
+    constructor(random = Math.random, profile = freshProfile(), tutorial = false) {
         this.random = random;
+        this.profile = profile;
+        this.tutorial = tutorial;
         this.inventory = new Inventory();
         this.cooking = new Cooking();
         this.customers = [];
@@ -253,28 +313,63 @@ class Game {
         this.theft = null;
         this.message = '开摊啦！点击顾客接单，照着订单做一张热煎饼。';
     }
-    newCustomer() { let egg = this.random() < .3 ? 2 : 1; const protein = ['ham', 'pork', 'sausage', 'chicken'][Math.floor(this.random() * 4)]; const recipe = { batter: 1, egg, sweet: 1, [protein]: 1 }; for (const id of ['scallion', 'sesame', 'crisp', 'lettuce', 'chili', 'cilantro'])
-        if (this.random() < .35)
-            recipe[id] = 1; const c = { id: ++this.serial, look: this.serial % 3, recipe, patience: 100, max: 100, noCilantro: !recipe.cilantro }; this.customers.push(c); if (!this.next)
-        this.next = c.id; }
+    get availableFoods() { return foods.filter(([id]) => this.profile.mode !== 'tianjin' || ['batter', 'egg', 'scallion', 'cilantro', 'sweet', 'chili', 'crisp', 'youtiao'].includes(id)); }
+    addFood(id) { if (!this.availableFoods.some(f => f[0] === id))
+        return '天津模式不提供这种配料'; const message = this.cooking.add(id, this.inventory); return this.profile.mode === 'tianjin' ? message.replace('薄脆', '果篦儿') : message; }
+    newCustomer() {
+        const egg = this.random() < .3 ? 2 : 1;
+        const recipe = { batter: 1, egg, sweet: 1 };
+        if (this.profile.mode === 'tianjin') {
+            recipe[this.random() < .5 ? 'youtiao' : 'crisp'] = this.random() < .3 ? 2 : 1;
+            for (const id of ['scallion', 'cilantro', 'chili'])
+                if (this.random() < .4)
+                    recipe[id] = 1;
+        }
+        else {
+            const protein = ['ham', 'pork', 'sausage', 'chicken'][Math.floor(this.random() * 4)];
+            recipe[protein] = this.random() < .2 ? 2 : 1;
+            for (const id of ['scallion', 'sesame', 'crisp', 'lettuce', 'chili', 'cilantro'])
+                if (this.random() < .35)
+                    recipe[id] = this.random() < .15 ? 3 : 1;
+        }
+        const max = 100 * patienceMultiplier(this.profile);
+        const c = { id: ++this.serial, look: this.serial % 3, recipe: this.tutorial ? { batter: 1, egg: 2, sweet: 1, crisp: 2 } : recipe, patience: max, max, noCilantro: !recipe.cilantro };
+        if (this.tutorial)
+            c.noCilantro = true;
+        this.customers.push(c);
+        if (!this.next)
+            this.next = c.id;
+    }
     get target() { return this.customers.find(c => c.id === this.next) || this.customers[0]; }
     serve() { if (this.cooking.stage !== 'bagged' || !this.target) {
         this.message = '先折叠装袋，再点顾客交餐';
         return false;
-    } const c = this.target; const correct = foods.every(([id]) => (c.recipe[id] || 0) === (this.cooking.ingredients[id] || 0)); const quality = Math.max(0, 1 - Math.max(0, this.cooking.heat - 65) / 70); const rating = correct ? Math.round(65 + 25 * c.patience / c.max + 10 * quality) : 20; const base = 8 + Object.values(c.recipe).reduce((a, b) => a + (b || 0), 0); const earned = correct ? Math.round(base * (.8 + .2 * quality)) : 3; this.money += earned; this.served++; this.ratings.push(rating); this.message = correct ? `真香！收到 ¥${earned}，满意度 ${rating}` : '配料不对哦……只付 ¥3，注意不要香菜和双蛋'; this.customers = this.customers.filter(v => v.id !== c.id); this.next = this.customers[0]?.id || 0; this.cooking = new Cooking(); return correct; }
+    } const c = this.target; const correct = foods.every(([id]) => (c.recipe[id] || 0) === (this.cooking.ingredients[id] || 0)); const quality = Math.max(0, 1 - Math.max(0, this.cooking.heat - 65) / 70); const rating = correct ? Math.round(65 + 25 * c.patience / c.max + 10 * quality) : 20; const base = 8 + Object.values(c.recipe).reduce((a, b) => a + (b || 0), 0); const earned = correct ? Math.round(base * (.8 + .2 * quality)) : 3; if (!this.tutorial) {
+        this.money += earned;
+        rewardService(this.profile, earned, correct);
+    }
+    else if (correct)
+        this.profile.tutorial = true; this.served++; this.ratings.push(rating); this.message = this.tutorial ? (correct ? '完成练习，准备正式开摊！' : '配料不对哦……请清空铁板重试') : correct ? `真香！收到 ¥${earned}，满意度 ${rating}` : '配料不对哦……只付 ¥3，注意不要香菜和双蛋'; this.customers = this.customers.filter(v => v.id !== c.id); this.next = this.customers[0]?.id || 0; this.cooking = new Cooking(); return correct; }
     slap() { if (!this.theft || this.theft.slapped)
-        return false; this.theft.slapped = true; this.theft.remaining = .65; this.message = '啪！小手收好，想吃得先点单！'; return true; }
+        return false; this.theft.reach = Math.min(1, (3 - this.theft.remaining) / 1.1); this.theft.slapped = true; this.theft.remaining = .65; this.message = '啪！小手收好，想吃得先点单！'; return true; }
     tick(dt) {
         if (!this.started || this.ended || this.paused)
             return;
         dt = Math.min(dt, .1);
+        if (this.tutorial) {
+            this.inventory.tick(dt);
+            this.cooking.tick(dt);
+            if (!this.customers.length)
+                this.newCustomer();
+            return;
+        }
         this.time = Math.max(0, this.time - dt);
         this.inventory.tick(dt);
         this.cooking.tick(dt);
         this.spawn -= dt;
-        if (this.customers.length < 3 && this.spawn <= 0) {
+        if (this.customers.length < (this.profile.shop ? 5 : 3) && this.spawn <= 0) {
             this.newCustomer();
-            this.spawn = 9;
+            this.spawn = this.profile.shop ? 5 : 9;
         }
         for (const c of this.customers)
             c.patience -= dt * (c.id === this.next?.valueOf() ? .72 : .38);
@@ -287,7 +382,7 @@ class Game {
             this.next = this.customers[0]?.id || 0;
         this.theftIn -= dt;
         if (!this.theft && this.theftIn <= 0 && this.customers.length) {
-            const choices = ['crisp', 'scallion', 'ham'].filter(id => this.inventory.stock[id] > 0);
+            const choices = (this.profile.mode === 'tianjin' ? ['crisp', 'scallion', 'youtiao'] : ['crisp', 'scallion', 'ham']).filter(id => this.inventory.stock[id] > 0);
             if (choices.length) {
                 this.theft = { customer: this.customers[0].id, food: choices[Math.floor(this.random() * choices.length)], remaining: 3, slapped: false };
                 this.message = '有人伸手偷吃！快拍回去！';
@@ -310,7 +405,7 @@ class Game {
     }
     get satisfaction() { return this.ratings.length ? Math.round(this.ratings.reduce((a, b) => a + b, 0) / this.ratings.length) : 100; }
 }
-function recipeText(c) { return foods.filter(([id]) => id !== 'batter' && c.recipe[id]).map(([id, label]) => `${c.recipe[id] === 2 ? (getLanguage() === 'en' ? 'Double ' : '双份') : ''}${foodLabel(id)}`).join(' · '); }
+function recipeText(c) { return foods.filter(([id]) => id !== 'batter' && c.recipe[id]).map(([id, label]) => `${foodLabel(id)} ×${c.recipe[id]}`).join(' · '); }
 
 class Sound {
     constructor() {
@@ -339,12 +434,14 @@ function toolRect(index) { return { x: 364 + index * 112, y: 619, w: 104, h: 58 
 function nextAction(g) {
     const p = g.cooking, c = g.target;
     if (p.stage === 'empty')
-        return { step: 1, key: '倒入面糊', detail: '点击面糊壶，开始制作', focus: ['food:batter'], progress: 0 };
+        return { step: 1, key: '倒入面糊', detail: '点击面糊桶，开始制作', focus: ['food:batter'], progress: 0 };
     if (p.stage === 'batter')
         return { step: 1, key: '摊开煎饼', detail: '按住铁板，来回拖动摊匀', focus: ['scrape'], progress: p.spread };
     if (p.stage === 'egg') {
-        const needed = foods.filter(([id]) => ['egg', 'scallion', 'sesame'].includes(id) && (c?.recipe[id] || 0) > (p.ingredients[id] || 0)).map(([id]) => 'food:' + id);
-        return { step: 2, key: needed.length ? '加入蛋与小料' : '可以翻面了', detail: needed.length ? '按订单加入鸡蛋、葱花和芝麻' : '点击铲子，把煎饼翻过来', focus: needed.length ? needed : ['flip'], progress: 0 };
+        const needed = foods.filter(([id]) => ['egg', 'scallion', 'sesame', 'cilantro'].includes(id) && (c?.recipe[id] || 0) > (p.ingredients[id] || 0)).map(([id]) => 'food:' + id);
+        if (!needed.length && p.eggSpread < 1)
+            return { step: 2, key: '抹匀鸡蛋', detail: '按住饼面来回拖动，把蛋液抹匀再翻面', focus: ['scrape'], progress: p.eggSpread };
+        return { step: 2, key: needed.length ? '加入蛋与小料' : '可以翻面了', detail: needed.length ? '按订单加入鸡蛋和小料' : '点击铲子，把煎饼翻过来', focus: needed.length ? needed : ['flip'], progress: 0 };
     }
     if (p.stage === 'flipped') {
         const needed = foods.filter(([id]) => id !== 'batter' && (c?.recipe[id] || 0) > (p.ingredients[id] || 0)).map(([id]) => 'food:' + id);
@@ -356,7 +453,9 @@ function nextAction(g) {
     return { step: 5, key: '交给这位顾客', detail: '点击正在制作的顾客完成交餐', focus: g.target ? ['customer:' + g.target.id] : [], progress: 1 };
 }
 function ingredientStatus(g, id) { const expected = g.target?.recipe[id] || 0, actual = g.cooking.ingredients[id] || 0; return actual > expected ? 'extra' : actual >= expected && expected > 0 ? 'done' : 'needed'; }
-function toolEnabled(g, id) { const p = g.cooking; return id === 'discard' ? p.stage !== 'empty' : id === 'scrape' ? ['batter', 'flipped'].includes(p.stage) : id === 'flip' ? p.stage === 'egg' && !!p.ingredients.egg : id === 'fold' ? p.stage === 'flipped' && (!(p.ingredients.sweet || p.ingredients.chili) || p.sauce >= 1) : id === 'bag' ? p.stage === 'folded' && p.foldTime >= .65 : true; }
+function toolEnabled(g, id) { const p = g.cooking; return id === 'discard' ? p.stage !== 'empty' : id === 'scrape' ? ['batter', 'egg', 'flipped'].includes(p.stage) : id === 'flip' ? p.stage === 'egg' && !!p.ingredients.egg && p.eggSpread >= 1 : id === 'fold' ? p.stage === 'flipped' && (!(p.ingredients.sweet || p.ingredients.chili) || p.sauce >= 1) : id === 'bag' ? p.stage === 'folded' && p.foldTime >= .65 : true; }
+function customerX(index, shop) { return shop ? 373 + index * 137 : 445 + index * 190; }
+
 
 
 
@@ -394,7 +493,18 @@ class Scene {
     path(points, fill, stroke = '#704632', width = 2) { const c = this.ctx; c.beginPath(); points.forEach(([x, y], i) => i ? c.lineTo(x, y) : c.moveTo(x, y)); c.closePath(); c.fillStyle = fill; c.fill(); c.strokeStyle = stroke; c.lineWidth = width; c.stroke(); }
     hit(id, x, y, w, h) { this.hits.push({ id, x, y, w, h }); }
     hovered(id) { const h = this.hits.find(v => v.id === id); return !!h && this.pointer.x >= h.x && this.pointer.x <= h.x + h.w && this.pointer.y >= h.y && this.pointer.y <= h.y + h.h; }
-    sprite(index, x, y, w, h = w) { const im = this.kitchen, c = this.ctx; if (im.complete && im.naturalWidth) {
+    sprite(index, x, y, w, h = w) { if (index === 20) {
+        const c = this.ctx;
+        c.save();
+        c.translate(x + w * .5, y + h * .5);
+        c.rotate(-.25);
+        for (let n = 0; n < 2; n++) {
+            this.box(-w * .23 + n * w * .24, -h * .36, w * .23, h * .72, '#c28233', w * .08);
+            this.box(-w * .20 + n * w * .24, -h * .34, w * .12, h * .65, '#edb95c', w * .06);
+        }
+        c.restore();
+        return;
+    } const im = this.kitchen, c = this.ctx; if (im.complete && im.naturalWidth) {
         const xs = [0, 294, 566, 846, 1122], ys = [0, 279, 538, 793, 1067, 1402], col = index % 4, row = Math.floor(index / 4), sx = im.naturalWidth / 1122, sy = im.naturalHeight / 1402;
         c.drawImage(im, xs[col] * sx, ys[row] * sy, (xs[col + 1] - xs[col]) * sx, (ys[row + 1] - ys[row]) * sy, x, y, w, h);
     }
@@ -413,7 +523,7 @@ class Scene {
     notify(message, id = '', g) { this.toast = message; this.toastAge = 3; this.touchFocus = id; this.touchAge = 1.5; if (id === 'flip')
         this.flipAge = 0; if (id.startsWith('food:')) {
         const index = foods.findIndex(f => f[0] === id.slice(5)), r = stationRect(index);
-        this.effects.push({ kind: 'food', age: 0, life: .44, x: r.x + 44, y: r.y + 32, tx: 630 + Math.sin(this.clock) * 62, ty: 497, index });
+        this.effects.push({ kind: 'food', age: 0, life: .44, x: r.x + 44, y: r.y + 32, tx: 630 + Math.sin(this.clock) * 62, ty: 497, index: index === 13 ? 20 : index });
     } if (id === 'serve' && g) {
         for (let n = 0; n < 5; n++)
             this.effects.push({ kind: 'coin', age: -n * .07, life: .9, x: 640 + n * 13, y: 295, tx: 654, ty: 49, index: 19 });
@@ -438,7 +548,8 @@ class Scene {
         c.fillRect(0, 0, 1280, 400);
         this.panel(20, 17, 310, 65, '#452d24ed', 15);
         this.text('煎饼摊传奇', 42, 49, 25, '#ffe4b2', 'left', 268);
-        this.text('街角烟火 · 第一天', 43, 69, 11, '#c7b197', 'left', 260);
+        this.text((getLanguage() === 'zh' ? `第 ${g.profile.days} 天 · ` : `DAY ${g.profile.days} · `) + (g.profile.mode === 'tianjin' ? t('纯血天津人模式') : t(g.profile.shop ? '街角小店' : '街角煎饼摊')), 43, 69, 11, '#c7b197', 'left', 260);
+        this.drawDecor(g);
         const stats = [['今日收入', '¥ ' + g.money, 567], ['剩余时间', `${Math.floor(Math.ceil(g.time) / 60)}:${String(Math.ceil(g.time) % 60).padStart(2, '0')}`, 716], ['顾客满意', String(g.satisfaction) + '%', 865]];
         for (const [label, value, x] of stats) {
             this.panel(x, 19, 136, 60, '#fff2dceF', 13);
@@ -451,7 +562,7 @@ class Scene {
                 this.departures.push({ look: old.look, x: old.x, age: 0 });
         const action = nextAction(g);
         customers.forEach((v, i) => {
-            const x = 445 + i * 190;
+            const x = customerX(i, g.profile.shop);
             let age = this.arrivals.get(v.id) ?? 0;
             age += dt;
             this.arrivals.set(v.id, age);
@@ -468,19 +579,19 @@ class Scene {
                 this.panel(x - 55, 104, 110, 27, '#fff1d7e8', 9);
                 this.text(['学生', '上班族', '老街坊'][v.look], x, 123, 12, '#74513c');
             }
-            this.person(v.look, x, 135 + (1 - enter) * 24 + Math.sin(this.clock * 1.6 + i) * 1.5, 174, 191);
+            this.person(v.look, x, 135 + (1 - enter) * 24 + Math.sin(this.clock * 1.6 + i) * 1.5, g.profile.shop ? 134 : 174, 191);
             if (g.started) {
                 this.box(x - 53, 320, 106, 5, '#503c2b80', 3);
                 this.box(x - 53, 320, 106 * Math.max(0, v.patience / v.max), 5, v.patience < 30 ? '#c6563f' : '#8ea968', 3);
                 if (v.patience < 25)
                     this.text('!', x + 66, 171, 24, '#fff1cc');
-                this.hit('customer:' + v.id, x - 84, 102, 168, 224);
+                this.hit('customer:' + v.id, x - (g.profile.shop ? 66 : 84), 102, g.profile.shop ? 132 : 168, 224);
                 if (selected && g.cooking.stage === 'bagged')
                     this.focusRing({ x: x - 84, y: 134, w: 168, h: 184 });
             }
             c.restore();
         });
-        this.previousCustomers = customers.map((v, i) => ({ id: v.id, look: v.look, x: 445 + i * 190 }));
+        this.previousCustomers = customers.map((v, i) => ({ id: v.id, look: v.look, x: customerX(i, g.profile.shop) }));
         this.departures = this.departures.filter(d => (d.age += dt) < .4);
         for (const d of this.departures) {
             c.save();
@@ -493,12 +604,20 @@ class Scene {
         this.hit('boss', 1068, 177, 184, 186);
         this.panel(1075, 330, 177, 30, '#4b4934ed', 9);
         this.text(refill ? `补货中 ${refill.toFixed(1)}s` : '老板，补个货！', 1163, 350, 13, '#ffefcd', 'center', 159);
-        // Continuous inset wood racks, rather than isolated interface cards.
+        // Stainless steel worktops and round ingredient pails, inspired by the reference photo.
         for (const x of [16, 952]) {
-            this.panel(x, 408, 312, 264, '#6d412bd9', 14);
-            this.box(x + 5, 415, 302, 248, '#a6784c99', 10);
-            for (let j = 0; j < 3; j++) {
-                this.box(x + 9, 486 + j * 84, 294, 6, '#4c2b1f88', 2);
+            const metal = c.createLinearGradient(x, 408, x + 312, 670);
+            metal.addColorStop(0, '#e0e6df');
+            metal.addColorStop(.25, '#8e9a94');
+            metal.addColorStop(.6, '#c1cbc4');
+            metal.addColorStop(1, '#64736f');
+            this.panel(x, 408, 312, 264, metal, 9);
+            for (let j = 0; j < 9; j++) {
+                c.strokeStyle = '#edf7ef22';
+                c.beginPath();
+                c.moveTo(x + 12, 430 + j * 26);
+                c.lineTo(x + 300, 426 + j * 26);
+                c.stroke();
             }
         }
         this.ellipse(640, 544, 257, 105, '#2d201bbb');
@@ -517,25 +636,58 @@ class Scene {
         c.stroke();
         this.ellipse(640, 627, 166, 5, '#ffa34d22');
         for (let i = 0; i < foods.length; i++) {
-            const [id] = foods[i], r = stationRect(i), count = g.inventory.stock[id], need = action.focus.includes('food:' + id);
+            const [id] = foods[i];
+            if (!g.availableFoods.some(f => f[0] === id))
+                continue;
+            const r = stationRect(i), count = g.inventory.stock[id], need = action.focus.includes('food:' + id);
             this.hit('food:' + id, r.x, r.y, r.w, r.h);
             const hover = this.hovered('food:' + id);
             if (need && g.started && !g.ended)
                 this.focusRing(r, `rgba(255,220,144,${.45 + Math.sin(this.clock * 3) * .18})`);
             if (hover)
                 this.focusRing(r, '#fff1c5');
-            this.box(r.x + 1, r.y + 6, r.w, r.h - 7, '#362d22', 11);
-            this.box(r.x, r.y, r.w, r.h - 7, '#c5b998', 11);
-            this.box(r.x + 4, r.y + 4, r.w - 8, r.h - 17, '#6d6b51', 8);
-            this.box(r.x + 7, r.y + 6, r.w - 14, r.h - 24, id === 'sweet' ? '#493326' : id === 'chili' ? '#783f2b' : '#dad1a4', 8);
+            const steel = c.createLinearGradient(r.x, 0, r.x + r.w, 0);
+            steel.addColorStop(0, '#596b69');
+            steel.addColorStop(.18, '#e8efeb');
+            steel.addColorStop(.43, '#8d9e98');
+            steel.addColorStop(.72, '#d8e3df');
+            steel.addColorStop(1, '#566864');
+            this.ellipse(r.x + 44, r.y + 61, 43, 10, '#243b3855');
+            this.box(r.x + 4, r.y + 19, 80, 43, steel, 9);
+            this.ellipse(r.x + 44, r.y + 59, 40, 10, steel);
+            this.ellipse(r.x + 44, r.y + 20, 44, 20, '#e8eeea');
+            this.ellipse(r.x + 44, r.y + 20, 39, 16, '#3b504c');
             c.save();
-            c.globalAlpha = count ? 1 : .23;
-            const pile = Math.max(1, Math.ceil(count / 3));
-            for (let z = 0; z < pile; z++)
-                this.sprite(i, r.x + 8 + (z % 2) * 9, r.y - 3 + (z > 1 ? 5 : 0), r.w - 21, r.h - 13);
+            c.beginPath();
+            c.ellipse(r.x + 44, r.y + 20, 37, 14, 0, 0, Math.PI * 2);
+            c.clip();
+            this.ellipse(r.x + 44, r.y + 24, 39, 16, count ? foods[i][2] : '#35433c');
+            if (count) {
+                for (let z = 0; z < 18; z++) {
+                    const px = r.x + 13 + (z * 29 % 62), py = r.y + 10 + (z * 17 % 24);
+                    if (['scallion', 'cilantro', 'lettuce'].includes(id))
+                        this.box(px, py, 7, 3, z % 2 ? '#487b31' : '#a5bd59', 1);
+                    else if (['crisp', 'youtiao', 'ham', 'sausage', 'chicken', 'pork'].includes(id)) {
+                        c.save();
+                        c.translate(px, py);
+                        c.rotate(z * .8);
+                        this.box(-3, -3, id === 'youtiao' ? 18 : 11, 7, z % 2 ? '#e8b15e' : foods[i][2], 3);
+                        c.restore();
+                    }
+                    else if (id === 'egg')
+                        this.ellipse(px, py, 8, 10, '#f7e2b0');
+                    else if (id === 'sesame')
+                        this.ellipse(px, py, 2, 1, '#fff3c9');
+                }
+            }
             c.restore();
-            this.box(r.x + r.w - 24, r.y + 4, 22, 20, count < 3 ? '#ad4b35' : '#493d2bea', 6);
-            this.text(String(count), r.x + r.w - 13, r.y + 18, 12, '#fff4d6');
+            c.strokeStyle = '#f3faf5';
+            c.lineWidth = 1.6;
+            c.beginPath();
+            c.ellipse(r.x + 44, r.y + 20, 42, 18, 0, 0, 7);
+            c.stroke();
+            this.box(r.x + r.w - 25, r.y + 40, 24, 20, count < 3 ? '#ad4b35' : '#344a44', 6);
+            this.text(String(count), r.x + r.w - 13, r.y + 54, 12, '#fff4d6');
             if (need && g.started)
                 this.ellipse(r.x + 10, r.y + 11, 3, 3, '#ffe7a0');
         }
@@ -549,12 +701,26 @@ class Scene {
             c.translate(-640, -505);
             if (p.stage === 'bagged') {
                 this.ellipse(640, 543, 77, 13, '#0003');
-                this.sprite(16, 572, 422, 136, 141);
-                this.sprite(15, 602, 425, 76, 74);
+                this.box(588, 454, 104, 103, '#b4834e', 7);
+                this.box(595, 460, 90, 90, '#e8c58b', 4);
+                this.path([[595, 460], [607, 444], [675, 444], [685, 460]], '#f2d7a0', '#a77a48');
+                this.text('热', 640, 513, 24, '#99653c');
+                this.text('JIANBING', 640, 536, 10, '#99653c');
             }
             else if (p.stage === 'folded') {
                 const f = Math.min(1, p.foldTime / .65);
-                this.sprite(15, 534 + f * 20, 434 - f * 6, 212 - f * 40, 142);
+                const width = 410 - 244 * f, height = 180 - 80 * f;
+                this.ellipse(640, 511, width / 2, height / 2, '#e6b968');
+                this.path([[640 - width / 2, 501], [640 - width * .12, 466], [640 - width * .12, 544], [640 - width / 2, 521]], '#f2d18a', '#bd8e47');
+                this.path([[640 + width / 2, 501], [640 + width * .12, 466], [640 + width * .12, 544], [640 + width / 2, 521]], '#e5b461', '#bd8e47');
+                if (f > .55) {
+                    this.box(640 - width * .42, 496, width * .84, 40, '#f4d48a', 9);
+                    c.strokeStyle = '#c69445';
+                    c.beginPath();
+                    c.moveTo(640 - width * .4, 508);
+                    c.lineTo(640 + width * .4, 508);
+                    c.stroke();
+                }
             }
             else {
                 const rx = p.stage === 'batter' ? 58 + 147 * p.spread : 205;
@@ -565,15 +731,20 @@ class Scene {
                     if (x * x / (rx * rx) + y * y / (rx * rx * .2) < .9)
                         this.ellipse(640 + x, 502 + y, 1 + n % 3, 1, '#b4773e44');
                 }
-                for (let n = 0; n < (p.ingredients.egg || 0); n++) {
-                    this.ellipse(603 + n * 76, 495, 58, 28, '#fff0b8c9');
-                    this.ellipse(602 + n * 76, 492, 14, 8, '#ffbd36');
+                if (p.stage === 'egg' && p.ingredients.egg) {
+                    const spread = p.eggSpread;
+                    this.ellipse(640, 502, 75 + spread * 124, 32 + spread * 54, '#ffd251bb');
+                    for (let n = 0; n < (p.ingredients.egg || 0); n++) {
+                        const x = 585 + (n % 3) * 55, y = 487 + Math.floor(n / 3) * 29;
+                        this.ellipse(x, y, 25 * (1 - spread), 13 * (1 - spread), '#fff0b8');
+                        this.ellipse(x, y, 11 * (1 - spread), 7 * (1 - spread), '#ffb62e');
+                    }
                 }
                 // Bounded sauce strokes avoid an unbounded draw loop during long gestures.
                 for (const v of p.strokes.slice(-100)) {
                     this.ellipse(v.x, v.y, 22, 10, p.ingredients.chili ? '#a43e2377' : '#73402066');
                 }
-                foods.filter(([id]) => !['batter', 'egg', 'sweet', 'chili'].includes(id) && p.ingredients[id]).forEach(([id], j) => { const index = foods.findIndex(f => f[0] === id); for (let n = 0; n < 3; n++)
+                foods.filter(([id]) => !['batter', 'egg', 'sweet', 'chili'].includes(id) && (p.ingredients[id] || 0) - (p.stage === 'flipped' ? (p.underside[id] || 0) : 0) > 0).forEach(([id], j) => { const index = id === 'youtiao' ? 20 : foods.findIndex(f => f[0] === id); for (let n = 0; n < Math.min(6, 2 * ((p.ingredients[id] || 0) - (p.stage === 'flipped' ? (p.underside[id] || 0) : 0))); n++)
                     this.sprite(index, 544 + (n % 2) * 112 + Math.sin(j * 3) * 18, 459 + Math.floor(n / 2) * 39 + Math.cos(j * 4) * 12, 55, 38); });
             }
             c.restore();
@@ -606,31 +777,57 @@ class Scene {
             }
             const items = foods.filter(([id]) => id !== 'batter' && (g.target.recipe[id] || p.ingredients[id]));
             const cell = Math.min(46, 535 / Math.max(1, items.length));
-            items.forEach(([id], i) => { const x = 374 + i * cell, status = ingredientStatus(g, id), index = foods.findIndex(f => f[0] === id); this.hit('order:' + id, x - 4, 359, cell, 39); this.box(x - 1, 361, cell - 5, 35, status === 'done' ? '#e5ebd2' : status === 'extra' ? '#f5d4c6' : '#efe4c9', 8); this.sprite(index, x + 2, 362, 30, 30); if ((g.target.recipe[id] || 0) > 1) {
+            items.forEach(([id], i) => { const x = 374 + i * cell, status = ingredientStatus(g, id), index = id === 'youtiao' ? 20 : foods.findIndex(f => f[0] === id); this.hit('order:' + id, x - 4, 359, cell, 39); this.box(x - 1, 361, cell - 5, 35, status === 'done' ? '#e5ebd2' : status === 'extra' ? '#f5d4c6' : '#efe4c9', 8); this.sprite(index, x + 2, 362, 30, 30); if ((g.target.recipe[id] || 0) > 1) {
                 this.box(x + cell - 20, 359, 17, 14, '#a85434', 4);
-                this.text('×2', x + cell - 11, 370, 9, '#fff8e3');
+                this.text('×' + g.target.recipe[id], x + cell - 11, 370, 9, '#fff8e3');
             } if (status === 'done')
                 this.text('✓', x + cell - 12, 391, 12, '#3f7446'); if (status === 'extra')
                 this.text('!', x + cell - 12, 391, 12, '#b14e33'); });
         }
-        // Theft retains a large click target; the hand is part of the scene, not a dialog.
+        // Bent sleeve + wrist + rotated fingers; a slapped arm retracts along the same route.
         if (g.theft) {
-            const th = g.theft, ci = g.customers.findIndex(v => v.id === th.customer), sx = 445 + Math.max(0, ci) * 190, fi = foods.findIndex(v => v[0] === th.food), r = stationRect(fi);
-            const travel = th.slapped ? Math.max(0, th.remaining / .65) : Math.min(1, (3 - th.remaining) / 1.1);
-            const hx = sx + (r.x + 44 - sx) * travel, hy = 288 + (r.y + 33 - 288) * travel;
-            this.path([[sx - 11, 288], [sx + 11, 288], [hx + 15, hy], [hx - 15, hy]], '#e2ad7d', '#9d6f49');
-            this.ellipse(hx, hy, 24, 16, '#efc192');
+            const th = g.theft, ci = g.customers.findIndex(v => v.id === th.customer), sx = customerX(Math.max(0, ci), g.profile.shop), fi = foods.findIndex(v => v[0] === th.food), r = stationRect(fi);
+            const travel = th.slapped ? Math.max(0, th.remaining / .65) * (th.reach ?? 1) : Math.min(1, (3 - th.remaining) / 1.1), e = travel * travel * (3 - 2 * travel);
+            const hx = sx + (r.x + 44 - sx) * e, hy = 288 + (r.y + 26 - 288) * e;
+            c.save();
+            c.lineCap = 'round';
+            c.lineJoin = 'round';
+            c.beginPath();
+            c.moveTo(sx, 266);
+            c.quadraticCurveTo(sx + (hx - sx) * .25, hy - 35, hx, hy);
+            c.strokeStyle = '#47372d';
+            c.lineWidth = 29;
+            c.stroke();
+            c.strokeStyle = ['#66887c', '#c4815d', '#497873'][Math.max(0, ci) % 3];
+            c.lineWidth = 23;
+            c.stroke();
+            c.translate(hx, hy);
+            c.rotate(Math.atan2(hy - 288, hx - sx) - Math.PI / 2);
+            this.box(-13, -20, 26, 30, '#efc399', 9);
             for (let j = 0; j < 4; j++)
-                this.box(hx - 21 + j * 11, hy, 9, 21 - j * 2, '#efc192', 5);
-            this.panel(hx - 62, hy - 49, 124, 23, th.slapped ? '#e2ebc4' : '#ffe3ab', 7);
-            this.text(th.slapped ? '哎哟！不敢啦' : '快拍手！ ' + th.remaining.toFixed(1), hx, hy - 33, 11, '#663b27', 'center', 114);
+                this.box(-14 + j * 8, -1, 7, 22 - Math.abs(j - 1) * 4, '#efc399', 4);
+            this.box(-20, -10, 8, 19, '#e0a879', 4);
+            c.restore();
+            if (th.slapped) {
+                c.strokeStyle = '#fff1be';
+                c.lineWidth = 3;
+                for (let j = 0; j < 5; j++) {
+                    const a = j * 1.25;
+                    c.beginPath();
+                    c.moveTo(hx + Math.cos(a) * 29, hy + Math.sin(a) * 29);
+                    c.lineTo(hx + Math.cos(a) * 39, hy + Math.sin(a) * 39);
+                    c.stroke();
+                }
+            }
+            this.panel(hx - 62, hy - 56, 124, 23, th.slapped ? '#e2ebc4' : '#ffe3ab', 7);
+            this.text(th.slapped ? '哎哟！不敢啦' : '快拍手！ ' + th.remaining.toFixed(1), hx, hy - 40, 11, '#663b27', 'center', 114);
             this.hit('slap', hx - 43, hy - 30, 86, 78);
         }
-        if (this.dragging && ['batter', 'flipped'].includes(p.stage)) {
+        if (this.dragging && ['batter', 'egg', 'flipped'].includes(p.stage)) {
             c.save();
             c.translate(this.pointer.x, this.pointer.y);
             c.rotate(-.25);
-            this.sprite(p.stage === 'batter' ? 13 : 18, -14, -62, 84, 84);
+            this.sprite(p.stage === 'flipped' ? 18 : 13, -14, -62, 84, 84);
             c.restore();
         }
         this.effects = this.effects.filter(f => (f.age += dt) < f.life);
@@ -661,26 +858,75 @@ class Scene {
         const hoverHit = [...this.hits].reverse().find(h => this.pointer.x >= h.x && this.pointer.x < h.x + h.w && this.pointer.y >= h.y && this.pointer.y < h.y + h.h);
         const tip = hoverHit?.id || (this.touchAge ? this.touchFocus : '');
         if (tip && (tip.startsWith('food:') || tip.startsWith('order:') || toolIds.includes(tip))) {
-            const h = this.hits.find(v => v.id === tip);
-            const label = tip.includes(':') ? foodLabel(tip.split(':')[1]) : ['刮板', '铲子 · 翻面', '折叠', '纸袋', '丢弃'][toolIds.indexOf(tip)];
+            const h = this.hits.find(v => v.id === tip) || { x: 550, y: 620, w: 180, h: 30 };
+            const label = tip.includes(':') ? foodLabel(tip.split(':')[1], g.profile.mode === 'tianjin') : ['刮板', '铲子 · 翻面', '折叠', '纸袋', '丢弃'][toolIds.indexOf(tip)];
             const x = Math.min(1178, Math.max(102, h.x + h.w / 2));
             this.panel(x - 84, h.y - 32, 168, 25, '#332d25f5', 8);
             this.text(label, x, h.y - 15, 12, '#fff0cf', 'center', 154);
         }
+        if (g.tutorial && g.started && !g.paused && !g.ended) {
+            this.panel(20, 110, 305, 270, '#fff5dfef', 16);
+            this.text('实操新手教程', 40, 141, 21, '#6a432b', 'left', 265);
+            this.text(action.key, 40, 178, 18, '#b15a35', 'left', 265);
+            const lines = getLanguage() === 'zh' ? ['按发光物品操作，订单需要双蛋、双脆。', '倒面糊 → 拖动摊开 → 加两次鸡蛋', '拖动抹匀蛋液 → 翻面 → 加酱和脆', '拖动刷酱 → 折叠 → 装袋 → 点顾客', '练习不限时、不扣耐心，不赚取金币。', '做错可点垃圾桶重新做；右上可退出。'] : ['Follow the glow: two eggs, two crisps.', 'Batter → drag → add two eggs', 'Spread egg → flip → sauce + crisps', 'Brush → fold → bag → customer', 'No time limit, patience loss or income.', 'Discard to retry; exit at the top right.'];
+            lines.forEach((line, i) => this.text(line, 40, 213 + i * 27, 11, '#785c44', 'left', 265));
+        }
         if (!g.started || g.ended || g.paused)
             this.overlay(g);
     }
+    drawDecor(g) { const p = g.profile, c = this.ctx; const owned = (id) => p.equipped.includes(id); if (p.shop) {
+        this.box(333, 86, 609, 13, '#815233', 3);
+        for (const x of [333, 930])
+            this.box(x, 90, 12, 240, '#815233', 2);
+        this.panel(488, 85, 290, 25, '#795134', 5);
+        this.text('街角小店', 633, 104, 13, '#ffebc4');
+    } if (owned('awning')) {
+        for (let i = 0; i < 11; i++)
+            this.box(334 + i * 56, 83, 56, 20, i % 2 ? '#e9cf92' : '#a95c41', 6);
+    } if (owned('sign')) {
+        this.panel(26, 336, 215, 53, '#745235', 6);
+        this.text('手作热煎饼', 133, 369, 19, '#ffe8b5');
+    } if (owned('plant'))
+        for (const x of [50, 290]) {
+            this.box(x - 13, 375, 26, 29, '#aa6843', 4);
+            for (let j = 0; j < 5; j++)
+                this.ellipse(x + Math.sin(j * 2) * 13, 367 - Math.abs(Math.cos(j)) * 18, 8, 15, '#698e4c');
+        } if (owned('spring'))
+        for (const x of [353, 918]) {
+            this.box(x - 1, 107, 2, 25, '#e2b56c');
+            this.ellipse(x, 151, 19, 25, '#b94836');
+            this.box(x - 6, 173, 12, 5, '#e7b45e');
+            this.box(x - 1, 178, 2, 18, '#e7b45e');
+        } if (owned('dragon'))
+        for (const x of [355, 916])
+            this.path([[x, 119], [x - 22, 160], [x + 22, 160]], '#52774b', '#d5ba6b', 3); if (owned('autumn')) {
+        this.ellipse(913, 150, 27, 27, '#fff0af');
+        this.ellipse(907, 149, 8, 12, '#d1a75a');
+        this.ellipse(902, 135, 3, 9, '#d1a75a');
+        this.ellipse(910, 135, 3, 9, '#d1a75a');
+    } if (owned('spring-reward')) {
+        c.save();
+        c.translate(284, 362);
+        c.rotate(.785);
+        this.box(-19, -19, 38, 38, '#bb4d36', 2);
+        c.restore();
+        this.text('福', 284, 369, 21, '#f8d67e');
+    } if (owned('dragon-reward'))
+        for (let j = 0; j < 5; j++)
+            this.box(354 + j * 6, 180, 4, 55, ['#d16045', '#c7b951', '#53875e', '#618b9c', '#99647a'][j], 2); if (owned('autumn-reward'))
+        for (let j = 0; j < 5; j++)
+            this.text('✦', 380 + j * 115, 90, 18, '#ffe5a4'); this.text((getLanguage() === 'zh' ? `钱包 ¥${p.wallet} · 魅力 ${charm(p)} · 等待 +` : `Wallet ¥${p.wallet} · Charm ${charm(p)} · Wait +`) + Math.round((patienceMultiplier(p) - 1) * 100) + '%', 25, 96, 11, '#ffebc4', 'left', 300); }
     overlay(g) {
         const c = this.ctx;
         this.box(0, 0, 1280, 720, '#291e18a6', 0);
         this.panel(282, 146, 716, 431, '#fff1d6', 24);
         this.box(298, 161, 684, 399, '#fff8e9', 18);
-        this.text(g.paused ? '休息一下' : g.ended ? '今日收摊' : '街角烟火', 326, 204, 12, '#a16f47', 'left', 580);
-        this.text(g.paused ? '炉火等你回来' : g.ended ? '辛苦啦，老板！' : '煎饼摊传奇', 326, 250, 36, '#553328', 'left', 610);
+        this.text(g.paused ? '休息一下' : g.ended ? (g.tutorial ? '教程完成' : '今日收摊') : '街角烟火', 326, 204, 12, '#a16f47', 'left', 580);
+        this.text(g.paused ? '炉火等你回来' : g.ended ? (g.tutorial ? '完成练习，准备正式开摊！' : '辛苦啦，老板！') : '煎饼摊传奇', 326, 250, 36, '#553328', 'left', 610);
         if (g.ended) {
             const stats = [['今日收入', '¥ ' + g.money], ['完成订单', String(g.served)], ['顾客满意', g.satisfaction + '%']];
             stats.forEach(([label, value], i) => { this.box(326 + i * 207, 280, 192, 89, '#f0e4cd', 12); this.text(label, 343 + i * 207, 307, 12, '#927154', 'left', 158); this.text(value, 343 + i * 207, 346, 30, '#80513a', 'left', 156); });
-            this.text('营业成绩已保存在本机（浏览器允许时）', 326, 411, 12, '#95795c', 'left', 620);
+            this.text(g.tutorial ? '练习不计收入，也不消耗顾客耐心' : '营业成绩已保存在本机（浏览器允许时）', 326, 411, 12, '#95795c', 'left', 620);
         }
         else if (g.paused) {
             this.text('时间、顾客耐心和补货都已暂停', 326, 298, 17, '#977154', 'left', 610);
@@ -694,13 +940,14 @@ class Scene {
             this.sprite(15, 766, 306, 155, 135);
             this.sprite(19, 874, 408, 36, 36);
         }
-        const primary = g.paused ? '继续营业' : g.ended ? '再开一天' : '开始营业';
+        const primary = g.paused ? '继续营业' : g.ended ? (g.tutorial ? '进入正式营业' : '再开一天') : '开始营业';
         this.panel(326, 456, 628, 65, '#b85e39', 15);
         this.text(primary, 640, 497, 23, '#fff4d9');
         this.hit(g.paused ? 'resume' : 'start', 326, 456, 628, 65);
         this.text('三分钟一局 · 中英双语 · 无需下载', 640, 548, 12, '#a28565', 'center', 630);
     }
 }
+
 
 
 
@@ -715,15 +962,83 @@ const orientation = document.querySelector('#orientation');
 const help = document.querySelector('#accessible');
 const titleKey = document.title, ariaKey = canvas.getAttribute('aria-label'), helpKey = help.textContent;
 const scene = new Scene(canvas), sound = new Sound();
-let game = new Game(), dragging = false, last = { x: 0, y: 0 }, saved = false;
+let profile = restoreProfile(null);
+try {
+    profile = restoreProfile(localStorage.getItem('jianbing-legend:progress'));
+}
+catch { }
+let game = new Game(Math.random, profile), dragging = false, last = { x: 0, y: 0 }, saved = false;
 try {
     if (localStorage.getItem('jianbing-legend:language') === 'en')
         setLanguage('en');
-    scene.tutorialDone = localStorage.getItem('jianbing-legend:tutorial') === 'done';
+    scene.tutorialDone = profile.tutorial;
     sound.muted = localStorage.getItem('jianbing-legend:muted') === 'true';
 }
 catch { }
-function toolbar() { document.documentElement.lang = getLanguage() === 'en' ? 'en' : 'zh-CN'; document.title = t(titleKey); canvas.setAttribute('aria-label', t(ariaKey)); help.textContent = t(helpKey); languageButton.textContent = getLanguage() === 'zh' ? 'EN / 中文' : '中文 / EN'; languageButton.setAttribute('aria-label', getLanguage() === 'zh' ? 'Switch to English' : '切换为中文'); pauseButton.textContent = game.paused ? '▶' : 'Ⅱ'; pauseButton.setAttribute('aria-label', t(game.paused ? '继续营业' : '暂停')); pauseButton.disabled = !game.started || game.ended; soundButton.textContent = sound.muted ? '♪ ×' : '♪'; soundButton.setAttribute('aria-label', t(sound.muted ? '开启声音' : '关闭声音')); soundButton.setAttribute('aria-pressed', String(!sound.muted)); orientation.textContent = t('横屏体验更好，转动手机后再开摊'); }
+function toolbar() { document.querySelector('#shop-open').textContent = t('装饰与经营'); document.querySelector('#learn').textContent = t(game.tutorial && game.started && !game.ended ? '退出教程' : '新手教程'); document.querySelector('#learn').disabled = game.started && !game.ended && !game.tutorial; document.querySelector('#toolbar').setAttribute('aria-label', t('游戏控制')); if (shopDialog.open)
+    renderShop(); document.documentElement.lang = getLanguage() === 'en' ? 'en' : 'zh-CN'; document.title = t(titleKey); canvas.setAttribute('aria-label', t(ariaKey)); help.textContent = t(helpKey); languageButton.textContent = getLanguage() === 'zh' ? 'EN / 中文' : '中文 / EN'; languageButton.setAttribute('aria-label', getLanguage() === 'zh' ? 'Switch to English' : '切换为中文'); pauseButton.textContent = game.paused ? '▶' : 'Ⅱ'; pauseButton.setAttribute('aria-label', t(game.paused ? '继续营业' : '暂停')); pauseButton.disabled = !game.started || game.ended; soundButton.textContent = sound.muted ? '♪ ×' : '♪'; soundButton.setAttribute('aria-label', t(sound.muted ? '开启声音' : '关闭声音')); soundButton.setAttribute('aria-pressed', String(!sound.muted)); orientation.textContent = t('横屏体验更好，转动手机后再开摊'); }
+const shopDialog = document.querySelector('#shop-dialog');
+let resumeAfterShop = false, lastProgress = '', storageFailed = false;
+function saveProgress() { const raw = JSON.stringify(profile); if (raw === lastProgress)
+    return; try {
+    localStorage.setItem('jianbing-legend:progress', raw);
+    lastProgress = raw;
+    storageFailed = false;
+}
+catch {
+    storageFailed = true;
+    document.querySelector('#save-status').textContent = t('浏览器无法保存，进度仅在本次打开期间保留');
+} }
+function begin(tutorial = false) { game = new Game(Math.random, profile, tutorial); game.started = true; game.newCustomer(); game.spawn = 9; saved = false; scene.effects = []; scene.toastAge = 0; scene.arrivals.clear(); scene.previousCustomers = []; scene.tutorialDone = profile.tutorial && !tutorial; sound.start(); toolbar(); }
+const bi = (zh, en) => getLanguage() === 'zh' ? zh : en;
+function renderShop() {
+    const active = game.started && !game.ended;
+    const title = bi('装饰与经营', 'Decorate & grow');
+    const body = document.querySelector('#shop-body');
+    document.querySelector('#shop-title').textContent = title;
+    document.querySelector('#shop-close').textContent = bi('返回煎饼摊', 'Back to the stall');
+    body.innerHTML = `<p class="shop-balance">${bi('钱包', 'Wallet')} ¥${profile.wallet} · ${bi('魅力', 'Charm')} ${charm(profile)} · ${bi('新顾客等待', 'New customer patience')} +${Math.round((patienceMultiplier(profile) - 1) * 100)}%</p>
+ <p>${bi('魅力每点延长等待 2%，上限 50%；装饰可叠加，卸下后不再加成。', 'Each charm point adds 2% patience, up to 50%. Equipped decorations stack.')}</p>
+ <section class="shop-settings"><div><h3>${bi('经营升级', 'Grow your business')}</h3><p>${profile.shop ? bi('已开店：最多五位顾客，每五秒来客。', 'Shop open: five customers, arrivals every five seconds.') : bi('¥180 开店：三位顾客 → 五位，来客更快。', 'Open for ¥180: three → five customers, faster arrivals.')}</p><button data-action="upgrade" ${profile.shop || profile.wallet < 180 ? 'disabled' : ''}>${profile.shop ? bi('已开店', 'Shop opened') : bi('开店 · ¥180', 'Open shop · ¥180')}</button></div>
+ <div><h3>${bi('玩法模式', 'Recipe mode')}</h3><button data-action="mode" ${active ? 'disabled' : ''}>${profile.mode === 'tianjin' ? bi('纯血天津人模式 ✓', 'Tianjin Purist Mode ✓') : bi('经典模式 · 点击切换', 'Classic · Click to switch')}</button><p>${bi('天津模式：面糊、鸡蛋；只配果子、果篦儿、两种酱、葱花和香菜。模式与活动在两局之间切换。', 'Tianjin: batter, eggs; youtiao, guobier, two sauces, scallions and cilantro only. Switch modes/events between days.')}</p></div></section>
+ <h3>${bi('节日活动', 'Festival events')}</h3><p>${bi('可随时选择主题体验，不受现实日期限制。当前主题正确出餐六份，即获限定奖励；进度跨局保留。', 'Choose any theme, regardless of the calendar. Serve six correct orders in a theme for its exclusive reward; progress carries over.')}</p><div class="festival-tabs">${['spring', 'dragon', 'autumn'].map((f, i) => `<button data-festival="${f}" aria-pressed="${profile.festival === f}" ${active ? 'disabled' : ''}>${getLanguage() === 'zh' ? ['春节', '端午', '中秋'][i] : ['Spring Festival', 'Dragon Boat', 'Mid-Autumn'][i]} · ${Math.min(6, profile.events[f])}/6</button>`).join('')}</div>
+ <div class="decor-grid">${decorations.filter(d => !d.festival || d.festival === profile.festival).map(d => { const owned = profile.owned.includes(d.id), on = profile.equipped.includes(d.id), reward = d.id.endsWith('-reward'); return `<article><h3>${getLanguage() === 'zh' ? d.zh : d.en}</h3><p>+${d.charm} ${bi('魅力', 'charm')} · ${reward ? bi('活动奖励', 'Event reward') : '¥' + d.cost}</p><button data-item="${d.id}" ${!owned && (reward || profile.wallet < d.cost) ? 'disabled' : ''}>${owned ? (on ? bi('已装上 · 卸下', 'Equipped · Remove') : bi('装上', 'Equip')) : reward ? bi('六份正确订单解锁', 'Unlock: six correct orders') : bi('购买并装上', 'Buy & equip')}</button></article>`; }).join('')}</div>
+ <p>${storageFailed ? t('浏览器无法保存，进度仅在本次打开期间保留') : bi('钱包、装饰和活动进度自动保存在当前浏览器。教程不产生收入或活动进度。', 'Wallet, decorations and events save in this browser. Tutorials do not earn money or event progress.')}</p>`;
+}
+document.querySelector('#shop-open').addEventListener('click', () => { resumeAfterShop = game.started && !game.ended && !game.paused; game.paused = game.started && !game.ended; dragging = false; renderShop(); shopDialog.showModal(); toolbar(); });
+function closeShop() { shopDialog.close(); if (resumeAfterShop)
+    game.paused = false; toolbar(); }
+document.querySelector('#shop-close').addEventListener('click', closeShop);
+shopDialog.addEventListener('cancel', e => { e.preventDefault(); closeShop(); });
+document.querySelector('#shop-body').addEventListener('click', e => {
+    const button = e.target.closest('button');
+    if (!button || button.disabled)
+        return;
+    const id = button.dataset.item;
+    if (id) {
+        if (profile.owned.includes(id)) {
+            profile.equipped = profile.equipped.includes(id) ? profile.equipped.filter(v => v !== id) : [...profile.equipped, id];
+        }
+        else
+            purchase(profile, id);
+    }
+    if (button.dataset.action === 'upgrade')
+        openShop(profile);
+    if (!game.started || game.ended) {
+        if (button.dataset.action === 'mode')
+            profile.mode = profile.mode === 'classic' ? 'tianjin' : 'classic';
+        if (button.dataset.festival)
+            profile.festival = button.dataset.festival;
+    }
+    saveProgress();
+    renderShop();
+});
+document.querySelector('#learn').addEventListener('click', () => { if (game.tutorial && game.started && !game.ended) {
+    game = new Game(Math.random, profile);
+    toolbar();
+}
+else if (!game.started || game.ended)
+    begin(true); });
 toolbar();
 languageButton.addEventListener('click', () => { setLanguage(getLanguage() === 'zh' ? 'en' : 'zh'); toolbar(); try {
     localStorage.setItem('jianbing-legend:language', getLanguage());
@@ -747,17 +1062,7 @@ canvas.addEventListener('pointerdown', e => {
     const hit = [...scene.hits].reverse().find(h => p.x >= h.x && p.x < h.x + h.w && p.y >= h.y && p.y < h.y + h.h);
     if (!game.started || game.ended || game.paused) {
         if (hit?.id === 'start') {
-            game = new Game();
-            game.started = true;
-            game.newCustomer();
-            game.spawn = 9;
-            saved = false;
-            scene.effects = [];
-            scene.toastAge = 0;
-            scene.arrivals.clear();
-            scene.previousCustomers = [];
-            sound.start();
-            toolbar();
+            begin(!profile.tutorial);
         }
         else if (hit?.id === 'resume') {
             game.paused = false;
@@ -771,7 +1076,7 @@ canvas.addEventListener('pointerdown', e => {
         const id = hit.id;
         if (id.startsWith('food:')) {
             const food = id.slice(5), before = game.inventory.stock[food];
-            game.message = game.cooking.add(food, game.inventory);
+            game.message = game.addFood(food);
             success = game.inventory.stock[food] < before;
             effect = success ? id : '';
             scene.touchFocus = id;
@@ -783,11 +1088,12 @@ canvas.addEventListener('pointerdown', e => {
                 success = game.serve();
                 effect = success ? 'serve' : '';
                 sound.tone(success ? 660 : 160, .2);
-                scene.tutorialDone = true;
-                try {
-                    localStorage.setItem('jianbing-legend:tutorial', 'done');
+                if (success && game.tutorial) {
+                    game.ended = true;
+                    scene.tutorialDone = true;
+                    toolbar();
                 }
-                catch { }
+                saveProgress();
             }
             else
                 game.message = '已接单，请看铁板上方的完整订单';
@@ -796,7 +1102,7 @@ canvas.addEventListener('pointerdown', e => {
             game.message = game.inventory.request() ? '老板：来了来了，五秒补齐！' : '老板：库存还满着，或正在路上！';
         else if (id === 'flip') {
             success = game.cooking.flip();
-            game.message = success ? '翻面完成，开始刷酱加配料' : '先摊匀并加至少一个鸡蛋';
+            game.message = success ? '翻面完成，开始刷酱加配料' : '先加鸡蛋，并拖动抹匀蛋液';
             effect = success ? id : '';
         }
         else if (id === 'fold') {
@@ -843,7 +1149,7 @@ canvas.addEventListener('pointerleave', () => { if (!dragging)
     scene.pointer = { x: -100, y: -100 }; });
 for (const event of ['pointerup', 'pointercancel', 'lostpointercapture'])
     canvas.addEventListener(event, () => dragging = false);
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && game.started && !game.ended) {
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !shopDialog.open && game.started && !game.ended) {
     game.paused = !game.paused;
     dragging = false;
     toolbar();
@@ -856,12 +1162,17 @@ document.addEventListener('visibilitychange', () => { if (document.hidden && gam
 let previous = performance.now();
 function frame(now) { const dt = Math.min(.1, (now - previous) / 1000); previous = now; if (!document.hidden) {
     game.tick(dt);
+    saveProgress();
     if (game.started && !game.ended && !game.paused)
         sound.tick(dt, game.cooking.stage !== 'empty');
     scene.dragging = dragging;
     scene.muted = sound.muted;
     scene.draw(game, game.paused ? 0 : dt);
     if (game.ended && !saved) {
+        if (!game.tutorial) {
+            profile.days++;
+            saveProgress();
+        }
         try {
             localStorage.setItem('jianbing-legend:last-day', JSON.stringify({ version: 2, money: game.money, served: game.served, satisfaction: game.satisfaction, date: new Date().toISOString() }));
         }
