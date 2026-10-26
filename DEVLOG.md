@@ -14,6 +14,17 @@
   Automated validation: strict compilation, four existing gameplay tests and two language/deployment-output tests pass. Full mobile, audio and complete-day manual review remains outstanding.
 
 
+### 发布验收 / Deployment verification
+
+- GitHub Pages 已启用，发布源为 main 分支 /docs，构建、部署和状态报告全部成功。在线地址：https://fchen6343.github.io/jianbing-legend/ 。
+  GitHub Pages is enabled from main /docs. Build, deployment and status reporting all succeeded. Live URL: https://fchen6343.github.io/jianbing-legend/ .
+- 已在真实 Chrome 打开线上页面，检查中文开场、英文开场与英文营业界面；营业中切回中文后进度继续，刷新后中文偏好保留。完整背景、食材、工具、订单、统计及双语按钮可见。
+  Opened the live game in Chrome and checked Chinese/English start screens and English gameplay. Switching back to Chinese during play preserved progress; the language choice survived reload. Background, ingredients, tools, orders, statistics and the language button rendered.
+- 未观察到游戏自身的控制台错误；日志中出现一条来自浏览器扩展的独立错误。未据此宣称完成全面音频或手机验收。
+  No game-origin console errors were observed. One separate browser-extension error appeared. This does not establish full audio or mobile acceptance.
+- 发布提交：bcd20521fc683845c3d7d34b9608ed8c3687bfbe；部署记录：https://github.com/fchen6343/jianbing-legend/actions/runs/40326147848 。远端 29 个文件的路径、大小与 Blob SHA 均匹配本地版本。
+  Release commit: bcd20521fc683845c3d7d34b9608ed8c3687bfbe. Deployment: https://github.com/fchen6343/jianbing-legend/actions/runs/40326147848 . All 29 remote file paths, sizes and blob SHAs matched the local release.
+
 ## 2026-10-26 · v0.3.0 · 恢复并补齐 GitHub 上传
 
 ### 仓库核对
