@@ -661,7 +661,7 @@ class Scene {
             c.beginPath();
             c.ellipse(r.x + 44, r.y + 20, 37, 14, 0, 0, Math.PI * 2);
             c.clip();
-            this.ellipse(r.x + 44, r.y + 24, 39, 16, count ? foods[i][2] : '#35433c');
+            this.ellipse(r.x + 44, r.y + 24, 39, 16, count ? (id === 'egg' ? '#796d4a' : foods[i][2]) : '#35433c');
             if (count) {
                 for (let z = 0; z < 18; z++) {
                     const px = r.x + 13 + (z * 29 % 62), py = r.y + 10 + (z * 17 % 24);
@@ -674,8 +674,12 @@ class Scene {
                         this.box(-3, -3, id === 'youtiao' ? 18 : 11, 7, z % 2 ? '#e8b15e' : foods[i][2], 3);
                         c.restore();
                     }
-                    else if (id === 'egg')
-                        this.ellipse(px, py, 8, 10, '#f7e2b0');
+                    else if (id === 'egg' && z < 6) {
+                        const ex = r.x + 23 + (z % 3) * 21, ey = r.y + 13 + Math.floor(z / 3) * 17;
+                        this.ellipse(ex + 1, ey + 2, 9, 10, '#9c815b');
+                        this.ellipse(ex, ey, 8, 10, '#f1d6a1');
+                        this.ellipse(ex - 2, ey - 3, 2, 4, '#fff1cd');
+                    }
                     else if (id === 'sesame')
                         this.ellipse(px, py, 2, 1, '#fff3c9');
                 }
@@ -708,17 +712,28 @@ class Scene {
                 this.text('JIANBING', 640, 536, 10, '#99653c');
             }
             else if (p.stage === 'folded') {
-                const f = Math.min(1, p.foldTime / .65);
-                const width = 410 - 244 * f, height = 180 - 80 * f;
-                this.ellipse(640, 511, width / 2, height / 2, '#e6b968');
-                this.path([[640 - width / 2, 501], [640 - width * .12, 466], [640 - width * .12, 544], [640 - width / 2, 521]], '#f2d18a', '#bd8e47');
-                this.path([[640 + width / 2, 501], [640 + width * .12, 466], [640 + width * .12, 544], [640 + width / 2, 521]], '#e5b461', '#bd8e47');
-                if (f > .55) {
-                    this.box(640 - width * .42, 496, width * .84, 40, '#f4d48a', 9);
-                    c.strokeStyle = '#c69445';
+                const f = Math.min(1, p.foldTime / .65), width = 410 - 228 * f, height = 180 - 96 * f, l = 640 - width / 2, r = 640 + width / 2, top = 505 - height / 2, bottom = 505 + height / 2;
+                this.ellipse(640, 535, width * .48, 14, '#0003');
+                if (f < .72) {
+                    this.ellipse(640, 505, width / 2, height / 2, '#e6b968');
+                    this.path([[l, 499], [l + width * .35, top + 7], [l + width * .35, bottom - 7], [l, 519]], '#f2d18a', '#bd8e47');
+                    this.path([[r, 499], [r - width * .35, top + 7], [r - width * .35, bottom - 7], [r, 519]], '#e5b461', '#bd8e47');
+                }
+                else {
+                    this.box(l, top + 5, width, height, '#b77a35', 12);
+                    const crust = c.createLinearGradient(0, top, 0, bottom);
+                    crust.addColorStop(0, '#f4d38b');
+                    crust.addColorStop(.6, '#e8b95f');
+                    crust.addColorStop(1, '#c69042');
+                    this.box(l, top, width, height, crust, 12);
+                    this.path([[l + 3, top + 16], [640, top + 43], [r - 3, top + 16], [r - 3, top + 27], [640, top + 49], [l + 3, top + 27]], '#c69249', '#c69249', 1);
+                    for (let n = 0; n < 22; n++)
+                        this.ellipse(l + 12 + (n * 31 % (width - 24)), top + 9 + (n * 17 % (height - 18)), 1 + n % 3, 1, '#aa703966');
+                    c.strokeStyle = '#f8df9e';
+                    c.lineWidth = 2;
                     c.beginPath();
-                    c.moveTo(640 - width * .4, 508);
-                    c.lineTo(640 + width * .4, 508);
+                    c.moveTo(l + 9, bottom - 10);
+                    c.lineTo(r - 9, bottom - 10);
                     c.stroke();
                 }
             }

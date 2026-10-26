@@ -152,3 +152,14 @@ The next priorities were browser testing, layout and input fixes, consistent cha
   All 13 automated tests pass, including existing rules plus progression, purchases/rewards, shop/patience, Tianjin restrictions, repeated egg spreading, quantities and the complete tutorial. Strict TypeScript compilation passes. Live browser validation will be recorded after deployment.
 - 新增造型使用原生 Canvas；未复制参考照片或商业游戏素材，未增加第三方运行库。手机实机、长时平衡性与音频体验仍待进一步测试。
   New shapes use native Canvas; no reference-photo or commercial-game assets were copied and no runtime dependency was added. Physical mobile, long-session balance and audio review remain pending.
+
+### v0.5.0 上线验收 / Live acceptance
+
+首次部署提交 `a3df9039934bed28b2548a9c956e888dc544c07a`，Pages 工作流 `40335329680` 成功；远端 40 个文件与本地路径、大小、Git blob 哈希一致。随后精修折叠成品和鸡蛋桶辨识度。
+Initial release commit `a3df9039934bed28b2548a9c956e888dc544c07a`, successful Pages run `40335329680`; all 40 remote files matched local paths, sizes and Git blob hashes. A follow-up refines the folded shape and egg-pail readability.
+
+Chrome 实际完成完整天津模式教程：面糊摊开、双蛋抹匀、翻面、甜面酱、双份果篦儿、刷酱、折叠、装袋及正确交餐；观察到背面鸡蛋隐藏、果篦儿库存由 8 减至 6、装袋后仅一个纸袋、教程结束且钱包仍为零。检查了中文/英文经营窗口、天津模式与中秋切换，英文界面没有遗留中文操作说明。
+Completed the real Chrome tutorial in Tianjin mode: spread batter, spread two eggs, flip, add sauce and two guobier, brush, fold, bag and correctly serve. Observed hidden back-side eggs, guobier stock falling from eight to six, a single bagged output, tutorial completion and a zero wallet. Checked Chinese/English shop dialogs, Tianjin mode and Mid-Autumn selection; English controls/instructions are translated.
+
+付费装饰、奖励阈值、魅力及五人队列通过自动规则测试验证；未通过浏览器实际攒够全部装饰费用或跑完所有节日。手机实机及完整多日平衡验收仍待后续。
+Purchases, reward thresholds, charm and the five-person queue are covered by automated rules tests. Browser testing did not grind the cost of all decorations or complete every festival. Physical-mobile and full multi-day balance review remain outstanding.
