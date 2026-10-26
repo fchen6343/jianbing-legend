@@ -1,5 +1,31 @@
 # 开发日志 / Development log
 
+## 2026-10-27 · v0.4.0 · 全 A 界面改造 / All-A UI redesign
+
+### 实现 / Implementation
+
+- 根据用户选定的 8 项 A 方案，保留第一视角、左右配料、下方工具，统一暖色手绘摊位风格。
+  Followed the eight selected A options: first-person view, side ingredients and lower tools in a warm illustrated stall.
+- 用内置图片生成制作原创四人顾客 / 老板图集和 20 格食材 / 工具图集，实际接入渲染、订单与制作动画；原背景沿用。运行时按透明间隔裁切，修复生成图集并非严格等高网格导致的相邻素材串入。
+  Generated original four-character and 20-item atlases with the built-in image tool, used in rendering, orders and cooking feedback. Retained the background. Runtime sampling follows actual transparent gaps rather than assuming perfectly equal rows.
+- 重做顶部 HUD、开始页、结算页、暂停页；原料与工具以实物呈现，悬停 / 触摸揭示名称。订单使用图标、双蛋数量、已完成勾选、额外配料警告和不要香菜标签。
+  Redesigned HUD, start, results and pause screens. Physical ingredients/tools reveal names on hover/touch. Icon orders show double eggs, completion, extras and no cilantro.
+- 加入首轮教学 / 后续简短提示、所需食材发光、拖动时贴手工具、加料抛落、翻面抛起、折叠、金币和顾客进出过渡。
+  Added first-run coaching, compact later hints, needed-ingredient highlights, attached drag tools, ingredient drops, flips, folding, coins and customer transitions.
+- 暂停冻结所有玩法计时，切出页面自动暂停；中英文切换和语言偏好保留。刷酱轨迹数量设上限，避免持续拖动无限增长。
+  Pause freezes all gameplay timers; hiding the page pauses automatically. Language switching/preferences remain. Sauce stroke storage is bounded.
+- 更新构建器，将所有图集复制到 dist 并嵌入离线版 / Pages；新增 ui.ts 分离可测试的引导与几何规则。
+  Updated builds to copy atlases into dist and embed them in offline/Pages output. Added ui.ts for testable coaching and geometry.
+
+### 验证与边界 / Validation and limits
+
+严格编译和 8 项自动测试通过，覆盖原有玩法、双语、发布产物、暂停冻结和完整制作引导。使用真实 Canvas 渲染器预览中文 / 英文营业画面及菜单并修正图集串入；线上浏览器验收另行记录。
+Strict compilation and eight automated tests passed: existing gameplay, bilingual output, publishing, pause and full cooking guidance. Rendered Chinese/English gameplay and menus with the actual Canvas renderer and corrected atlas bleed. Live browser acceptance is recorded separately.
+
+本轮查询了设计插件，确认 Figma 已安装；现有图片生成、Canvas 和 GitHub 工具足以完成，未安装额外插件、未购买服务，也没有声称使用 Figma 生成当前画面。仍未达到《沙威玛传奇》商业成品的完整动作、音频和长期经营深度；骨骼动作、专业配音、更多姿势和升级系统仍待迭代。
+Design-plugin discovery confirmed Figma is installed. Existing image generation, Canvas and GitHub tools were sufficient; no extra plugin or paid service was purchased, and Figma was not claimed as the source of this UI. Full commercial-quality animation, audio and long-term progression comparable to Shawarma Legend remain future work.
+
+
 ## 2026-10-26 · v0.3.1 · 双语与在线发布 / Bilingual UI and online publishing
 
 - 新增中文 / English 切换，保存语言偏好；在营业中切换不会重置进度，已有消息和订单也会即时翻译。

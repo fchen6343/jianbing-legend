@@ -62,6 +62,8 @@ export class Cooking {
     else if (this.stage === 'flipped' && (this.ingredients.sweet || this.ingredients.chili)) {
         this.sauce = Math.min(1, this.sauce + distance / 550);
         this.strokes.push({ x, y });
+        if (this.strokes.length > 100)
+            this.strokes.shift();
     } }
     flip() { if (this.stage !== 'egg' || !this.ingredients.egg)
         return false; this.stage = 'flipped'; return true; }
@@ -86,6 +88,7 @@ export class Game {
         this.ratings = [];
         this.ended = false;
         this.started = false;
+        this.paused = false;
         this.next = 0;
         this.serial = 0;
         this.spawn = 0;
@@ -105,7 +108,7 @@ export class Game {
     slap() { if (!this.theft || this.theft.slapped)
         return false; this.theft.slapped = true; this.theft.remaining = .65; this.message = '啪！小手收好，想吃得先点单！'; return true; }
     tick(dt) {
-        if (!this.started || this.ended)
+        if (!this.started || this.ended || this.paused)
             return;
         dt = Math.min(dt, .1);
         this.time = Math.max(0, this.time - dt);
