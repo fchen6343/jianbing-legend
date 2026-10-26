@@ -1,3 +1,4 @@
+import { t, getLanguage } from '../i18n.js';
 import { foods, recipeText } from '../systems/game.js';
 export class Scene {
     constructor(canvas) {
@@ -10,7 +11,17 @@ export class Scene {
         this.background.src = './assets/street.png';
     }
     box(x, y, w, h, color, r = 12) { const c = this.ctx; c.fillStyle = color; c.beginPath(); c.roundRect(x, y, w, h, r); c.fill(); }
-    text(s, x, y, size = 18, color = '#42281e', align = 'center') { const c = this.ctx; c.font = `${size >= 22 ? 'bold ' : ''}${size}px system-ui`; c.fillStyle = color; c.textAlign = align; c.fillText(s, x, y); }
+    text(s, x, y, size = 18, color = '#42281e', align = 'center', maxWidth = 1180) { const c = this.ctx; s = t(s); c.font = `${size >= 22 ? 'bold ' : ''}${size}px system-ui`; c.fillStyle = color; c.textAlign = align; c.fillText(s, x, y, maxWidth); }
+    wrap(s, maxWidth, size) { const c = this.ctx; c.font = `${size}px system-ui`; const units = getLanguage() === 'en' ? s.split(' ') : Array.from(s); const join = getLanguage() === 'en' ? ' ' : ''; const lines = []; let line = ''; for (const unit of units) {
+        const next = line ? line + join + unit : unit;
+        if (line && c.measureText(next).width > maxWidth) {
+            lines.push(line);
+            line = unit;
+        }
+        else
+            line = next;
+    } if (line)
+        lines.push(line); return lines; }
     ellipse(x, y, rx, ry, color) { const c = this.ctx; c.fillStyle = color; c.beginPath(); c.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2); c.fill(); }
     hit(id, x, y, w, h) { this.hits.push({ id, x, y, w, h }); }
     path(points, fill, stroke = '#613e2a', width = 3) { const c = this.ctx; c.beginPath(); points.forEach(([x, y], i) => i ? c.lineTo(x, y) : c.moveTo(x, y)); c.closePath(); c.fillStyle = fill; c.fill(); c.strokeStyle = stroke; c.lineWidth = width; c.stroke(); }
@@ -32,7 +43,7 @@ export class Scene {
         c.moveTo(-4, 0);
         c.lineTo(4, 0);
         c.stroke();
-    } this.box(-32, 60, 64, 48, '#ede0bc', 5); this.text('煎饼真香', 0, 88, 12); this.ellipse(-44, 89, 10, 16, '#efb984'); this.ellipse(44, 89, 10, 16, '#efb984'); c.restore(); }
+    } this.box(-32, 60, 64, 48, '#ede0bc', 5); this.text('煎饼真香', 0, 88, 12, '#42281e', 'center', 59); this.ellipse(-44, 89, 10, 16, '#efb984'); this.ellipse(44, 89, 10, 16, '#efb984'); c.restore(); }
     food(id, x, y, s = 1, seed = 0) { const c = this.ctx; c.save(); c.translate(x, y); c.scale(s, s); if (id === 'egg') {
         this.ellipse(0, 0, 12, 16, '#f7e4bb');
         this.ellipse(-4, -5, 3, 6, '#fff8dd');
@@ -89,14 +100,14 @@ export class Scene {
         }
         // Street canopy and a compact shop sign, leaving the street visible.
         this.box(18, 16, 242, 51, '#532d23e8', 8);
-        this.text('煎 饼 摊 传 奇', 139, 49, 26, '#ffe5ad');
-        this.text('街 角 烟 火  ·  第一日', 140, 83, 14, '#fff3c9');
+        this.text('煎 饼 摊 传 奇', 139, 49, 26, '#ffe5ad', 'center', 224);
+        this.text('街 角 烟 火  ·  第一日', 140, 83, 14, '#fff3c9', 'center', 240);
         this.box(930, 18, 330, 46, '#fff0d9eb');
         this.text(`¥ ${g.money}   ·   ${Math.ceil(g.time)} 秒   ·   满意 ${g.satisfaction}`, 1095, 48, 19);
         this.box(1210, 78, 50, 33, '#fff0d9');
         this.text('声', 1235, 101, 18);
         this.hit('sound', 1210, 78, 50, 33);
-        g.customers.forEach((v, i) => { const x = 400 + i * 220; const bob = Math.sin(this.clock * 2 + i) * 2; this.person(x, 226 + bob, v.look, .88, v.patience / v.max); this.box(x - 97, 105, 194, 75, v.id === g.next ? '#fff3d8' : '#eadbbf', 12); this.text(v.id === g.next ? '正在制作' : '点击接单', x, 127, 16, '#a2542b'); const label = recipeText(v); const chunks = label.match(/.{1,12}/g) || []; chunks.slice(0, 2).forEach((line, j) => this.text(line, x, 149 + j * 17, 12)); this.box(x - 74, 184, 148, 5, '#583f33'); this.box(x - 74, 184, 148 * v.patience / v.max, 5, v.patience > 30 ? '#86ac56' : '#d9633e'); this.hit('customer:' + v.id, x - 97, 105, 194, 210); });
+        g.customers.forEach((v, i) => { const x = 400 + i * 220; const bob = Math.sin(this.clock * 2 + i) * 2; this.person(x, 226 + bob, v.look, .88, v.patience / v.max); this.box(x - 97, 105, 194, 75, v.id === g.next ? '#fff3d8' : '#eadbbf', 12); this.text(v.id === g.next ? '正在制作' : '点击接单', x, 127, 16, '#a2542b'); const label = recipeText(v); const chunks = this.wrap(label, 180, 12); chunks.slice(0, 2).forEach((line, j) => this.text(line, x, 149 + j * 17, 12, '#42281e', 'center', 180)); this.box(x - 74, 184, 148, 5, '#583f33'); this.box(x - 74, 184, 148 * v.patience / v.max, 5, v.patience > 30 ? '#86ac56' : '#d9633e'); this.hit('customer:' + v.id, x - 97, 105, 194, 210); });
         const refill = g.inventory.refill;
         const bossX = refill ? 1127 - Math.sin((5 - refill) / 5 * Math.PI) * 90 : 1170;
         this.person(bossX, 235 + Math.sin(this.clock * 3) * 2, 2, .76);
@@ -129,7 +140,7 @@ export class Scene {
             if (!count)
                 this.text('空', x + 41, y + 23, 17, '#6b604c');
             this.box(x - 3, y + 38, 90, 22, '#ffedc9', 4);
-            this.text(`${label} ${count}`, x + 41, y + 54, 14);
+            this.text(`${label} ${count}`, x + 41, y + 54, 14, '#42281e', 'center', 86);
             this.hit('food:' + id, x - 12, y - 16, 106, 77);
         }
         const p = g.cooking;
@@ -206,7 +217,7 @@ export class Scene {
         else {
             this.box(x - 19, 565, 38, 42, '#657169', 5);
             this.box(x - 24, 559, 48, 7, '#adb7a6', 3);
-        } this.text(label, x, 641, 15, '#fff0cc'); this.hit(id, x - 52, 550, 104, 100); });
+        } this.text(label, x, 641, 15, '#fff0cc', 'center', 100); this.hit(id, x - 52, 550, 104, 100); });
         this.box(22, 603, 245, 58, '#fff0d9e8', 8);
         this.text('今日小账', 44, 625, 14, '#985e38', 'left');
         this.text(`出餐 ${g.served}  ·  离开 ${g.lost}`, 44, 649, 18, '#503929', 'left');
@@ -228,22 +239,23 @@ export class Scene {
         const help = p.stage === 'empty' ? '点击左侧面糊开始' : p.stage === 'batter' ? `按住铁板拖动摊开 ${Math.round(p.spread * 100)}%` : p.stage === 'egg' ? '加鸡蛋、葱花和芝麻 → 点铲子翻面' : p.stage === 'flipped' ? `照订单加配料 · 拖动刷酱 ${Math.round(p.sauce * 100)}% → 折叠` : p.stage === 'folded' ? '点击纸袋打包' : '点击目标顾客交餐';
         this.box(285, 663, 970, 44, '#452b22ed', 8);
         this.text(help, 770, 690, 18, '#ffe3ae');
-        this.text(g.message.slice(0, 35), 640, 353, 18, '#fff5d7');
+        this.text(g.message, 640, 353, 18, '#fff5d7', 'center', 1050);
         if (g.target && g.started && !g.ended) {
-            this.box(409, 365, 461, 32, '#fff4dcf2');
-            this.text(recipeText(g.target) + (g.target.noCilantro ? ' · 不要香菜' : ''), 640, 387, 13);
+            this.box(404, 365, 472, 55, '#fff4dcf2');
+            const order = recipeText(g.target) + (g.target.noCilantro ? ' · ' + t('不要香菜') : '');
+            this.wrap(order, 454, 12).forEach((line, i) => this.text(line, 640, 381 + i * 16, 12, '#42281e', 'center', 454));
         }
         if (!g.started || g.ended) {
             this.box(0, 0, 1280, 720, '#261c1ac9', 0);
             this.box(355, 160, 570, 398, '#fff0d8', 22);
-            this.text(g.ended ? '今日收摊' : '街角烟火 · 煎饼摊传奇', 640, 218, 32);
+            this.text(g.ended ? '今日收摊' : '街角烟火 · 煎饼摊传奇', 640, 218, 32, '#42281e', 'center', 530);
             if (g.ended) {
                 this.text(`收入 ¥${g.money}  ·  出餐 ${g.served} 份`, 640, 280, 25);
                 this.text(`顾客满意度 ${g.satisfaction} / 100`, 640, 322, 23);
                 this.text('营业成绩已保存在本机（浏览器允许时）', 640, 368, 16);
             }
             else {
-                ['1  点击面糊，按住铁板拖动摊匀', '2  加鸡蛋 → 铲子翻面 → 按订单加配料', '3  拖动刷酱 → 折叠 → 装袋 → 点顾客', '老板能补满食材；看到偷吃的手，快拍！'].forEach((s, i) => this.text(s, 640, 276 + i * 42, 19));
+                ['1  点击面糊，按住铁板拖动摊匀', '2  加鸡蛋 → 铲子翻面 → 按订单加配料', '3  拖动刷酱 → 折叠 → 装袋 → 点顾客', '老板能补满食材；看到偷吃的手，快拍！'].forEach((s, i) => this.text(s, 640, 276 + i * 42, 19, '#42281e', 'center', 530));
             }
             this.box(495, 464, 290, 59, '#aa492d', 12);
             this.text(g.ended ? '再开一天' : '开摊，来一张热乎的', 640, 502, 23, '#fff0cd');

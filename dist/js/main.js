@@ -1,7 +1,21 @@
+import { getLanguage, setLanguage, t } from './i18n.js';
 import { Game, Cooking } from './systems/game.js';
 import { Sound } from './systems/audio.js';
 import { Scene } from './render/scene.js';
 const canvas = document.querySelector('#game');
+const languageButton = document.querySelector('#language');
+const titleKey = document.title, ariaKey = canvas.getAttribute('aria-label'), helpElement = document.querySelector('#accessible'), helpKey = helpElement.textContent;
+function updateLanguage() { document.documentElement.lang = getLanguage() === 'en' ? 'en' : 'zh-CN'; document.title = t(titleKey); canvas.setAttribute('aria-label', t(ariaKey)); helpElement.textContent = t(helpKey); languageButton.textContent = getLanguage() === 'zh' ? 'English / 中文' : '中文 / English'; languageButton.setAttribute('aria-label', getLanguage() === 'zh' ? 'Switch to English' : '切换为中文'); }
+try {
+    if (localStorage.getItem('jianbing-legend:language') === 'en')
+        setLanguage('en');
+}
+catch { }
+updateLanguage();
+languageButton.addEventListener('click', () => { setLanguage(getLanguage() === 'zh' ? 'en' : 'zh'); updateLanguage(); try {
+    localStorage.setItem('jianbing-legend:language', getLanguage());
+}
+catch { } });
 const scene = new Scene(canvas), sound = new Sound();
 let game = new Game(), dragging = false, last = { x: 0, y: 0 }, saved = false;
 function position(e) { const r = canvas.getBoundingClientRect(); return { x: (e.clientX - r.left) * 1280 / r.width, y: (e.clientY - r.top) * 720 / r.height }; }

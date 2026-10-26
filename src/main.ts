@@ -1,7 +1,15 @@
+import {getLanguage,setLanguage,t} from './i18n.js';
 import {Game,Cooking,Food} from './systems/game.js';
 import {Sound} from './systems/audio.js';
 import {Scene} from './render/scene.js';
 const canvas=document.querySelector<HTMLCanvasElement>('#game')!;
+const languageButton=document.querySelector<HTMLButtonElement>('#language')!;
+const titleKey=document.title,ariaKey=canvas.getAttribute('aria-label')!,helpElement=document.querySelector<HTMLElement>('#accessible')!,helpKey=helpElement.textContent!;
+function updateLanguage(){document.documentElement.lang=getLanguage()==='en'?'en':'zh-CN';document.title=t(titleKey);canvas.setAttribute('aria-label',t(ariaKey));helpElement.textContent=t(helpKey);languageButton.textContent=getLanguage()==='zh'?'English / 中文':'中文 / English';languageButton.setAttribute('aria-label',getLanguage()==='zh'?'Switch to English':'切换为中文');}
+try{if(localStorage.getItem('jianbing-legend:language')==='en')setLanguage('en');}catch{}
+updateLanguage();
+languageButton.addEventListener('click',()=>{setLanguage(getLanguage()==='zh'?'en':'zh');updateLanguage();try{localStorage.setItem('jianbing-legend:language',getLanguage());}catch{}});
+
 const scene=new Scene(canvas), sound=new Sound();let game=new Game(),dragging=false,last={x:0,y:0},saved=false;
 function position(e:PointerEvent){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*1280/r.width,y:(e.clientY-r.top)*720/r.height};}
 canvas.addEventListener('pointerdown',e=>{sound.start();const p=position(e);last=p;scene.pointer=p;const hit=[...scene.hits].reverse().find(h=>p.x>=h.x&&p.x<h.x+h.w&&p.y>=h.y&&p.y<h.y+h.h);if(!game.started||game.ended){if(hit?.id==='start'){game=new Game();game.started=true;game.newCustomer();game.spawn=9;saved=false;}return;}if(hit){const id=hit.id;if(id.startsWith('food:'))game.message=game.cooking.add(id.slice(5) as Food,game.inventory);else if(id.startsWith('customer:')){game.next=Number(id.split(':')[1]);if(game.cooking.stage==='bagged'){game.serve();sound.tone(660,.2);}else game.message='已接单，请看铁板上方的完整订单';}else if(id==='boss')game.message=game.inventory.request()?'老板：来了来了，五秒补齐！':'老板：库存还满着，或正在路上！';else if(id==='flip')game.message=game.cooking.flip()?'翻面完成，开始刷酱加配料':'先摊匀并加至少一个鸡蛋';else if(id==='fold')game.message=game.cooking.fold()?'折起来，香气包住！':'先翻面；加酱后请拖动刷匀';else if(id==='bag')game.message=game.cooking.bag()?'装袋完成，点击顾客交餐':'先折叠好，再装袋';else if(id==='discard'){game.cooking=new Cooking();game.message='清空铁板，已用食材不会退回';}else if(id==='slap'){game.slap();sound.tone(100,.15,.12);}else if(id==='sound')sound.muted=!sound.muted;else if(id==='scrape')game.message='直接按住铁板移动，摊饼或刷酱';sound.tone(310,.05);}

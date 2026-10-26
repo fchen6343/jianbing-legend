@@ -1,41 +1,56 @@
-# 煎饼摊传奇 · 街角烟火
+# 煎饼摊传奇 · 街角烟火 / Jianbing Legend · Street Corner
 
-第一视角中文煎饼摊经营网页游戏。当前为 v0.3.0 可玩垂直切片，尚未达到商业游戏的美术和动画完成度。独立于 space-cat-dash，旧版本未覆盖。
+第一视角煎饼摊经营网页游戏，当前版本 v0.3.1。游戏支持中英文切换，并记住当前浏览器的选择。
+A first-person Chinese pancake-stall game, currently v0.3.1. Switch between Chinese and English at any time; the browser remembers your choice.
 
-## 试玩
+## 试玩 / Play
 
-下载项目后，直接用桌面 Chrome / Edge 打开根目录 `play.html`，无需安装、联网或服务器。该文件内嵌原创背景及编译后的游戏代码。推荐横屏。
+在线地址 / Online: https://fchen6343.github.io/jianbing-legend/
 
-开发：安装 Node.js 后执行 `npm install`、`npm test`。`npm run dev` 用 Python 3 启动 dist 目录；打开 http://localhost:5173。当前环境不能监听本地端口，所以本轮没有完成真实浏览器试玩。
+离线：下载项目，用桌面 Chrome / Edge 打开根目录 `play.html`，无需安装或服务器。推荐横屏。
+Offline: download the project and open root-level `play.html` in desktop Chrome or Edge. No installation or server is required. Landscape is recommended.
 
-## 操作
+开发：安装 Node.js 后执行 `npm ci`、`npm test`。`npm run dev` 使用 Python 3 启动 dist 目录，访问 http://localhost:5173 。
+Development: install Node.js, run `npm ci`, then `npm test`. `npm run dev` serves `dist` using Python 3 at http://localhost:5173 .
 
-1. 点击顾客选择订单，查看铁板上方的完整清单。
-2. 点击面糊，在铁板范围内按住拖动至摊匀。
-3. 按订单加入一个或两个鸡蛋，可撒葱花、芝麻，然后点击铲子翻面。
-4. 点击所需酱料、肉类和小料；在饼上拖动刷匀酱料。
-5. 点击折叠，等折叠完成后点纸袋，再点击顾客交餐。
-6. 老板补货耗时五秒。伸出的手可点击拍回，放任会损失最多两份库存。
-7. 三分钟结算；配料不符只收到 ¥3。丢弃不返还食材。右上“声”切换声音。
+## 操作 / Controls
 
-## 架构
+| 步骤 / Step | 中文 | English |
+| --- | --- | --- |
+| 1 | 点击顾客接单，查看铁板上方完整清单。 | Select a customer and read the full order above the griddle. |
+| 2 | 点击面糊，在铁板内按住拖动至摊匀。 | Click batter, then drag inside the griddle until evenly spread. |
+| 3 | 按订单加入一或两个鸡蛋，可加葱花、芝麻，然后点击铲子翻面。 | Add one or two eggs as ordered, optionally add scallions or sesame, then flip. |
+| 4 | 加入指定酱料、肉类、小料，在饼上拖动刷匀酱料。 | Add the requested sauces, proteins and toppings; drag to spread sauce. |
+| 5 | 折叠，等待动作完成，装袋，点击顾客交餐。 | Fold, wait for the fold to finish, bag, then click a customer to serve. |
+| 6 | 点击老板补货，耗时五秒；拍回伸来的手，否则最多损失两份库存。 | Ask the boss to restock in five seconds. Tap sneaking hands or lose up to two portions. |
+| 7 | 三分钟收摊；错单只付 ¥3，丢弃不返还食材。右上“声 / SFX”切换声音。 | Each day lasts three minutes. Wrong orders pay ¥3; discarded ingredients are not refunded. Use “声 / SFX” to toggle sound. |
+| 8 | 左下角 English / 中文 随时切换语言，不重置当前游戏。 | Use English / 中文 at bottom left without resetting the current game. |
 
-- `src/systems/game.ts`：库存、烹饪状态机、随机订单、耐心、偷吃、收入与满意度。
-- `src/systems/audio.ts`：需首次点击激活的 Web Audio 简易旋律和操作提示音。
-- `src/render/scene.ts`：1280×720 第一视角场景、原创程序绘制人物/食材、命中区域。
-- `src/main.ts`：Pointer Events 输入、帧循环、本机结算记录。
-- `assets/street.png`：本项目生成的原创卡通街景背景。
-- `tools/build.mjs`：生成 dist 和离线单文件；只支持本项目当前使用的具名导入形式。
-- `tests/game.test.mjs`：真实规则测试，不依赖页面 mock。
+## 架构 / Architecture
 
-实际技术是 TypeScript 5.8 + Canvas 2D。Phaser/Vite 下载因环境网络限制失败，未假装接入；后续可替换渲染与构建层。暂无第三方运行时依赖，暂无广告、付费服务或数据采集。
+| 路径 / Path | 中文 | English |
+| --- | --- | --- |
+| `src/systems/game.ts` | 库存、烹饪状态机、订单、耐心、偷吃、收入与满意度。 | Inventory, cooking states, orders, patience, theft, revenue and ratings. |
+| `src/systems/audio.ts` | 首次点击后激活的 Web Audio 旋律与提示音。 | Web Audio melody and cues, activated after the first click. |
+| `src/render/scene.ts` | 1280×720 场景、人物、食材及命中区域。 | The 1280×720 scene, characters, ingredients and hit regions. |
+| `src/main.ts` | 指针输入、帧循环、结算存储和语言按钮。 | Pointer input, frame loop, local results and the language button. |
+| `src/i18n.ts` | 中英文文案、食材名和动态消息翻译。 | Chinese/English UI, ingredient names and dynamic messages. |
+| `assets/street.png` | 本项目生成的卡通街景背景。 | The generated cartoon street background. |
+| `tools/build.mjs` | 生成 dist、离线单文件和 Pages 入口。只支持当前具名导入形式。 | Builds dist, offline HTML and the Pages entry point; supports the current named-import format. |
+| `tests/*.test.mjs` | 玩法规则、翻译及发布文件检查。 | Gameplay, translation and deployment-output checks. |
 
-## 验证与边界
+实际技术为 TypeScript 5.8 + Canvas 2D，暂无第三方运行时依赖、广告、付费服务或数据采集。原计划 Phaser/Vite 因当时下载受限未接入。
+The actual stack is TypeScript 5.8 and Canvas 2D, with no third-party runtime, ads, paid services or data collection. Phaser/Vite were not added because downloads were blocked during the original build.
 
-TypeScript 严格编译通过；4 项测试覆盖双蛋全流程、刷酱/折叠门槛、库存补货、打手与失窃、错误订单和收摊。
+## 发布与验证 / Publishing and validation
 
-未验证：实际浏览器视觉、触屏手感、帧率和音频兼容性。现阶段人物、食材为原创 Canvas 插画，精度与生成背景仍有差距；翻面、加蛋、补货搬运动作与顾客入场/离场还需更完整的动画。没有真实物理蛋液或专业录制音效。存档目前只记录最近一天结算，尚无长期升级系统。街道环境暂为静态。
+GitHub Pages 使用 main 分支的 `/docs`；每次 `npm run build` 会把最新的离线游戏同步到 `docs/index.html`。提交更新时应包括构建产物。
+GitHub Pages serves `/docs` on `main`. Each `npm run build` copies the latest standalone game to `docs/index.html`. Commit generated outputs with source changes.
 
-项目仓库：https://github.com/fchen6343/jianbing-legend 。上传核验记录见根目录 DEVLOG.md；GitHub Pages 尚未启用。
+`npm test` 执行严格编译和自动测试。语言切换覆盖界面、订单、食材、提示、结算、页面标题与辅助文字；保留背景图片里的装饰性中文招牌。
+`npm test` runs strict compilation and automated tests. Switching language updates UI, orders, ingredients, hints, results, page title and accessible text. Decorative Chinese shop signs remain in the background artwork.
 
-开发记录见 [DEVLOG.md](../DEVLOG.md)，需求差距见 [ROADMAP.md](ROADMAP.md)。
+尚未完成全面手机、触屏、帧率和音频兼容验收；人物、食材的程序插画与背景风格仍有差距。动作需要完善，无真实蛋液物理或专业录音；存档仅记录最近一天结算，暂无长期升级，街道背景静态。
+Full mobile, touch, frame-rate and audio compatibility testing remains outstanding. Procedural characters and ingredients still differ from the background style. Animations need refinement; there is no egg-fluid physics or professional audio. Storage records only the latest day, with no long-term upgrades. The street background is static.
+
+[开发日志 / Development log](../DEVLOG.md) · [路线图 / Roadmap](ROADMAP.md)

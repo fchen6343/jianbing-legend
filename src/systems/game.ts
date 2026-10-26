@@ -1,3 +1,4 @@
+import {foodLabel,getLanguage} from '../i18n.js';
 export const foods = [
  ['batter','面糊','#efcf84'],['egg','鸡蛋','#ffca46'],['scallion','葱花','#74a638'],['cilantro','香菜','#397842'],['sesame','芝麻','#f6dd9c'],['sweet','甜面酱','#814127'],['chili','辣椒酱','#ce472c'],['crisp','薄脆','#e5a243'],['ham','火腿','#d97d70'],['pork','里脊','#b97945'],['sausage','烤肠','#a94d30'],['lettuce','生菜','#83ad43'],['chicken','鸡柳','#dca154']
 ] as const;
@@ -47,4 +48,4 @@ export class Game {
  }
  get satisfaction(){return this.ratings.length?Math.round(this.ratings.reduce((a,b)=>a+b,0)/this.ratings.length):100;}
 }
-export function recipeText(c:Customer){return foods.filter(([id])=>id!=='batter'&&c.recipe[id]).map(([id,label])=>`${c.recipe[id]===2?'双份':''}${label}`).join(' · ');}
+export function recipeText(c:Customer){return foods.filter(([id])=>id!=='batter'&&c.recipe[id]).map(([id,label])=>`${c.recipe[id]===2?(getLanguage()==='en'?'Double ':'双份'):''}${foodLabel(id)}`).join(' · ');}

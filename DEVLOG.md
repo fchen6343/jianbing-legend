@@ -1,4 +1,18 @@
-# 开发日志
+# 开发日志 / Development log
+
+## 2026-10-26 · v0.3.1 · 双语与在线发布 / Bilingual UI and online publishing
+
+- 新增中文 / English 切换，保存语言偏好；在营业中切换不会重置进度，已有消息和订单也会即时翻译。
+  Added Chinese/English switching with a saved language preference. Switching during play preserves progress and translates active messages and orders.
+- 覆盖食材、订单、库存、补货、偷吃提示、工具、步骤、统计、开场、结算、页面标题和辅助说明。背景图片中的中文招牌保留为装饰。
+  Covers ingredients, orders, inventory, restocking, theft hints, tools, steps, statistics, start/results screens, page title and accessible instructions. Chinese signs in the background remain decorative artwork.
+- 订单按当前语言换行，完整订单栏加高，长英文标签限定宽度。README、项目说明、路线图和开发日志提供中英文。
+  Orders wrap by language, the full-order panel is taller and English labels have width limits. README, guide, roadmap and development log provide both languages.
+- 构建会同时生成 docs/index.html 和 docs/.nojekyll，使用 GitHub Pages 的 main /docs 发布源；保留根目录与 dist 的开发方式。
+  Builds generate docs/index.html and docs/.nojekyll for GitHub Pages from main /docs, retaining the root and dist development layout.
+- 自动测试：严格编译、4 项原有玩法测试及 2 项双语 / 发布文件测试通过。全面手机、音频和一整局操作验收仍待完成。
+  Automated validation: strict compilation, four existing gameplay tests and two language/deployment-output tests pass. Full mobile, audio and complete-day manual review remains outstanding.
+
 
 ## 2026-10-26 · v0.3.0 · 恢复并补齐 GitHub 上传
 
@@ -54,3 +68,25 @@ npm 无法解析 registry.npmjs.org，Phaser/Vite 未安装。使用已缓存的
 ### 下轮重点
 
 先完成浏览器实测并修复布局/手感，再统一人物与食材美术、补全动作和街道动态。不要将本版本描述成已达到《沙威玛传奇》成品质感。
+
+## English record of earlier entries
+
+### 2026-10-26 · v0.3.0 · GitHub upload recovery
+
+Reused https://github.com/fchen6343/jianbing-legend without creating another repository. Before the upload, main was `6e80df2b1fe697914e8db146744ee73a793cad59`; its complete tree contained only README.md. Detached blobs, if previously created, were not committed files. The original README content and blob SHA `efb2f268302852c35b90e2d38e08a6bc6c1a00bf` were preserved in that upload.
+
+Recovered 22 files from jianbing-legend-v0.3.0.zip. Moved the detailed guide to docs/PROJECT_GUIDE.md, corrected relative links and repository status, added the other 21 original files and included package-lock.json for reproducible dependencies. TypeScript 5.8.2 was installed from cache. `npm test` passed strict compilation, the standalone build and all four gameplay tests. Rebuilt play.html, dist modules and the background matched the archive byte for byte.
+
+That commit added missing paths using the existing branch as parent, with an expected-head guard against concurrent updates. The final remote tree was verified by path, size and blob SHA: 24 files, including 23 additions, at commit `ae9ab628d557b6a154cbdc016dab362ac32deed7`. No node_modules or archive was uploaded. Pages had not yet been enabled at that stage, and browser, touch, audio and frame-rate acceptance remained outstanding.
+
+### 2026-10-26 · v0.3.0 · First-person reconstruction
+
+The older jianbing-stall version used page cards and emoji ingredients, missing the feeling of standing behind a real stall. It was retained as reference and the new game was placed in its own jianbing-legend directory.
+
+The new implementation separated gameplay, rendering, audio and input in a strict TypeScript project. A generated warm-toned Chinese street background, continuous wooden worktop, central griddle, side ingredient containers and front tools formed the 16:9 first-person scene. Thirteen ingredients had visible inventory levels. Three character designs supported up to three customers, random orders, double eggs, no-cilantro requests and order selection.
+
+The cooking loop included pouring batter, dragging to spread, adding eggs, flipping, adding ingredients, dragging to brush sauce, folding, bagging and serving. Rendering included pancake texture, egg and ingredient layers, brush strokes, steam and a folding transition. The boss restocked after a five-second movement; customers could reach for ingredients and had to be stopped in time. Three-minute days included recipe validation, patience, revenue, rating, results and replay. Click-activated synthesized audio and a locally stored latest-day result were included. Both standalone play.html and modular dist output were built.
+
+Strict compilation and four gameplay tests passed. Real browser acceptance was not completed: local ports and local-file navigation were blocked in that environment. Rules tests were not treated as visual or interaction tests. The npm registry was unavailable at the time, so Phaser/Vite were not installed; the actual renderer used Canvas 2D and cached TypeScript 5.8.2. GitHub publishing was originally blocked at login and no repository or live URL was falsely recorded as complete.
+
+The next priorities were browser testing, layout and input fixes, consistent character and ingredient artwork, fuller animation and a moving street. The prototype was not described as matching the finished quality of Shawarma Legend.
