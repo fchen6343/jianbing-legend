@@ -26,6 +26,17 @@ Strict compilation and eight automated tests passed: existing gameplay, bilingua
 Design-plugin discovery confirmed Figma is installed. Existing image generation, Canvas and GitHub tools were sufficient; no extra plugin or paid service was purchased, and Figma was not claimed as the source of this UI. Full commercial-quality animation, audio and long-term progression comparable to Shawarma Legend remain future work.
 
 
+### 线上试玩验收 / Live browser acceptance
+
+- v0.4.0 提交：410addd6979363cbc946d871a2e0ae6a76f02405；Pages 部署成功：https://github.com/fchen6343/jianbing-legend/actions/runs/40330252515 。37 个远端文件的路径、大小及 Blob SHA 均核对通过。
+  Release commit: 410addd6979363cbc946d871a2e0ae6a76f02405. Successful Pages deployment: https://github.com/fchen6343/jianbing-legend/actions/runs/40330252515 . All 37 remote paths, sizes and blob SHAs matched.
+- 真实 Chrome 检查了中英文开场与营业界面、语言切换、声音按钮、名称提示及暂停 / 继续；未观察到游戏自身的控制台错误。
+  Checked Chinese/English start and gameplay screens, language switching, sound controls, name tooltips and pause/resume in Chrome. No game-origin console errors were observed.
+- 使用真实指针操作完成一张正确订单：面糊、拖动摊匀、加蛋、翻面、香菜、甜面酱、辣椒酱、薄脆、火腿、拖动刷酱、折叠、装袋、交餐。实际收到 ¥15，满意度 97%，完成订单数 1。由此验证了规则之外的输入、图标核对与成功交餐路径。
+  Completed one correct order using real pointer input: batter, spreading, egg, flip, cilantro, sweet sauce, chili sauce, crisp, ham, sauce brushing, fold, bag and service. Actual result: ¥15, 97% rating, one served order. This verifies input, checklist updates and successful service beyond unit tests.
+- 本次没有宣称完成整局三分钟结算、手机真机或音频听感验收；这些仍需后续实际测试。
+  A full three-minute day, physical mobile-device testing and listening-based audio acceptance were not claimed and remain pending.
+
 ## 2026-10-26 · v0.3.1 · 双语与在线发布 / Bilingual UI and online publishing
 
 - 新增中文 / English 切换，保存语言偏好；在营业中切换不会重置进度，已有消息和订单也会即时翻译。
