@@ -245,3 +245,8 @@ A1 replaces a distance counter with circular coverage. Batter spreads in covered
 
 28 项自动测试通过，包含真实绕圈输入的整单测试和新增手势防绕过检查。测试通过并不证明好玩；十单手感评估、触屏，以及后续打蛋/折叠/设备阶段仍待验收。
 All 28 tests pass, including complete orders using real circular input and gesture misuse checks. This does not establish enjoyment. The ten-order feel review, touch checks and subsequent egg/fold/equipment increments remain pending.
+
+### A1 上线整单检查 / A1 live whole-order check
+
+Pages 工作流 `40468309475` 成功。在 Chrome 中从倒糊开始，先铺开部分区域、再完成绕圈，随后完成双蛋、抹蛋、葱花、翻面、甜酱、刷匀、果篦儿、折叠、装袋及正确交付，教程正常结束。这里只记录一张教程整单，不冒充十单手感或完整 50 天验收。
+Pages run `40468309475` succeeded. In Chrome, spread a partial region then completed circular coverage and the entire two-egg tutorial through filling, folding, bagging and correct service. The tutorial ended normally. This is one practice order, not the ten-order feel review or fifty-day acceptance.
