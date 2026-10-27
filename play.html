@@ -990,7 +990,7 @@ class Scene {
             const x = Math.min(1178, Math.max(102, h.x + h.w / 2));
             this.panel(x - 84, h.y - 32, 168, 25, '#332d25f5', 8);
             this.text(label, x, h.y - 15, 12, '#fff0cf', 'center', 154);
-            if (tip.startsWith('food:')) {
+            if (tip.startsWith('food:') && !g.tutorial) {
                 this.panel(x - 58, h.y - 114, 116, 78, '#fff1dbeF', 10);
                 this.foodArt(tip.split(':')[1], x - 44, h.y - 111, 88, 51);
                 this.text('点击加一份', x, h.y - 44, 10, '#72503b');
@@ -1171,6 +1171,7 @@ document.querySelector('#shop-body').addEventListener('click', e => {
     if (button.dataset.preview) {
         previewItem = button.dataset.preview;
         renderShop();
+        document.querySelector('#decor-preview').scrollIntoView({ block: 'center', behavior: 'smooth' });
         return;
     }
     const id = button.dataset.item;

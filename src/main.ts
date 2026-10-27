@@ -38,7 +38,7 @@ document.querySelector('#shop-open')!.addEventListener('click',()=>{resumeAfterS
 function closeShop(){previewItem='';shopDialog.close();if(resumeAfterShop)game.paused=false;toolbar();}
 document.querySelector('#shop-close')!.addEventListener('click',closeShop);
 shopDialog.addEventListener('cancel',e=>{e.preventDefault();closeShop();});
-document.querySelector('#shop-body')!.addEventListener('click',e=>{const button=(e.target as HTMLElement).closest('button');if(!button||button.disabled)return;if(button.dataset.preview){previewItem=button.dataset.preview;renderShop();return;}const id=button.dataset.item;
+document.querySelector('#shop-body')!.addEventListener('click',e=>{const button=(e.target as HTMLElement).closest('button');if(!button||button.disabled)return;if(button.dataset.preview){previewItem=button.dataset.preview;renderShop();document.querySelector('#decor-preview')!.scrollIntoView({block:'center',behavior:'smooth'});return;}const id=button.dataset.item;
  if(id){if(profile.owned.includes(id)){profile.equipped=profile.equipped.includes(id)?profile.equipped.filter(v=>v!==id):[...profile.equipped,id];}else purchase(profile,id);}
  if(button.dataset.action==='upgrade')openShop(profile);
  if(!game.started||game.ended){if(button.dataset.action==='mode')profile.mode=profile.mode==='classic'?'tianjin':'classic';if(button.dataset.festival)profile.festival=button.dataset.festival as Festival;}

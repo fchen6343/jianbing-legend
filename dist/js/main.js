@@ -80,6 +80,7 @@ document.querySelector('#shop-body').addEventListener('click', e => {
     if (button.dataset.preview) {
         previewItem = button.dataset.preview;
         renderShop();
+        document.querySelector('#decor-preview').scrollIntoView({ block: 'center', behavior: 'smooth' });
         return;
     }
     const id = button.dataset.item;

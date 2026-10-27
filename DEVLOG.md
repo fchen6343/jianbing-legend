@@ -176,3 +176,8 @@ Purchases, reward thresholds, charm and the five-person queue are covered by aut
   The shop shows the remaining opening cost. Every decoration has a free scene preview that does not change money or saves. Touch controls are enlarged and ingredient/tool hit regions are checked for overlap.
 - 严格编译和十五项测试通过，含完整十二步教学、份数/经济验证、刷酱断笔与命中几何；使用真实 Scene 渲染器生成并检查原生画布预览。本轮浏览器连接工具未提供，因此不声称完成新版浏览器或实体手机验收。
   Strict compilation and all fifteen tests pass, including the complete tutorial, quantities/economy, separate sauce strokes and hit geometry. Native previews use the actual Scene renderer. Browser connection tools were unavailable this round; new browser and physical-mobile acceptance is not claimed.
+
+### v0.6.0 浏览器补验 / Browser follow-up
+
+浏览器工具恢复后，在 Chrome 实际完成十二步教程：双蛋 2/2、葱花 1/1、翻面背面隐藏、连续刷酱、果篦儿 1/1、折叠、装袋及正确交餐，步骤未卡住。装饰预览选择月兔灯，钱包保持 ¥12；Pages 发布工作流 `40454774631` 成功。随后修复教程大图遮挡，并让点击装饰预览自动滚到画面。实体手机仍未验收。
+After browser tools returned, completed all twelve tutorial actions in Chrome, including 2/2 eggs, 1/1 scallions, hidden back side, continuous sauce, 1/1 guobier, folding, bagging and correct service without blocked steps. Selected the moon-lantern preview and the wallet stayed at ¥12. Pages run `40454774631` succeeded. A follow-up removes tutorial preview overlap and scrolls decoration previews into view. Physical-mobile testing remains outstanding.
