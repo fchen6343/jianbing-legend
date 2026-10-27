@@ -1,5 +1,12 @@
 # 更新记录 / Changelog
 
+## 0.13.0
+
+- 独立厨具屋、免费手动/自动试用台、¥550 旋转刮板、营业前开关、保存与收回。\
+  Workshop, free manual/automatic trial, ¥550 rotor, preparation switch, persistence and retraction.
+- 保留打蛋/配料/折叠手动；51 项测试通过。\
+  Eggs, fillings and folds remain manual; 51 tests pass.
+
 ## 0.12.0
 
 - 三边手动拖折、未完成回落、退回上一折、按实际馅料装袋；完整双语教程同步。\

@@ -1,4 +1,5 @@
 import { freshProfile, patienceMultiplier, rewardService } from './progress.js';
+import { tickRotor } from './equipment.js';
 import { foodLabel } from '../i18n.js';
 export const foods = [
     ['batter', '面糊', '#efcf84'], ['egg', '鸡蛋', '#ffca46'], ['scallion', '葱花', '#74a638'], ['cilantro', '香菜', '#397842'], ['sesame', '芝麻', '#f6dd9c'], ['sweet', '甜面酱', '#814127'], ['chili', '辣椒酱', '#ce472c'], ['crisp', '果篦儿', '#e5a243'], ['ham', '火腿', '#d97d70'], ['pork', '里脊', '#b97945'], ['sausage', '烤肠', '#a94d30'], ['lettuce', '生菜', '#83ad43'], ['chicken', '鸡柳', '#dca154'], ['youtiao', '果子', '#dba751']
@@ -43,6 +44,8 @@ export class Cooking {
         this.foldStep = 0;
         this.foldProgress = 0;
         this.foldDragging = false;
+        this.rotorAngle = 0;
+        this.rotorDeploy = 0;
     }
     get eggSpread() { return this.eggLayers.length ? Math.min(...this.eggLayers.map(e => e.spread)) : 0; }
     add(id, inventory) {
@@ -347,6 +350,7 @@ export class Game {
         }
         this.time = Math.max(0, this.time - dt);
         this.inventory.tick(dt);
+        tickRotor(this, dt);
         this.cooking.tick(dt);
         this.spawn -= dt;
         if (this.customers.length < (this.profile.shop ? 5 : 3) && this.spawn <= 0) {

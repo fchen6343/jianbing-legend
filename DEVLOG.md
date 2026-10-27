@@ -300,3 +300,34 @@ Validation: strict build and 42 tests passed, including eight folding regression
 
 范围：A1/A2/A3 操作增量，不是完整版。下一项为 A4 首台真实、可关闭的旋转刮板；八设备、三存档、独立场景、完整经济/剧情/50 天仍待实现。
 Scope: A1/A2/A3 interaction increments, not the full game. Next is A4, the first visible switchable rotating spreader. Eight devices, three saves, separate scenes and full economy/story/fifty days remain outstanding.
+
+
+### A3 线上验收 / A3 live acceptance
+
+- 提交 48f06cabe17164f1b03583487ea1a532ae406545；Pages 40481525564 成功，61 个远端文件与本地路径、大小、Git Blob SHA 一致；浏览器页面版本元信息为 0.12.0。
+  Commit 48f06cabe17164f1b03583487ea1a532ae406545; Pages 40481525564 succeeded. All 61 remote files matched local paths, sizes and Git blob SHAs. Browser version metadata reported 0.12.0.
+- Chrome 完成双蛋整单：手动拿/敲/拉开两蛋、逐蛋涂抹、翻面、甜酱、果篦儿、左/右/下三边拖折、装袋、交餐。1 单正确交付，满意度 90%，练习收入 ¥0。
+  Chrome completed one real double-egg order through manual eggs, coating, flip, sauce, guobier, three directed folds, bag and service. One correct order, 90% rating, ¥0 practice income.
+- 实测左边半折松手回落、错误尝试右边、提前点纸袋都不跳步；完整左折后暂停、切中文、继续、退回上一折、重折三边均走通。装袋只露出实际果篦儿，未再出现通用鸡柳图。
+  Tested partial release, wrong-edge input and early bagging without skipping steps; left fold, pause, Chinese switching, resume, undo and all three folds worked. Bagging showed the actual guobier instead of generic chicken art.
+- 刷新后钱包 ¥30、魅力 13、开店及语言保留；当前铁板按现有规则不恢复。没有观察到游戏来源错误，日志中仍有独立的浏览器扩展错误。
+  Reload retained wallet ¥30, charm 13, shop and language. Current-griddle recovery remains unsupported. No game-origin errors were observed; unrelated extension errors were present.
+
+## 2026-10-27 · v0.13.0 · A4 首台旋转刮板 / First real rotating spreader
+
+- 新增独立厨具屋，展示当前等级、Lv.1 实际试用外观、¥550 价格、效果、余额、确认升级及下次营业开关。只在营业前/后显示入口，制作画面不堆升级卡。
+  Added a separate workshop showing current level, working Lv.1 preview, ¥550 price, effect, wallet, confirmation and next-service switch. Its entry appears only between services; no upgrade cards crowd cooking.
+- 自动刮板有机座、立柱、铰接臂、升降轴、旋转木刮板、状态灯和轻声电机。它通过手动相同的覆盖规则逐段摊糊，约四秒完成后收回，不自动加蛋、配料、折叠或交餐。关闭后保留手动玩法；教程始终手动。
+  The device has a base, mast, hinged arm, shaft, rotating wooden blade, light and quiet motor. It uses the same spatial batter rule, finishes in about four seconds and retracts. It never adds eggs/fillings, folds or serves. Disabled devices leave manual play intact; tutorials stay manual.
+- 免费摊糊试用台可切换手动/自动、倒糊重试、暂停观察。使用隔离游戏对象和库存，不购买、不扣真实钱/库存，也不发收入。关闭后不再更新；隐藏页面自动暂停。
+  An isolated free batter trial supports manual/automatic, retry and pause. Its game/stock cannot purchase, spend real game assets or earn income. Closing stops updates; hiding the page pauses it.
+- 购买一次扣 ¥550，重复/余额不足/营业中操作拒绝；旧版 profile v1 兼容新增布尔字段，保留原钱包、装饰、活动、模式与天数。新增存档格式说明，但仍只有一档，没有冒称完成三存档。
+  Buying deducts ¥550 once; duplicates, insufficient funds and in-service changes are rejected. Optional booleans extend profile v1 without losing old wallet/decor/events/mode/days. The save format is documented; this is still one profile, not three slots.
+- 设备安装有落位和亮灯反馈；电机声音复用单个声源，停止/暂停/静音时释放。手动敲蛋音效改为即时触发，去掉旧自动落蛋遗留的延迟。
+  Installation lowers and highlights the mechanism. The quiet motor reuses one voice and releases on stop/pause/mute. Manual egg-crack sound now starts immediately, removing the old automatic-drop delay.
+
+验证：严格编译和 51 项测试通过，新增设备价格/幂等/旧档/手动开关/分区推进/收回/暂停/教程/整单以及电机资源回归。真实 Canvas 检查了厨具屋、营业中的旋转与收回。线上验收另记。
+Validation: strict build and 51 tests passed, adding equipment cost/idempotence/legacy-save/manual-switch/coverage/retraction/pause/tutorial/whole-order and motor-lifecycle regressions. Actual Canvas rendering checked workshop, working and retracted states. Live browser acceptance is recorded separately.
+
+仍未完成：另外七类厨具、完整经营中心、三存档、采购成本、自由装修、八熟客/主线/事件/五建筑/连锁/50 天，以及十单真人手感与真机触屏。
+Still pending: seven other devices, full hub, three saves, purchasing/costs, free decoration placement, eight regulars/story/events/five buildings/franchises/fifty days, ten-order human feel and physical touch.

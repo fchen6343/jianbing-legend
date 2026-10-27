@@ -1,4 +1,5 @@
 import { charm, patienceMultiplier } from '../systems/progress.js';
+import { rotorWorking } from '../systems/equipment.js';
 import { t, getLanguage, foodLabel } from '../i18n.js';
 import { foods, eggAreas } from '../systems/game.js';
 import { stationRect, toolRect, toolIds, nextAction, ingredientStatus, toolEnabled, customerX, restockPhase, clawGeometry, foldTarget } from '../ui.js';
@@ -11,6 +12,7 @@ export class Scene {
         this.foodAtlas = new Image();
         this.hands = new Image();
         this.hits = [];
+        this.upgradeAge = 0;
         this.clock = 0;
         this.pointer = { x: -100, y: -100 };
         this.dragging = false;
@@ -310,7 +312,7 @@ export class Scene {
         else if (id === 'fold') {
             this.path([[r.x + 26, r.y + 7], [r.x + 76, r.y + 7], [r.x + 68, r.y + 44], [r.x + 32, r.y + 44]], '#ecc985', '#a47242', 1.5);
             this.path([[r.x + 26, r.y + 7], [r.x + 53, r.y + 26], [r.x + 76, r.y + 7]], '#f7dba2', '#a47242', 1.5);
-            if (['folding', 'folded'].includes(p.stage))
+            if (['folding', 'folded'].includes(p.stage) && p.foldStep > 0)
                 this.text('↶', r.x + 52, r.y + 34, 27, '#80532e');
         }
         else
@@ -408,13 +410,14 @@ export class Scene {
                 c.ellipse(640, 505, 146, 65, 0, i / 16 * Math.PI * 2 + .035, (i + 1) / 16 * Math.PI * 2 - .035);
                 c.stroke();
             }
-            const a = this.clock * .9;
+            const a = rotorWorking(g) ? p.rotorAngle : this.clock * .9;
             c.fillStyle = '#fff5c1';
             c.beginPath();
             c.arc(640 + Math.cos(a) * 146, 505 + Math.sin(a) * 65, 5, 0, Math.PI * 2);
             c.fill();
             c.restore();
         }
+        this.drawRotor(g);
         this.drawFoldGuide(g);
         if (this.dragging && !p.heldEgg && ['batter', 'egg', 'flipped'].includes(p.stage)) {
             c.save();
@@ -462,9 +465,9 @@ export class Scene {
         }
         const hoverHit = [...this.hits].reverse().find(h => this.pointer.x >= h.x && this.pointer.x < h.x + h.w && this.pointer.y >= h.y && this.pointer.y < h.y + h.h);
         const tip = hoverHit?.id || (this.touchAge ? this.touchFocus : '');
-        if (tip && (tip.startsWith('food:') || tip.startsWith('order:') || toolIds.includes(tip))) {
+        if (tip && !(tip === 'fold' && p.stage === 'folding' && !p.foldStep) && (tip.startsWith('food:') || tip.startsWith('order:') || toolIds.includes(tip))) {
             const h = this.hits.find(v => v.id === tip) || { x: 550, y: 620, w: 180, h: 30 };
-            const label = tip === 'fold' && ['folding', 'folded'].includes(p.stage) ? '退回上一折' : tip.includes(':') ? foodLabel(tip.split(':')[1], g.profile.mode === 'tianjin') : ['刮板', '铲子 · 翻面', '折叠', '纸袋', '丢弃'][toolIds.indexOf(tip)];
+            const label = tip === 'fold' && ['folding', 'folded'].includes(p.stage) && p.foldStep > 0 ? '退回上一折' : tip.includes(':') ? foodLabel(tip.split(':')[1], g.profile.mode === 'tianjin') : ['刮板', '铲子 · 翻面', '折叠', '纸袋', '丢弃'][toolIds.indexOf(tip)];
             const x = Math.min(1178, Math.max(102, h.x + h.w / 2));
             this.panel(x - 84, h.y - 32, 168, 25, '#332d25f5', 8);
             this.text(label, x, h.y - 15, 12, '#fff0cf', 'center', 154);
@@ -493,6 +496,135 @@ export class Scene {
         }
         if (!g.started || g.ended || g.paused)
             this.overlay(g);
+    }
+    drawRotor(g) {
+        if (!g.profile.rotorOwned || g.tutorial)
+            return;
+        const c = this.ctx, p = g.cooking, d = p.rotorDeploy, working = rotorWorking(g), angle = p.rotorAngle;
+        c.save();
+        if (this.upgradeAge > 0)
+            c.translate(0, -85 * (this.upgradeAge / 1.2) ** 2);
+        // A parked mast, hinged arm and radial wooden blade are tied to real machine state.
+        const metal = c.createLinearGradient(880, 0, 930, 0);
+        metal.addColorStop(0, '#627973');
+        metal.addColorStop(.45, '#e5e9da');
+        metal.addColorStop(1, '#79948b');
+        this.ellipse(903, 580, 35, 9, '#1b2b2544');
+        this.box(877, 553, 53, 25, '#496b5d', 8);
+        this.box(890, 425, 23, 137, metal, 6);
+        this.box(877, 421, 51, 32, '#5c8874', 8);
+        this.ellipse(903, 437, 9, 9, '#e0dfb1');
+        const cx = 902 + (640 - 902) * d, cy = 442 + (503 - 442) * d;
+        c.lineCap = 'round';
+        c.strokeStyle = '#3e5a4c';
+        c.lineWidth = 17;
+        c.beginPath();
+        c.moveTo(899, 432);
+        c.lineTo(cx, cy - 44);
+        c.stroke();
+        c.strokeStyle = '#c0d4bd';
+        c.lineWidth = 11;
+        c.stroke();
+        this.ellipse(cx, cy - 44, 10, 8, '#447663');
+        this.ellipse(cx, cy - 44, 5, 4, '#e5db9c');
+        c.strokeStyle = '#9bb3a2';
+        c.lineWidth = 8;
+        c.beginPath();
+        c.moveTo(cx, cy - 40);
+        c.lineTo(cx, cy);
+        c.stroke();
+        this.ellipse(cx, cy, 9, 5, '#465e4d');
+        const bx = cx + Math.cos(angle) * 135 * d, by = cy + Math.sin(angle) * 58 * d, ux = -Math.sin(angle) * 30, uy = Math.cos(angle) * 13;
+        c.strokeStyle = '#65442d';
+        c.lineWidth = 9;
+        c.beginPath();
+        c.moveTo(cx, cy);
+        c.lineTo(bx, by);
+        c.moveTo(bx - ux, by - uy);
+        c.lineTo(bx + ux, by + uy);
+        c.stroke();
+        c.strokeStyle = '#c69256';
+        c.lineWidth = 5;
+        c.stroke();
+        this.ellipse(902, 568, 4, 4, working ? '#dceba0' : g.profile.rotorOn ? '#9cc37b' : '#b7aaa0');
+        if (working) {
+            this.panel(767, 581, 163, 23, '#3e6350ef', 7);
+            this.text('旋转刮板工作中', 849, 597, 10, '#fff0bd', 'center', 151);
+        }
+        c.restore();
+    }
+    drawWorkshop(g, dt) {
+        const c = this.ctx;
+        this.clock += dt;
+        this.upgradeAge = Math.max(0, this.upgradeAge - dt);
+        c.clearRect(0, 0, 1280, 720);
+        this.box(0, 0, 1280, 720, '#eed5a5', 0);
+        for (let i = 0; i < 12; i++) {
+            c.strokeStyle = '#d7b884';
+            c.lineWidth = 2;
+            c.beginPath();
+            c.moveTo(i * 118, 0);
+            c.lineTo(i * 118, 401);
+            c.stroke();
+        }
+        this.panel(34, 30, 1212, 102, '#76523b', 17);
+        this.text('厨具升级屋', 65, 76, 30, '#fff0cc', 'left', 1140);
+        this.text('免费试用台 · 只比较摊糊，不扣钱或库存', 66, 111, 17, '#efdcb3', 'left', 1140);
+        this.box(0, 394, 1280, 326, '#a77343', 0);
+        for (let i = 0; i < 7; i++)
+            this.box(0, 414 + i * 49, 1280, 3, '#875735', 0);
+        this.panel(53, 179, 278, 366, '#f8e8c4', 14);
+        this.text('手动刮板', 192, 221, 23, '#785036', 'center', 250);
+        c.save();
+        c.translate(177, 357);
+        c.rotate(-.23);
+        c.strokeStyle = '#835831';
+        c.lineCap = 'round';
+        c.lineWidth = 16;
+        c.beginPath();
+        c.moveTo(-71, 0);
+        c.lineTo(65, 0);
+        c.moveTo(0, 0);
+        c.lineTo(0, -95);
+        c.stroke();
+        c.strokeStyle = '#c29558';
+        c.lineWidth = 9;
+        c.stroke();
+        c.restore();
+        this.text('亲手绕圈摊开', 192, 432, 16, '#8b6242', 'center', 250);
+        this.text('随时可以保留手动操作', 192, 463, 13, '#8b6242', 'center', 250);
+        this.panel(969, 181, 254, 282, '#f8e8c4', 14);
+        this.text('自动旋转刮板', 1096, 224, 22, '#785036', 'center', 230);
+        this.text('Lv. 1', 1096, 265, 29, '#567d54');
+        this.text('腾出手接单、补货、拦夹子', 1096, 309, 14, '#8b6242', 'center', 230);
+        this.text('鸡蛋、配料、折叠仍由你做', 1096, 342, 14, '#8b6242', 'center', 230);
+        this.text('营业前可以关闭', 1096, 389, 16, '#567d54', 'center', 230);
+        this.ellipse(640, 525, 242, 108, '#3c3c2c55');
+        this.ellipse(640, 516, 235, 105, '#222f29');
+        this.ellipse(640, 505, 226, 96, '#3b5144');
+        this.ellipse(640, 505, 211, 89, '#293f34');
+        if (g.cooking.stage !== 'empty')
+            this.drawPancake(g.cooking);
+        this.drawRotor(g);
+        this.panel(365, 622, 572, 54, '#4d5f40', 14);
+        this.text(g.cooking.stage === 'egg' ? '摊好了，试试另一种方式' : g.profile.rotorOn ? '自动旋转摊糊，观察刮板走过的地方' : '按住铁板绕圈，亲手铺开面糊', 651, 655, 18, '#fff0c5', 'center', 544);
+        if (this.dragging && !g.profile.rotorOn && g.cooking.stage === 'batter') {
+            c.save();
+            c.beginPath();
+            c.rect(350, 405, 595, 205);
+            c.clip();
+            this.handArt(0, this.pointer.x - 55, this.pointer.y - 37, 205, 187);
+            c.restore();
+        }
+        if (this.upgradeAge > 0) {
+            const u = 1 - this.upgradeAge / 1.2;
+            for (let i = 0; i < 12; i++) {
+                const a = i / 12 * Math.PI * 2;
+                this.text('✦', 902 + Math.cos(a) * (25 + u * 70), 453 + Math.sin(a) * (20 + u * 50), 19, '#fff1a7');
+            }
+            this.panel(444, 153, 400, 40, '#527a4a', 12);
+            this.text('安装完成，下一局就能用！', 644, 179, 19, '#fff0b9', 'center', 380);
+        }
     }
     drawPancake(p) {
         const c = this.ctx;

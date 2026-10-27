@@ -1,3 +1,4 @@
+import { rotorWorking } from './systems/equipment.js';
 import { foods, theftReach, foldTargets } from './systems/game.js';
 export const griddle = { x: 640, y: 505, rx: 205, ry: 94 };
 export function insideGriddle(x, y) { return ((x - griddle.x) / griddle.rx) ** 2 + ((y - griddle.y) / griddle.ry) ** 2 <= 1; }
@@ -12,6 +13,8 @@ export function nextAction(g) {
         return eggAction(g, 2);
     if (p.stage === 'empty')
         return { step: 1, key: '倒入面糊', detail: '点击面糊壶，开始制作', focus: ['food:batter'], progress: 0 };
+    if (p.stage === 'batter' && rotorWorking(g))
+        return { step: 1, key: '自动摊开中', detail: '旋转刮板正在绕圈，可先接单或补货', focus: [], progress: p.spread };
     if (p.stage === 'batter')
         return { step: 1, key: '摊开煎饼', detail: '按住铁板绕圈移动，让面糊铺满', focus: ['scrape'], progress: p.spread };
     if (p.stage === 'egg') {

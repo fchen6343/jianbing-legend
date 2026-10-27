@@ -24,8 +24,8 @@ npm run dev
 - [开发日志 / Development log](DEVLOG.md)
 - [路线图与已知限制 / Roadmap and known limitations](docs/ROADMAP.md)
 
-当前为 v0.12.0 可玩原型，仍在迭代美术、动作与触屏体验。
-v0.12.0 is a playable prototype. Artwork, animation and touch controls are still being refined.
+当前为 v0.13.0 可玩原型，仍在迭代美术、动作与触屏体验。
+v0.13.0 is a playable prototype. Artwork, animation and touch controls are still being refined.
 
 ## v0.4.0 · 暖色手作摊位 / Warm illustrated stall
 
@@ -115,3 +115,11 @@ After filling and brushing, tap Fold. Drag the glowing left, right and bottom ed
 
 42 项自动测试通过，涵盖实际制作交餐、折错重试、暂停和中英提示；十单手感、实体触屏和真人反馈仍待验收。设备、三存档与五十天内容仍未完成。
 42 automated tests pass, including whole orders, folding recovery, pause and bilingual guidance. Ten varied orders, physical touch and human feedback remain separate gates. Equipment, three saves and fifty-day content remain unfinished.
+
+## v0.13.0 · A4 首台设备 / First working machine
+
+营业前后进入“厨具屋”，可免费比较手动/自动摊糊，暂停观察或倒糊重试；试用不影响钱和库存。¥550 购买旋转刮板后，开启则约四秒自动绕圈铺开面糊并收回，关闭则手动；开关和所有权自动保存。打蛋、配料、折叠与交餐继续由你操作，教程始终手动。
+Enter Workshop between services to compare manual/automatic batter spreading for free, pause or pour again. Trial does not change wallet/stock. Purchase the rotating spreader for ¥550: enabled, it circles and spreads in about four seconds before retracting; disabled, play manually. Ownership/switch save automatically. Eggs, fillings, folds and serving stay yours; tutorial stays manual.
+
+51 项测试通过；这是首台设备增量，另七类厨具和完整 50 天经营仍待开发。详见[当前差距](docs/REQUIREMENTS_STATUS.md)、[存档格式](docs/SAVE_FORMAT.md)。
+51 tests pass. This is the first device increment; seven other devices and the full fifty-day game remain outstanding. See the audit and save format.

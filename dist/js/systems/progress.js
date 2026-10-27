@@ -9,13 +9,15 @@ export const decorations = [
     { id: 'dragon-reward', zh: '端午奖励 · 彩绳', en: 'Dragon Boat reward · Ribbons', cost: 0, charm: 3, festival: 'dragon' },
     { id: 'autumn-reward', zh: '中秋奖励 · 星灯', en: 'Mid-Autumn reward · Stars', cost: 0, charm: 3, festival: 'autumn' }
 ];
-export function freshProfile() { return { version: 1, wallet: 0, shop: false, owned: [], equipped: [], festival: 'spring', events: { spring: 0, dragon: 0, autumn: 0 }, mode: 'classic', days: 1, tutorial: false }; }
+export function freshProfile() { return { version: 1, wallet: 0, shop: false, owned: [], equipped: [], festival: 'spring', events: { spring: 0, dragon: 0, autumn: 0 }, mode: 'classic', days: 1, tutorial: false, rotorOwned: false, rotorOn: false }; }
 export function restoreProfile(raw) { const p = freshProfile(); try {
     const v = JSON.parse(raw || 'null');
     if (!v || v.version !== 1)
         return p;
     const n = (x) => typeof x === 'number' && Number.isFinite(x) ? Math.min(1e8, Math.max(0, Math.floor(x))) : 0;
     p.wallet = n(v.wallet);
+    p.rotorOwned = v.rotorOwned === true;
+    p.rotorOn = p.rotorOwned && v.rotorOn === true;
     p.shop = v.shop === true;
     p.days = Math.max(1, n(v.days));
     p.tutorial = v.tutorial === true;

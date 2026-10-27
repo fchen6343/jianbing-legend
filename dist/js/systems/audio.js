@@ -6,6 +6,8 @@ export class Sound {
         this.beat = 0;
         this.clock = 0;
         this.voices = new Set();
+        this.motor = null;
+        this.motorGain = null;
         this.noise = null;
         this.sizzle = null;
         this.heatGain = null;
@@ -14,6 +16,7 @@ export class Sound {
     get muted() { return this.silent; }
     set muted(value) { this.silent = value; if (value) {
         this.activity(false);
+        this.motorActivity(false);
         for (const voice of this.voices) {
             try {
                 voice.stop();
@@ -48,9 +51,9 @@ export class Sound {
             return;
         switch (cue) {
             case 'egg':
-                this.burst(.06, 1900, .075, .46);
-                this.tone(710, .045, .025, .46);
-                this.burst(.23, 550, .055, .54, true);
+                this.burst(.06, 1900, .075);
+                this.tone(710, .045, .025);
+                this.burst(.23, 550, .055, .08, true);
                 break;
             case 'crisp':
                 for (let n = 0; n < 4; n++)
@@ -119,6 +122,31 @@ export class Sound {
         }
         this.heatFilter.frequency.setTargetAtTime(dragging ? (sauce ? 900 : 1500) : 2600, ctx.currentTime, .08);
         this.heatGain.gain.setTargetAtTime(dragging ? .026 : .011, ctx.currentTime, .08);
+    }
+    motorActivity(on) {
+        const ctx = this.ctx;
+        if (!ctx)
+            return;
+        if (!on || this.muted) {
+            if (this.motor) {
+                this.motor.stop();
+                this.motor.disconnect();
+                this.motorGain?.disconnect();
+                this.motor = null;
+                this.motorGain = null;
+            }
+            return;
+        }
+        if (!this.motor) {
+            const source = ctx.createOscillator(), gain = ctx.createGain();
+            source.type = 'triangle';
+            source.frequency.value = 68;
+            gain.gain.value = .008;
+            source.connect(gain).connect(ctx.destination);
+            source.start();
+            this.motor = source;
+            this.motorGain = gain;
+        }
     }
     tick(dt, cooking, dragging = false, sauce = false) { this.activity(cooking, dragging, sauce); this.clock -= dt; if (this.clock <= 0) {
         this.clock = .6;

@@ -1,6 +1,6 @@
 # 全文需求核对 / Full specification audit
 
-核对版本 / Audited release: **v0.12.0 · A3**. 原文 / Original: [MASTER_PLAN.zh-CN.md](MASTER_PLAN.zh-CN.md). 优先级 / Priority: [QUALITY_GATES.md](QUALITY_GATES.md).
+核对版本 / Audited release: **v0.13.0 · A4 首台设备 / first device**. 原文 / Original: [MASTER_PLAN.zh-CN.md](MASTER_PLAN.zh-CN.md). 优先级 / Priority: [QUALITY_GATES.md](QUALITY_GATES.md).
 
 **结论：尚未完成全文要求，仍是可玩原型。** “已有”只表示当前功能存在，不代表整个章节达标；代码测试通过不代表趣味性验收通过。
 **Conclusion: the full specification is not complete.** This remains a playable prototype. An existing feature does not establish completion of its chapter; automated tests do not establish enjoyment.
@@ -9,18 +9,18 @@
 |---|---|---|
 | 1. 总体目标 / Overall goal | 第一人称卡通煎饼制作、订单、钱包 / First-person cartoon cooking, orders, wallet | 完整长期经营及结局后持续经营 / Full progression and post-ending play |
 | 2. 主菜单 / Main menu | 开始、暂停、结果覆盖页，语言和声音 / Start, pause and result overlays; language and sound | 独立主菜单、继续、选档、剧情回顾、版本设置 / Separate menu, continue, slots, replay, settings |
-| 2. 经营中心 / Hub | “装饰与经营”弹窗 / Decorate & grow dialog | 独立经营中心及全部独立管理场景 / Hub and separate management scenes |
+| 2. 经营中心 / Hub | 装饰弹窗与独立首台厨具屋 / Decor dialog and first-device workshop | 经营中心及其余独立管理场景 / Hub and remaining management scenes |
 | 3. 日循环 / Day loop | 180 秒营业、顾客、收摊后再开 / 180-second service and restart | 默认 240 秒、清晨准备、每日预告、收摊互动、10–14 顾客节奏 / 240-second default, preparation, forecast, after-hours interactions and pacing |
 | 3. 结算 / Results | 收入、出餐、满意度 / Revenue, served count and rating | 成本、净利润、小费明细、好感、解锁、事件、三星评价 / Costs, net profit, tips, affection, unlocks, events and stars |
 | 4. 面糊 / Batter | 旋转覆盖驱动局部铺开，拒绝原地刷距离 / Circular coverage drives local geometry, rejects distance spam | 十单体验与真机触屏验收 / Ten-order feel review and physical touch testing |
 | 4. 打蛋 / Eggs | A2 手动拿蛋、敲壳、拉开、落液；触及蛋黄后按真实位置涂抹；每蛋独立 / A2 pick, tap, pull, drop and spatial spreading per egg | 真人手感反馈、触屏验收与后续辅助设备 / Human feedback, physical touch and egg-assist device |
 | 4. 刷酱 / Sauce | 跟随拖动留下轨迹 / Pointer-following sauce strokes | 完成判定仍依赖累计距离，需继续改为空间涂抹 / Completion still uses distance; spatial coating remains |
-| 4. 折叠 / Folding | A3 左/右/下三步拖折，回落和退回上一折 / A3 manual left/right/bottom folds, rollback and undo | 浏览器整单、十单体验与真机触屏验收 / Browser whole orders, ten-order feel and physical touch |
+| 4. 折叠 / Folding | A3 左/右/下三步拖折，回落和退回上一折 / A3 manual left/right/bottom folds, rollback and undo | 浏览器双蛋整单含回落/撤回通过；十单/触屏待验收 / One double-egg browser order with rollback/undo passed; ten-order/touch pending |
 | 4. 食材层次 / Food layers | 果子与果篦儿分开，铁桶与托盘，翻面隐藏背面材料，独立袋子 / Distinct youtiao/guobier, pails/trays, underside hiding and separate bag | 折叠成品已沿用实际馅料和纸袋前后遮挡，完整视觉审校待做 / Actual fillings and paper-bag occlusion now retained; full visual review pending |
 | 4. 保留玩法 / Existing mechanics | 普通/天津切换、伸缩夹、五秒老板补货、库存、双蛋完整教程 / Modes, telescoping claw, boss restock, stock and full double-egg tutorial | 随后阶段持续回归 / Preserve through future stages |
-| 5. 厨具屋 / Workshop | 无 / None | 独立厨房、等级/前后外观/价格/效果、购买及升级演出 / Room, levels, previews, prices, effects, purchase and upgrade animation |
-| 5. 八类厨具 / Eight devices | 无真实设备 / No actual equipment | 高级刮板、旋转刮板、蛋辅助、刷酱、配料盒、折叠辅助、加热、收银 / Spreader, rotor, egg assist, sauce, ingredient box, folding assist, heating and register |
-| 5. 自动化 / Automation | 无 / None | 可见运转、准备期开关、真实成本与保存、手动回退和保留关键选择 / Visible operation, prep switches, costs, persistence, manual fallback and retained choices |
+| 5. 厨具屋 / Workshop | A4 独立试用厨房、首台等级/价格/效果/余额/购买/安装 / First-device room, levels, working preview, price, effect, wallet, purchase and install | 其余七类厨具和更多等级 / Seven other devices and further levels |
+| 5. 八类厨具 / Eight devices | 首台 ¥550 旋转刮板 / First ¥550 rotating spreader | 高级刮板、蛋辅助、刷酱、配料盒、折叠辅助、加热、收银 / Manual upgrade, egg assist, sauce, ingredient box, fold assist, heating and register |
+| 5. 自动化 / Automation | A4 首台有可见运转、准备期开关、成本/保存、手动回退；只摊糊 / First rotor works visibly, costs/saves, switches in prep, retains manual play and only spreads batter | 其余设备、完整十单/触屏/真人体验 / Other devices and full ten-order/touch/human review |
 | 6. 建筑 / Buildings | 现有 ¥180 简单开店提升客流 / A simple ¥180 shop unlock increases traffic | 五阶段建筑、天数/营收/剧情门槛和升级花费 / Five buildings with day/revenue/story gates and costs |
 | 6. 装修 / Decoration | 9 件装饰、购买/装备/卸下、免费预览、魅力延长耐心 / Nine decorations, buy/equip/remove, preview and patience buffs | 独立设计室、拖放/旋转/碰撞/确认/收回/保存位置及更多品类 / Studio, placement, rotation, collision, confirmation, storage and more types |
 | 7. 熟客 / Regulars | 三种顾客外观和老板 / Three customer appearances and owner | 八名有姓名、口味、好感、专属资料的熟客 / Eight named regulars, tastes, affection and profiles |
@@ -44,8 +44,8 @@
 
 ## 当前执行顺序 / Current sequence
 
-A1 摊糊 → A2 打蛋 → **A3 分步折叠** → A4 首台真实设备 → B 场景与三存档 → C 五日完整经营 → D 分章节扩展五十天 → E 全量验收。
-A1 batter → A2 eggs → **A3 folding** → A4 first working machine → B scenes/saves → C five complete days → D fifty days in playable chapters → E full acceptance.
+A1 摊糊 → A2 打蛋 → A3 分步折叠 → **A4 首台真实设备** → B 场景与三存档 → C 五日完整经营 → D 分章节扩展五十天 → E 全量验收。
+A1 batter → A2 eggs → A3 folding → **A4 first working machine** → B scenes/saves → C five complete days → D fifty days in playable chapters → E full acceptance.
 
 这张表记录尚未完成的范围，不取消任何原需求，也不把原型功能改名视为完成。
 This records outstanding scope without cancelling it or treating renamed prototype features as finished.

@@ -1,19 +1,35 @@
 <!doctype html>
 <html lang="zh-CN">
 <meta charset="utf-8">
-<meta name="application-version" content="0.12.0">
+<meta name="application-version" content="0.13.0">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#34271f">
 <title>煎饼摊传奇 · 街角烟火</title>
 <style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#241e19;color:#ffdf9f;font-family:system-ui}body{display:grid;place-items:center;background:radial-gradient(ellipse at center,#594431,#241e19 75%)}#game-shell{position:relative;width:min(100vw,177.777vh);height:min(56.25vw,100vh);box-shadow:0 0 80px #0008}canvas{width:100%;height:100%;display:block;touch-action:none;outline:none}#toolbar{position:absolute;right:1.6%;top:3.5%;display:flex;gap:6px}#toolbar button{border:1px solid #efddb344;border-radius:9px;background:#48392deF;color:#fff0cc;min-width:clamp(26px,3vw,38px);height:clamp(28px,3.2vw,39px);padding:0 9px;cursor:pointer;font:600 clamp(10px,1.05vw,13px) system-ui;box-shadow:0 3px 8px #20140e33;transition:background .15s,transform .15s}#toolbar button:hover{background:#805436;transform:translateY(-1px)}#toolbar button:focus-visible{outline:2px solid #ffe0a2;outline-offset:3px}#toolbar button:disabled{opacity:.45;cursor:default;transform:none}#orientation{display:none}#accessible{position:absolute;left:-9999px}@media(orientation:portrait){#orientation{display:block;position:fixed;bottom:14px;left:10px;right:10px;text-align:center;font-size:13px;color:#e3c29a}#toolbar{gap:3px}#toolbar button{padding:0 5px}}
 #management{position:absolute;right:1.6%;top:13%;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;max-width:23%}#management button,dialog button{font:600 13px system-ui;background:#805239;color:#fff5dd;border:1px solid #c59d6d;border-radius:8px;padding:9px 12px;cursor:pointer}#management button{font-size:clamp(9px,1vw,13px);padding:6px 9px}button:disabled{opacity:.45;cursor:default}dialog{width:min(920px,94vw);max-height:90vh;overflow:auto;border:1px solid #d6b788;border-radius:20px;padding:25px;background:#fff5df;color:#563c2b;box-shadow:0 15px 100px #0008}dialog::backdrop{background:#21190edb}dialog h2{margin:0}dialog p{line-height:1.5;font-size:13px}dialog header{display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:-25px;padding:12px 0;background:#fff5df;z-index:1}.shop-balance{font-weight:bold;font-size:19px!important}.shop-settings{display:grid;grid-template-columns:1fr 1fr;gap:20px}.decor-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}.decor-grid article{background:#efdfbd;border-radius:12px;padding:15px}.decor-grid h3{font-size:16px}.festival-tabs{display:flex;gap:8px;flex-wrap:wrap}button[aria-pressed=true]{background:#b95d38!important}#save-status{position:fixed;bottom:0;background:#6d312b;color:white;font-size:12px;margin:0}@media(max-width:600px){.decor-grid{grid-template-columns:1fr 1fr}.shop-settings{grid-template-columns:1fr}dialog{padding:15px}dialog header{top:-15px}}
-#decor-preview{width:100%;max-width:640px;aspect-ratio:16/9;height:auto;border-radius:12px;display:block;touch-action:auto}button{touch-action:manipulation}dialog button{min-height:44px}#management button{min-height:32px}</style>
-<main id="game-shell"><canvas id="game" width="1280" height="720" aria-label="煎饼摊传奇：点击食材、拖动摊饼、点击工具和顾客" tabindex="0"></canvas><nav id="toolbar" aria-label="Game controls"><button id="language" type="button" aria-label="Switch to English">EN / 中文</button><button id="sound" type="button" aria-label="关闭声音">♪</button><button id="pause" type="button" aria-label="暂停" disabled>Ⅱ</button></nav><nav id="management"><button id="mode-open" type="button">普通模式 ▾</button><button id="shop-open" type="button">装饰与经营</button><button id="learn" type="button">新手教程</button></nav></main><dialog id="shop-dialog" aria-labelledby="shop-title"><header><h2 id="shop-title">装饰与经营</h2><button id="shop-close" type="button">返回煎饼摊</button></header><div id="shop-body"></div></dialog><p id="save-status" role="status"></p>
+#decor-preview{width:100%;max-width:640px;aspect-ratio:16/9;height:auto;border-radius:12px;display:block;touch-action:auto}button{touch-action:manipulation}dialog button{min-height:44px}#management button{min-height:32px}#equipment-preview{width:100%;height:auto;aspect-ratio:16/9;border-radius:14px;touch-action:none}.equipment-details,.bench-controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.equipment-details{justify-content:space-between;background:#f0e1bd;padding:15px;border-radius:12px}.equipment-details h3{margin:0}.equipment-details p{margin:7px 0}.bench-controls{margin-top:12px}#bench-status{min-height:20px;font-weight:600;color:#4d7444}#management button[hidden]{display:none}</style>
+<main id="game-shell"><canvas id="game" width="1280" height="720" aria-label="煎饼摊传奇：点击食材、拖动摊饼、点击工具和顾客" tabindex="0"></canvas><nav id="toolbar" aria-label="Game controls"><button id="language" type="button" aria-label="Switch to English">EN / 中文</button><button id="sound" type="button" aria-label="关闭声音">♪</button><button id="pause" type="button" aria-label="暂停" disabled>Ⅱ</button></nav><nav id="management"><button id="mode-open" type="button">普通模式 ▾</button><button id="shop-open" type="button">装饰与经营</button><button id="equipment-open" type="button">厨具屋</button><button id="learn" type="button">新手教程</button></nav></main><dialog id="shop-dialog" aria-labelledby="shop-title"><header><h2 id="shop-title">装饰与经营</h2><button id="shop-close" type="button">返回煎饼摊</button></header><div id="shop-body"></div></dialog><dialog id="equipment-dialog" aria-labelledby="equipment-title"><header><h2 id="equipment-title">厨具升级屋</h2><button id="equipment-close" type="button">返回煎饼摊</button></header><div id="equipment-body"></div></dialog><p id="save-status" role="status"></p>
 <p id="orientation">横屏体验更好，转动手机后再开摊</p><p id="accessible">鼠标或触屏操作。点击面糊，绕圈摊开。点蛋盘拿蛋，在饼上敲开并向左或右拉开蛋壳，从蛋黄开始摊匀；再点蛋盘可放回未打开的蛋。随后翻面、加料、刷酱，依次拖折左边、右边和下边；折叠工具可退回上一折。装袋后点击顾客交餐。点击老板补货，点击偷吃的夹子阻止偷吃。</p><script>(()=>{let language = 'zh';
 function getLanguage() { return language; }
 function setLanguage(value) { language = value; }
 const english = {
+    "旋转刮板工作中": "SPREADER RUNNING",
+    "厨具升级屋": "EQUIPMENT WORKSHOP",
+    "免费试用台 · 只比较摊糊，不扣钱或库存": "FREE TRIAL \u00b7 BATTER ONLY \u00b7 NO COINS OR STOCK USED",
+    "手动刮板": "Manual spreader",
+    "亲手绕圈摊开": "Circle and spread by hand",
+    "随时可以保留手动操作": "Manual play stays available",
+    "自动旋转刮板": "Rotating spreader",
+    "腾出手接单、补货、拦夹子": "Hands free for customers and claws",
+    "鸡蛋、配料、折叠仍由你做": "Eggs, fillings and folds stay yours",
+    "营业前可以关闭": "Switch off before service",
+    "摊好了，试试另一种方式": "Spread! Try the other method",
+    "自动旋转摊糊，观察刮板走过的地方": "Watch the rotating blade spread the batter",
+    "按住铁板绕圈，亲手铺开面糊": "Hold and circle the griddle to spread by hand",
+    "安装完成，下一局就能用！": "Installed! Ready for the next service!",
+    "自动摊开中": "Spreading automatically",
+    "旋转刮板正在绕圈，可先接单或补货": "The spreader is circling. Select an order or restock.",
     "折起左边": "Fold the left edge",
     "折起右边": "Fold the right edge",
     "托起下边": "Lift the bottom edge",
@@ -200,13 +216,15 @@ const decorations = [
     { id: 'dragon-reward', zh: '端午奖励 · 彩绳', en: 'Dragon Boat reward · Ribbons', cost: 0, charm: 3, festival: 'dragon' },
     { id: 'autumn-reward', zh: '中秋奖励 · 星灯', en: 'Mid-Autumn reward · Stars', cost: 0, charm: 3, festival: 'autumn' }
 ];
-function freshProfile() { return { version: 1, wallet: 0, shop: false, owned: [], equipped: [], festival: 'spring', events: { spring: 0, dragon: 0, autumn: 0 }, mode: 'classic', days: 1, tutorial: false }; }
+function freshProfile() { return { version: 1, wallet: 0, shop: false, owned: [], equipped: [], festival: 'spring', events: { spring: 0, dragon: 0, autumn: 0 }, mode: 'classic', days: 1, tutorial: false, rotorOwned: false, rotorOn: false }; }
 function restoreProfile(raw) { const p = freshProfile(); try {
     const v = JSON.parse(raw || 'null');
     if (!v || v.version !== 1)
         return p;
     const n = (x) => typeof x === 'number' && Number.isFinite(x) ? Math.min(1e8, Math.max(0, Math.floor(x))) : 0;
     p.wallet = n(v.wallet);
+    p.rotorOwned = v.rotorOwned === true;
+    p.rotorOn = p.rotorOwned && v.rotorOn === true;
     p.shop = v.shop === true;
     p.days = Math.max(1, n(v.days));
     p.tutorial = v.tutorial === true;
@@ -235,6 +253,7 @@ function rewardService(p, earned, correct) { p.wallet += earned; if (correct) {
         p.equipped.push(id);
     }
 } }
+
 
 
 
@@ -281,6 +300,8 @@ class Cooking {
         this.foldStep = 0;
         this.foldProgress = 0;
         this.foldDragging = false;
+        this.rotorAngle = 0;
+        this.rotorDeploy = 0;
     }
     get eggSpread() { return this.eggLayers.length ? Math.min(...this.eggLayers.map(e => e.spread)) : 0; }
     add(id, inventory) {
@@ -585,6 +606,7 @@ class Game {
         }
         this.time = Math.max(0, this.time - dt);
         this.inventory.tick(dt);
+        tickRotor(this, dt);
         this.cooking.tick(dt);
         this.spawn -= dt;
         if (this.customers.length < (this.profile.shop ? 5 : 3) && this.spawn <= 0) {
@@ -631,6 +653,33 @@ class Game {
 }
 function recipeText(c) { return foods.filter(([id]) => id !== 'batter' && c.recipe[id]).map(([id, label]) => `${foodLabel(id)} ×${c.recipe[id]}`).join(' · '); }
 
+const rotorEquipment = { id: 'rotor', cost: 550, secondsPerTurn: 3.2 };
+function equipmentPreparation(g) { return !g.started || g.ended; }
+function buyRotor(g) {
+    const p = g.profile;
+    if (!equipmentPreparation(g) || p.rotorOwned || !Number.isFinite(p.wallet) || p.wallet < rotorEquipment.cost)
+        return false;
+    p.wallet -= rotorEquipment.cost;
+    p.rotorOwned = true;
+    p.rotorOn = true;
+    return true;
+}
+function setRotor(g, on) { if (!equipmentPreparation(g) || !g.profile.rotorOwned)
+    return false; g.profile.rotorOn = on; return true; }
+function rotorWorking(g) { return !!(g.profile.rotorOwned && g.profile.rotorOn && !g.tutorial && g.cooking.stage === 'batter'); }
+function tickRotor(g, dt) {
+    if (!g.started || g.ended || g.paused || !Number.isFinite(dt) || dt <= 0)
+        return;
+    dt = Math.min(dt, .1);
+    const p = g.cooking, working = rotorWorking(g);
+    p.rotorDeploy = Math.min(1, Math.max(0, p.rotorDeploy + (working ? 1 : -1) * dt * 3));
+    if (!working || p.rotorDeploy < 1)
+        return;
+    p.rotorAngle += dt * Math.PI * 2 / rotorEquipment.secondsPerTurn;
+    // The moving blade uses the same local spreading rule as the player's tool.
+    p.spreadBatter(640 + Math.cos(p.rotorAngle) * 135, 505 + Math.sin(p.rotorAngle) * 58, dt * 135);
+}
+
 // All sounds are generated locally: filtered noise, envelopes and resonant tones.
 class Sound {
     constructor() {
@@ -639,6 +688,8 @@ class Sound {
         this.beat = 0;
         this.clock = 0;
         this.voices = new Set();
+        this.motor = null;
+        this.motorGain = null;
         this.noise = null;
         this.sizzle = null;
         this.heatGain = null;
@@ -647,6 +698,7 @@ class Sound {
     get muted() { return this.silent; }
     set muted(value) { this.silent = value; if (value) {
         this.activity(false);
+        this.motorActivity(false);
         for (const voice of this.voices) {
             try {
                 voice.stop();
@@ -681,9 +733,9 @@ class Sound {
             return;
         switch (cue) {
             case 'egg':
-                this.burst(.06, 1900, .075, .46);
-                this.tone(710, .045, .025, .46);
-                this.burst(.23, 550, .055, .54, true);
+                this.burst(.06, 1900, .075);
+                this.tone(710, .045, .025);
+                this.burst(.23, 550, .055, .08, true);
                 break;
             case 'crisp':
                 for (let n = 0; n < 4; n++)
@@ -753,11 +805,37 @@ class Sound {
         this.heatFilter.frequency.setTargetAtTime(dragging ? (sauce ? 900 : 1500) : 2600, ctx.currentTime, .08);
         this.heatGain.gain.setTargetAtTime(dragging ? .026 : .011, ctx.currentTime, .08);
     }
+    motorActivity(on) {
+        const ctx = this.ctx;
+        if (!ctx)
+            return;
+        if (!on || this.muted) {
+            if (this.motor) {
+                this.motor.stop();
+                this.motor.disconnect();
+                this.motorGain?.disconnect();
+                this.motor = null;
+                this.motorGain = null;
+            }
+            return;
+        }
+        if (!this.motor) {
+            const source = ctx.createOscillator(), gain = ctx.createGain();
+            source.type = 'triangle';
+            source.frequency.value = 68;
+            gain.gain.value = .008;
+            source.connect(gain).connect(ctx.destination);
+            source.start();
+            this.motor = source;
+            this.motorGain = gain;
+        }
+    }
     tick(dt, cooking, dragging = false, sauce = false) { this.activity(cooking, dragging, sauce); this.clock -= dt; if (this.clock <= 0) {
         this.clock = .6;
         this.tone([262, 330, 392, 440, 392, 330, 294, 330][this.beat++ % 8], .25, .004);
     } }
 }
+
 
 
 const griddle = { x: 640, y: 505, rx: 205, ry: 94 };
@@ -773,6 +851,8 @@ function nextAction(g) {
         return eggAction(g, 2);
     if (p.stage === 'empty')
         return { step: 1, key: '倒入面糊', detail: '点击面糊壶，开始制作', focus: ['food:batter'], progress: 0 };
+    if (p.stage === 'batter' && rotorWorking(g))
+        return { step: 1, key: '自动摊开中', detail: '旋转刮板正在绕圈，可先接单或补货', focus: [], progress: p.spread };
     if (p.stage === 'batter')
         return { step: 1, key: '摊开煎饼', detail: '按住铁板绕圈移动，让面糊铺满', focus: ['scrape'], progress: p.spread };
     if (p.stage === 'egg') {
@@ -820,6 +900,7 @@ function clawGeometry(g) { const th = g.theft; if (!th)
 
 
 
+
 class Scene {
     constructor(canvas) {
         this.canvas = canvas;
@@ -829,6 +910,7 @@ class Scene {
         this.foodAtlas = new Image();
         this.hands = new Image();
         this.hits = [];
+        this.upgradeAge = 0;
         this.clock = 0;
         this.pointer = { x: -100, y: -100 };
         this.dragging = false;
@@ -1128,7 +1210,7 @@ class Scene {
         else if (id === 'fold') {
             this.path([[r.x + 26, r.y + 7], [r.x + 76, r.y + 7], [r.x + 68, r.y + 44], [r.x + 32, r.y + 44]], '#ecc985', '#a47242', 1.5);
             this.path([[r.x + 26, r.y + 7], [r.x + 53, r.y + 26], [r.x + 76, r.y + 7]], '#f7dba2', '#a47242', 1.5);
-            if (['folding', 'folded'].includes(p.stage))
+            if (['folding', 'folded'].includes(p.stage) && p.foldStep > 0)
                 this.text('↶', r.x + 52, r.y + 34, 27, '#80532e');
         }
         else
@@ -1226,13 +1308,14 @@ class Scene {
                 c.ellipse(640, 505, 146, 65, 0, i / 16 * Math.PI * 2 + .035, (i + 1) / 16 * Math.PI * 2 - .035);
                 c.stroke();
             }
-            const a = this.clock * .9;
+            const a = rotorWorking(g) ? p.rotorAngle : this.clock * .9;
             c.fillStyle = '#fff5c1';
             c.beginPath();
             c.arc(640 + Math.cos(a) * 146, 505 + Math.sin(a) * 65, 5, 0, Math.PI * 2);
             c.fill();
             c.restore();
         }
+        this.drawRotor(g);
         this.drawFoldGuide(g);
         if (this.dragging && !p.heldEgg && ['batter', 'egg', 'flipped'].includes(p.stage)) {
             c.save();
@@ -1280,9 +1363,9 @@ class Scene {
         }
         const hoverHit = [...this.hits].reverse().find(h => this.pointer.x >= h.x && this.pointer.x < h.x + h.w && this.pointer.y >= h.y && this.pointer.y < h.y + h.h);
         const tip = hoverHit?.id || (this.touchAge ? this.touchFocus : '');
-        if (tip && (tip.startsWith('food:') || tip.startsWith('order:') || toolIds.includes(tip))) {
+        if (tip && !(tip === 'fold' && p.stage === 'folding' && !p.foldStep) && (tip.startsWith('food:') || tip.startsWith('order:') || toolIds.includes(tip))) {
             const h = this.hits.find(v => v.id === tip) || { x: 550, y: 620, w: 180, h: 30 };
-            const label = tip === 'fold' && ['folding', 'folded'].includes(p.stage) ? '退回上一折' : tip.includes(':') ? foodLabel(tip.split(':')[1], g.profile.mode === 'tianjin') : ['刮板', '铲子 · 翻面', '折叠', '纸袋', '丢弃'][toolIds.indexOf(tip)];
+            const label = tip === 'fold' && ['folding', 'folded'].includes(p.stage) && p.foldStep > 0 ? '退回上一折' : tip.includes(':') ? foodLabel(tip.split(':')[1], g.profile.mode === 'tianjin') : ['刮板', '铲子 · 翻面', '折叠', '纸袋', '丢弃'][toolIds.indexOf(tip)];
             const x = Math.min(1178, Math.max(102, h.x + h.w / 2));
             this.panel(x - 84, h.y - 32, 168, 25, '#332d25f5', 8);
             this.text(label, x, h.y - 15, 12, '#fff0cf', 'center', 154);
@@ -1311,6 +1394,135 @@ class Scene {
         }
         if (!g.started || g.ended || g.paused)
             this.overlay(g);
+    }
+    drawRotor(g) {
+        if (!g.profile.rotorOwned || g.tutorial)
+            return;
+        const c = this.ctx, p = g.cooking, d = p.rotorDeploy, working = rotorWorking(g), angle = p.rotorAngle;
+        c.save();
+        if (this.upgradeAge > 0)
+            c.translate(0, -85 * (this.upgradeAge / 1.2) ** 2);
+        // A parked mast, hinged arm and radial wooden blade are tied to real machine state.
+        const metal = c.createLinearGradient(880, 0, 930, 0);
+        metal.addColorStop(0, '#627973');
+        metal.addColorStop(.45, '#e5e9da');
+        metal.addColorStop(1, '#79948b');
+        this.ellipse(903, 580, 35, 9, '#1b2b2544');
+        this.box(877, 553, 53, 25, '#496b5d', 8);
+        this.box(890, 425, 23, 137, metal, 6);
+        this.box(877, 421, 51, 32, '#5c8874', 8);
+        this.ellipse(903, 437, 9, 9, '#e0dfb1');
+        const cx = 902 + (640 - 902) * d, cy = 442 + (503 - 442) * d;
+        c.lineCap = 'round';
+        c.strokeStyle = '#3e5a4c';
+        c.lineWidth = 17;
+        c.beginPath();
+        c.moveTo(899, 432);
+        c.lineTo(cx, cy - 44);
+        c.stroke();
+        c.strokeStyle = '#c0d4bd';
+        c.lineWidth = 11;
+        c.stroke();
+        this.ellipse(cx, cy - 44, 10, 8, '#447663');
+        this.ellipse(cx, cy - 44, 5, 4, '#e5db9c');
+        c.strokeStyle = '#9bb3a2';
+        c.lineWidth = 8;
+        c.beginPath();
+        c.moveTo(cx, cy - 40);
+        c.lineTo(cx, cy);
+        c.stroke();
+        this.ellipse(cx, cy, 9, 5, '#465e4d');
+        const bx = cx + Math.cos(angle) * 135 * d, by = cy + Math.sin(angle) * 58 * d, ux = -Math.sin(angle) * 30, uy = Math.cos(angle) * 13;
+        c.strokeStyle = '#65442d';
+        c.lineWidth = 9;
+        c.beginPath();
+        c.moveTo(cx, cy);
+        c.lineTo(bx, by);
+        c.moveTo(bx - ux, by - uy);
+        c.lineTo(bx + ux, by + uy);
+        c.stroke();
+        c.strokeStyle = '#c69256';
+        c.lineWidth = 5;
+        c.stroke();
+        this.ellipse(902, 568, 4, 4, working ? '#dceba0' : g.profile.rotorOn ? '#9cc37b' : '#b7aaa0');
+        if (working) {
+            this.panel(767, 581, 163, 23, '#3e6350ef', 7);
+            this.text('旋转刮板工作中', 849, 597, 10, '#fff0bd', 'center', 151);
+        }
+        c.restore();
+    }
+    drawWorkshop(g, dt) {
+        const c = this.ctx;
+        this.clock += dt;
+        this.upgradeAge = Math.max(0, this.upgradeAge - dt);
+        c.clearRect(0, 0, 1280, 720);
+        this.box(0, 0, 1280, 720, '#eed5a5', 0);
+        for (let i = 0; i < 12; i++) {
+            c.strokeStyle = '#d7b884';
+            c.lineWidth = 2;
+            c.beginPath();
+            c.moveTo(i * 118, 0);
+            c.lineTo(i * 118, 401);
+            c.stroke();
+        }
+        this.panel(34, 30, 1212, 102, '#76523b', 17);
+        this.text('厨具升级屋', 65, 76, 30, '#fff0cc', 'left', 1140);
+        this.text('免费试用台 · 只比较摊糊，不扣钱或库存', 66, 111, 17, '#efdcb3', 'left', 1140);
+        this.box(0, 394, 1280, 326, '#a77343', 0);
+        for (let i = 0; i < 7; i++)
+            this.box(0, 414 + i * 49, 1280, 3, '#875735', 0);
+        this.panel(53, 179, 278, 366, '#f8e8c4', 14);
+        this.text('手动刮板', 192, 221, 23, '#785036', 'center', 250);
+        c.save();
+        c.translate(177, 357);
+        c.rotate(-.23);
+        c.strokeStyle = '#835831';
+        c.lineCap = 'round';
+        c.lineWidth = 16;
+        c.beginPath();
+        c.moveTo(-71, 0);
+        c.lineTo(65, 0);
+        c.moveTo(0, 0);
+        c.lineTo(0, -95);
+        c.stroke();
+        c.strokeStyle = '#c29558';
+        c.lineWidth = 9;
+        c.stroke();
+        c.restore();
+        this.text('亲手绕圈摊开', 192, 432, 16, '#8b6242', 'center', 250);
+        this.text('随时可以保留手动操作', 192, 463, 13, '#8b6242', 'center', 250);
+        this.panel(969, 181, 254, 282, '#f8e8c4', 14);
+        this.text('自动旋转刮板', 1096, 224, 22, '#785036', 'center', 230);
+        this.text('Lv. 1', 1096, 265, 29, '#567d54');
+        this.text('腾出手接单、补货、拦夹子', 1096, 309, 14, '#8b6242', 'center', 230);
+        this.text('鸡蛋、配料、折叠仍由你做', 1096, 342, 14, '#8b6242', 'center', 230);
+        this.text('营业前可以关闭', 1096, 389, 16, '#567d54', 'center', 230);
+        this.ellipse(640, 525, 242, 108, '#3c3c2c55');
+        this.ellipse(640, 516, 235, 105, '#222f29');
+        this.ellipse(640, 505, 226, 96, '#3b5144');
+        this.ellipse(640, 505, 211, 89, '#293f34');
+        if (g.cooking.stage !== 'empty')
+            this.drawPancake(g.cooking);
+        this.drawRotor(g);
+        this.panel(365, 622, 572, 54, '#4d5f40', 14);
+        this.text(g.cooking.stage === 'egg' ? '摊好了，试试另一种方式' : g.profile.rotorOn ? '自动旋转摊糊，观察刮板走过的地方' : '按住铁板绕圈，亲手铺开面糊', 651, 655, 18, '#fff0c5', 'center', 544);
+        if (this.dragging && !g.profile.rotorOn && g.cooking.stage === 'batter') {
+            c.save();
+            c.beginPath();
+            c.rect(350, 405, 595, 205);
+            c.clip();
+            this.handArt(0, this.pointer.x - 55, this.pointer.y - 37, 205, 187);
+            c.restore();
+        }
+        if (this.upgradeAge > 0) {
+            const u = 1 - this.upgradeAge / 1.2;
+            for (let i = 0; i < 12; i++) {
+                const a = i / 12 * Math.PI * 2;
+                this.text('✦', 902 + Math.cos(a) * (25 + u * 70), 453 + Math.sin(a) * (20 + u * 50), 19, '#fff1a7');
+            }
+            this.panel(444, 153, 400, 40, '#527a4a', 12);
+            this.text('安装完成，下一局就能用！', 644, 179, 19, '#fff0b9', 'center', 380);
+        }
     }
     drawPancake(p) {
         const c = this.ctx;
@@ -1743,6 +1955,7 @@ class Scene {
 
 
 
+
 const canvas = document.querySelector('#game');
 const languageButton = document.querySelector('#language');
 const pauseButton = document.querySelector('#pause');
@@ -1764,8 +1977,11 @@ try {
     sound.muted = localStorage.getItem('jianbing-legend:muted') === 'true';
 }
 catch { }
-function toolbar() { document.querySelector('#mode-open').textContent = bi(profile.mode === 'classic' ? '普通模式 ▾' : '天津模式 ▾', profile.mode === 'classic' ? 'Classic ▾' : 'Tianjin ▾'); document.querySelector('#shop-open').textContent = t('装饰与经营'); document.querySelector('#learn').textContent = t(game.tutorial && game.started && !game.ended ? '退出教程' : '新手教程'); document.querySelector('#learn').disabled = game.started && !game.ended && !game.tutorial; document.querySelector('#toolbar').setAttribute('aria-label', t('游戏控制')); if (shopDialog.open)
+function toolbar() { const equipButton = document.querySelector('#equipment-open'); equipButton.textContent = bi('厨具屋', 'Workshop'); equipButton.hidden = !equipmentPreparation(game); if (equipmentDialog.open)
+    renderEquipment(); document.querySelector('#mode-open').textContent = bi(profile.mode === 'classic' ? '普通模式 ▾' : '天津模式 ▾', profile.mode === 'classic' ? 'Classic ▾' : 'Tianjin ▾'); document.querySelector('#shop-open').textContent = t('装饰与经营'); document.querySelector('#learn').textContent = t(game.tutorial && game.started && !game.ended ? '退出教程' : '新手教程'); document.querySelector('#learn').disabled = game.started && !game.ended && !game.tutorial; document.querySelector('#toolbar').setAttribute('aria-label', t('游戏控制')); if (shopDialog.open)
     renderShop(); document.documentElement.lang = getLanguage() === 'en' ? 'en' : 'zh-CN'; document.title = t(titleKey); canvas.setAttribute('aria-label', t(ariaKey)); help.textContent = t(helpKey); languageButton.textContent = getLanguage() === 'zh' ? 'EN / 中文' : '中文 / EN'; languageButton.setAttribute('aria-label', getLanguage() === 'zh' ? 'Switch to English' : '切换为中文'); pauseButton.textContent = game.paused ? '▶' : 'Ⅱ'; pauseButton.setAttribute('aria-label', t(game.paused ? '继续营业' : '暂停')); pauseButton.disabled = !game.started || game.ended; soundButton.textContent = sound.muted ? '♪ ×' : '♪'; soundButton.setAttribute('aria-label', t(sound.muted ? '开启声音' : '关闭声音')); soundButton.setAttribute('aria-pressed', String(!sound.muted)); orientation.textContent = t('横屏体验更好，转动手机后再开摊'); }
+const equipmentDialog = document.querySelector('#equipment-dialog');
+let benchGame = null, benchScene = null, benchPaused = false, benchPointer = null, benchLast = { x: 0, y: 0 };
 const shopDialog = document.querySelector('#shop-dialog');
 let previewItem = '';
 let resumeAfterShop = false, lastProgress = '', storageFailed = false;
@@ -1846,6 +2062,71 @@ document.querySelector('#shop-body').addEventListener('click', e => {
     saveProgress();
     toolbar();
 });
+function copyArtwork(target) { target.background = scene.background; target.neighbors = scene.neighbors; target.kitchen = scene.kitchen; target.foodAtlas = scene.foodAtlas; target.hands = scene.hands; }
+function benchReset() { if (!benchGame)
+    return; benchGame.cooking = new Cooking(); benchGame.inventory.stock.batter = 8; benchGame.addFood('batter'); benchPaused = false; benchPointer = null; if (benchScene)
+    benchScene.dragging = false; }
+function renderEquipment() {
+    if (!benchGame) {
+        benchGame = new Game(() => .5, { ...profile, owned: [...profile.owned], equipped: [...profile.equipped], events: { ...profile.events }, rotorOwned: true, rotorOn: true });
+        benchGame.started = true;
+        benchReset();
+    }
+    benchPointer = null;
+    benchGame.cooking.endStroke();
+    const owned = profile.rotorOwned, canBuy = equipmentPreparation(game) && !owned && profile.wallet >= rotorEquipment.cost, auto = benchGame.profile.rotorOn;
+    document.querySelector('#equipment-title').textContent = bi('厨具升级屋', 'Equipment workshop');
+    document.querySelector('#equipment-close').textContent = bi('返回煎饼摊', 'Back to the stall');
+    document.querySelector('#equipment-body').innerHTML = `<section class="equipment-details"><div><h3>${bi('自动旋转刮板', 'Rotating spreader')}</h3><p>${bi('当前等级', 'Current level')} ${owned ? '1' : '0'} → ${bi('试用外观 Lv.1', 'Trial appearance Lv.1')} · ${bi('钱包', 'Wallet')} ¥${profile.wallet}</p><p>${bi('约四秒自动绕圈摊糊；腾出手接单、补货和拦夹子。打蛋、配料和折叠由你完成。', 'Circles the batter in about four seconds, freeing your hand for customers, restock and claws. Eggs, fillings and folding stay yours.')}</p></div><div><button id="buy-rotor" ${canBuy ? '' : 'disabled'}>${owned ? bi('已安装 Lv.1', 'Installed Lv.1') : bi('确认升级 · ¥', 'Confirm upgrade · ¥') + rotorEquipment.cost}</button> <button id="rotor-switch" aria-pressed="${owned && profile.rotorOn}" ${owned && equipmentPreparation(game) ? '' : 'disabled'}>${profile.rotorOn ? bi('下次营业：自动开启', 'Next service: automatic ON') : bi('下次营业：手动制作', 'Next service: manual')}</button><p>${owned ? bi('开关与设备自动保存；教程始终手动。', 'Ownership and switch save automatically. Tutorial stays manual.') : bi('还差 ¥', 'Need ¥') + Math.max(0, rotorEquipment.cost - profile.wallet)}</p></div></section>
+ <h3>${bi('免费比较手动 / 自动', 'Compare manual / automatic for free')}</h3><p>${bi('下方仅是摊糊试用台，不会购买设备、花钱、消耗真实库存或产生收入。可暂停观察，倒面糊重试。', 'This batter-only trial does not buy equipment, spend money, use real stock or earn income. Pause to inspect; pour again to retry.')}</p><canvas id="equipment-preview" width="1280" height="720" aria-label="${bi('旋转刮板免费试用台', 'Free rotating-spreader trial')}"></canvas>
+ <div class="bench-controls" role="group" aria-label="${bi('选择试用方式', 'Choose trial method')}"><button id="bench-auto" aria-pressed="${auto}">${bi('自动试用', 'Try automatic')}</button><button id="bench-manual" aria-pressed="${!auto}">${bi('手动试用', 'Try manual')}</button><button id="bench-pour">${bi('倒面糊重试', 'Pour and retry')}</button><button id="bench-pause">${benchPaused ? bi('继续试用', 'Resume trial') : bi('暂停试用', 'Pause trial')}</button></div><p id="bench-status" role="status"></p>`;
+    const el = document.querySelector('#equipment-preview');
+    benchScene = new Scene(el);
+    copyArtwork(benchScene);
+    const point = (e) => { const r = el.getBoundingClientRect(); return { x: (e.clientX - r.left) * 1280 / r.width, y: (e.clientY - r.top) * 720 / r.height }; };
+    el.addEventListener('pointerdown', e => { if (!benchGame || !benchScene || benchPaused || benchGame.profile.rotorOn || benchPointer !== null)
+        return; const p = point(e); if (!insideGriddle(p.x, p.y))
+        return; benchGame.cooking.endStroke(); benchPointer = e.pointerId; benchLast = p; benchScene.dragging = true; benchScene.pointer = p; el.setPointerCapture(e.pointerId); });
+    el.addEventListener('pointermove', e => { if (!benchGame || !benchScene || benchPaused || benchPointer !== e.pointerId)
+        return; const p = point(e); benchScene.pointer = p; benchGame.cooking.drag(p.x, p.y, Math.hypot(p.x - benchLast.x, p.y - benchLast.y)); benchLast = p; });
+    const release = (e) => { if (benchPointer === null || benchPointer === e.pointerId) {
+        benchPointer = null;
+        benchGame?.cooking.endStroke();
+        if (benchScene)
+            benchScene.dragging = false;
+    } };
+    for (const name of ['pointerup', 'pointercancel', 'lostpointercapture'])
+        el.addEventListener(name, release);
+    const select = (auto) => { if (!benchGame)
+        return; benchGame.profile.rotorOn = auto; benchReset(); renderEquipment(); };
+    document.querySelector('#bench-auto').addEventListener('click', () => select(true));
+    document.querySelector('#bench-manual').addEventListener('click', () => select(false));
+    document.querySelector('#bench-pour').addEventListener('click', () => { benchReset(); renderEquipment(); });
+    document.querySelector('#bench-pause').addEventListener('click', () => { benchPaused = !benchPaused; renderEquipment(); });
+    document.querySelector('#buy-rotor').addEventListener('click', () => { if (buyRotor(game)) {
+        saveProgress();
+        sound.start();
+        sound.play('coin');
+        benchReset();
+        renderEquipment();
+        if (benchScene)
+            benchScene.upgradeAge = 1.2;
+    } });
+    document.querySelector('#rotor-switch').addEventListener('click', () => { if (setRotor(game, !profile.rotorOn)) {
+        saveProgress();
+        renderEquipment();
+    } });
+    updateBenchStatus();
+    benchScene.drawWorkshop(benchGame, 0);
+}
+function updateBenchStatus() { if (!benchGame)
+    return; const message = benchScene && benchScene.upgradeAge > 0 ? bi('正在安装旋转刮板…', 'Installing the rotating spreader…') : benchPaused ? bi('试用已暂停，面糊与设备保持当前位置', 'Trial paused: batter and machine stay in place') : benchGame.cooking.stage === 'egg' ? bi('摊好了！可以换一种方式比较，或倒面糊重试。', 'Batter spread! Compare the other method, or pour again.') : benchGame.profile.rotorOn ? bi('正在自动摊糊，等待刮板绕完一圈', 'Spreading automatically; let the blade complete its circle') : bi('按住试用铁板绕圈摊开面糊', 'Hold and circle the trial griddle to spread the batter'); const status = document.querySelector('#bench-status'); if (status && status.textContent !== message)
+    status.textContent = message; }
+function closeEquipment() { equipmentDialog.close(); benchGame = null; benchScene = null; benchPointer = null; benchPaused = false; toolbar(); }
+document.querySelector('#equipment-open').addEventListener('click', () => { if (!equipmentPreparation(game))
+    return; stopGesture(); sound.start(); renderEquipment(); equipmentDialog.showModal(); });
+document.querySelector('#equipment-close').addEventListener('click', closeEquipment);
+equipmentDialog.addEventListener('cancel', e => { e.preventDefault(); closeEquipment(); });
 document.querySelector('#learn').addEventListener('click', () => { if (game.tutorial && game.started && !game.ended) {
     game = new Game(Math.random, profile);
     toolbar();
@@ -2026,19 +2307,36 @@ canvas.addEventListener('pointerleave', () => { if (!dragging && !eggDragging &&
 for (const event of ['pointerup', 'pointercancel', 'lostpointercapture'])
     canvas.addEventListener(event, (e) => { if (activePointer === null || activePointer === e.pointerId)
         stopGesture(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && !shopDialog.open && game.started && !game.ended) {
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !shopDialog.open && !equipmentDialog.open && game.started && !game.ended) {
     game.paused = !game.paused;
     stopGesture();
     toolbar();
 } });
-document.addEventListener('visibilitychange', () => { if (document.hidden)
-    sound.activity(false); if (document.hidden && game.started && !game.ended) {
+document.addEventListener('visibilitychange', () => { if (document.hidden && equipmentDialog.open) {
+    benchPaused = true;
+    benchPointer = null;
+    benchGame?.cooking.endStroke();
+    if (benchScene)
+        benchScene.dragging = false;
+    renderEquipment();
+} if (document.hidden) {
+    sound.activity(false);
+    sound.motorActivity(false);
+} if (document.hidden && game.started && !game.ended) {
     game.paused = true;
     stopGesture();
     toolbar();
 } });
 let previous = performance.now();
 function frame(now) { const dt = Math.min(.1, (now - previous) / 1000); previous = now; if (!document.hidden) {
+    if (equipmentDialog.open && benchGame && benchScene) {
+        if (!benchPaused && benchScene.upgradeAge <= 0) {
+            tickRotor(benchGame, dt);
+            benchGame.cooking.tick(dt);
+        }
+        benchScene.drawWorkshop(benchGame, benchPaused ? 0 : dt);
+        updateBenchStatus();
+    }
     const wasRefilling = game.inventory.refill > 0;
     game.tick(dt);
     if (wasRefilling && !game.inventory.refill)
@@ -2048,6 +2346,7 @@ function frame(now) { const dt = Math.min(.1, (now - previous) / 1000); previous
         sound.tick(dt, !['empty', 'bagged', 'folded'].includes(game.cooking.stage), dragging, game.cooking.stage === 'flipped');
     else
         sound.activity(false);
+    sound.motorActivity(equipmentDialog.open ? !!benchGame && !benchPaused && rotorWorking(benchGame) : game.started && !game.ended && !game.paused && rotorWorking(game));
     scene.dragging = dragging;
     scene.muted = sound.muted;
     scene.draw(game, game.paused ? 0 : dt);

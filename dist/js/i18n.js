@@ -2,6 +2,22 @@ let language = 'zh';
 export function getLanguage() { return language; }
 export function setLanguage(value) { language = value; }
 const english = {
+    "旋转刮板工作中": "SPREADER RUNNING",
+    "厨具升级屋": "EQUIPMENT WORKSHOP",
+    "免费试用台 · 只比较摊糊，不扣钱或库存": "FREE TRIAL \u00b7 BATTER ONLY \u00b7 NO COINS OR STOCK USED",
+    "手动刮板": "Manual spreader",
+    "亲手绕圈摊开": "Circle and spread by hand",
+    "随时可以保留手动操作": "Manual play stays available",
+    "自动旋转刮板": "Rotating spreader",
+    "腾出手接单、补货、拦夹子": "Hands free for customers and claws",
+    "鸡蛋、配料、折叠仍由你做": "Eggs, fillings and folds stay yours",
+    "营业前可以关闭": "Switch off before service",
+    "摊好了，试试另一种方式": "Spread! Try the other method",
+    "自动旋转摊糊，观察刮板走过的地方": "Watch the rotating blade spread the batter",
+    "按住铁板绕圈，亲手铺开面糊": "Hold and circle the griddle to spread by hand",
+    "安装完成，下一局就能用！": "Installed! Ready for the next service!",
+    "自动摊开中": "Spreading automatically",
+    "旋转刮板正在绕圈，可先接单或补货": "The spreader is circling. Select an order or restock.",
     "折起左边": "Fold the left edge",
     "折起右边": "Fold the right edge",
     "托起下边": "Lift the bottom edge",
