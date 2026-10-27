@@ -1,4 +1,4 @@
-import {spreadBatter} from './helpers.mjs';
+import {spreadBatter,crackEgg,spreadEgg} from './helpers.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {Game,foods} from '../dist/js/systems/game.js';
@@ -15,8 +15,8 @@ test('coaching follows a real double-egg order through spread, flip, sauce, bag 
  assert.deepEqual(nextAction(g).focus,['food:batter']);
  g.cooking.add('batter',g.inventory);assert.deepEqual(nextAction(g).focus,['scrape']);
  spreadBatter(g.cooking);assert.ok(nextAction(g).focus.includes('food:egg'));
- for(const id of ['egg','egg','scallion','sesame','cilantro'])g.cooking.add(id,g.inventory);
- g.cooking.drag(640,505,700);assert.equal(ingredientStatus(g,'egg'),'done');assert.deepEqual(nextAction(g).focus,['flip']);
+ for(let n=0;n<2;n++)crackEgg(g.cooking,g.inventory);for(const id of ['scallion','sesame','cilantro'])g.cooking.add(id,g.inventory);
+ spreadEgg(g.cooking);assert.equal(ingredientStatus(g,'egg'),'done');assert.deepEqual(nextAction(g).focus,['flip']);
  assert.ok(toolEnabled(g,'flip'));assert.ok(g.cooking.flip());
  for(const [id] of foods)if(g.target.recipe[id]&&!g.cooking.ingredients[id])g.cooking.add(id,g.inventory);
  assert.deepEqual(nextAction(g).focus,['scrape']);assert.equal(toolEnabled(g,'fold'),false);

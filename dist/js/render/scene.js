@@ -1,6 +1,6 @@
 import { charm, patienceMultiplier } from '../systems/progress.js';
 import { t, getLanguage, foodLabel } from '../i18n.js';
-import { foods } from '../systems/game.js';
+import { foods, eggAreas } from '../systems/game.js';
 import { stationRect, toolRect, toolIds, nextAction, ingredientStatus, toolEnabled, customerX, restockPhase, clawGeometry } from '../ui.js';
 export class Scene {
     constructor(canvas) {
@@ -378,21 +378,8 @@ export class Scene {
                     c.restore();
                 }
         }
-        for (const egg of p.eggLayers)
-            if (p.stage === 'egg' && egg.age >= .46 && egg.age < .9) {
-                const u = (egg.age - .46) / .44;
-                c.save();
-                c.globalAlpha = 1 - u;
-                for (const sign of [-1, 1]) {
-                    c.save();
-                    c.translate(egg.x + sign * (16 + u * 47), egg.y - 40 - u * 12);
-                    c.rotate(sign * u * .8);
-                    this.path([[sign * 4, -17], [sign * 20, -10], [sign * 23, 7], [sign * 8, 13], [0, 5], [sign * 6, -1], [0, -7]], '#f1d7ad', '#aa8055', 1.5);
-                    c.restore();
-                }
-                this.ellipse(egg.x, egg.y - 27 + u * 27, 5 * (1 - u), 13 * (1 - u), '#ffd05e');
-                c.restore();
-            }
+        if (p.stage === 'egg')
+            this.drawEggOpening(p);
         if (this.flipAge < .46) {
             const u = this.flipAge / .46;
             c.save();
@@ -507,7 +494,7 @@ export class Scene {
             c.fill();
             c.restore();
         }
-        if (this.dragging && ['batter', 'egg', 'flipped'].includes(p.stage)) {
+        if (this.dragging && !p.heldEgg && ['batter', 'egg', 'flipped'].includes(p.stage)) {
             c.save();
             c.beginPath();
             c.rect(335, 405, 610, 210);
@@ -562,7 +549,7 @@ export class Scene {
             if (tip.startsWith('food:') && !g.tutorial) {
                 this.panel(x - 58, h.y - 114, 116, 78, '#fff1dbeF', 10);
                 this.foodArt(tip.split(':')[1], x - 44, h.y - 111, 88, 51);
-                this.text('点击加一份', x, h.y - 44, 10, '#72503b');
+                this.text(tip === 'food:egg' ? (p.heldEgg ? '再点蛋盘放回' : '点蛋盘拿蛋') : '点击加一份', x, h.y - 44, 10, '#72503b');
             }
         }
         if (g.tutorial && g.started && !g.paused && !g.ended) {
@@ -574,7 +561,7 @@ export class Scene {
             this.text('练习不限时，可丢弃重来', 40, 275, 12, '#785c44', 'left', 265);
             this.text('跳过教程', 170, 312, 14, '#9f512f');
             this.hit('skip', 40, 288, 265, 40);
-            const focus = action.focus[0], h = focus === 'scrape' ? { x: 575, y: 460, w: 130, h: 60 } : this.hits.find(v => v.id === focus);
+            const focus = action.focus[0], h = focus === 'egg:crack' ? { x: 585, y: 464, w: 110, h: 65 } : focus === 'egg:open' && p.heldEgg ? { x: p.heldEgg.x - 55, y: p.heldEgg.y - 60, w: 110, h: 65 } : focus === 'scrape' ? { x: 575, y: 460, w: 130, h: 60 } : this.hits.find(v => v.id === focus);
             if (h) {
                 const x = h.x + h.w / 2, y = h.y - 12 - Math.sin(this.clock * 4) * 4;
                 this.path([[x - 10, y - 15], [x + 10, y - 15], [x, y]], '#fff1b5', '#a8662f');
@@ -591,50 +578,45 @@ export class Scene {
         c.ellipse(640, 502, 199, 85, 0, 0, Math.PI * 2);
         c.clip();
         for (const egg of p.eggLayers) {
-            if (egg.age < .48)
+            if (egg.age < .16)
                 continue;
-            const settle = Math.min(1, (egg.age - .48) / .26), spread = egg.spread;
+            const settle = Math.min(1, (egg.age - .16) / .18), spread = egg.spread;
             const whites = c.createRadialGradient(egg.x - 8, egg.y - 5, 2, egg.x, egg.y, 54);
             whites.addColorStop(0, '#fff9dd');
             whites.addColorStop(1, '#fff0b5c0');
             c.fillStyle = whites;
-            const pool = Array.from({ length: 24 }, (_, j) => { const a = j / 24 * Math.PI * 2, wobble = 1 + Math.sin(a * 3) * .06 + Math.cos(a * 5) * .035; return { x: egg.x + Math.cos(a) * (30 + spread * 18) * settle * wobble, y: egg.y + Math.sin(a) * (15 + spread * 12) * settle * wobble }; });
+            const pool = Array.from({ length: 24 }, (_, j) => { const a = j / 24 * Math.PI * 2, wobble = 1 + Math.sin(a * 3) * .06 + Math.cos(a * 5) * .035; return { x: egg.x + Math.cos(a) * 34 * settle * wobble, y: egg.y + Math.sin(a) * 17 * settle * wobble }; });
+            c.save();
+            c.globalAlpha = egg.broken ? Math.max(.15, 1 - spread) : 1;
             c.beginPath();
             c.moveTo((pool[23].x + pool[0].x) / 2, (pool[23].y + pool[0].y) / 2);
             for (let j = 0; j < 24; j++) {
-                const p = pool[j], next = pool[(j + 1) % 24];
-                c.quadraticCurveTo(p.x, p.y, (p.x + next.x) / 2, (p.y + next.y) / 2);
+                const v = pool[j], next = pool[(j + 1) % 24];
+                c.quadraticCurveTo(v.x, v.y, (v.x + next.x) / 2, (v.y + next.y) / 2);
             }
             c.closePath();
             c.fill();
-            if (spread > 0) {
+            c.restore();
+            if (egg.strokes.length) {
                 c.save();
-                c.scale(1, .48);
-                c.strokeStyle = '#ffd34eae';
-                c.lineWidth = 49;
+                c.scale(1, .45);
                 c.lineCap = 'round';
                 c.lineJoin = 'round';
-                c.beginPath();
-                egg.strokes.forEach((v, i) => { if (!i || v.move)
-                    c.moveTo(v.x, v.y / .48);
-                else
-                    c.lineTo(v.x, v.y / .48); });
-                c.stroke();
-                c.restore();
-            }
-            if (spread > .5) {
-                c.save();
-                c.globalAlpha = (spread - .5) * 1.7;
-                const coat = c.createRadialGradient(603, 478, 15, 640, 502, 204);
-                coat.addColorStop(0, '#ffe387');
-                coat.addColorStop(1, '#efb93b');
-                this.ellipse(640, 502, 199, 85, coat);
-                for (let j = 0; j < 22; j++)
-                    this.ellipse(492 + j * 43 % 296, 465 + j * 17 % 73, 6 + j % 4, 2, '#fff0bf55');
+                for (const [color, width] of [['#fff0b1c0', 88], ['#ffcc55c9', 73], ['#ffe48b70', 48]]) {
+                    c.strokeStyle = color;
+                    c.lineWidth = width;
+                    c.beginPath();
+                    egg.strokes.forEach((v, i) => { if (!i || v.move)
+                        c.moveTo(v.x, v.y / .45);
+                    else
+                        c.lineTo(v.x, v.y / .45); });
+                    c.stroke();
+                }
                 c.restore();
             }
             if (spread < 1) {
-                const size = (1 - spread) * settle, yolk = c.createRadialGradient(egg.x - 4, egg.y - 4, 1, egg.x, egg.y, 17);
+                const size = (egg.broken ? Math.max(0, 1 - spread * 1.8) : 1) * settle;
+                const yolk = c.createRadialGradient(egg.x - 4, egg.y - 4, 1, egg.x, egg.y, 17);
                 yolk.addColorStop(0, '#fff2a4');
                 yolk.addColorStop(.3, '#ffc83d');
                 yolk.addColorStop(1, '#e79816');
@@ -644,6 +626,96 @@ export class Scene {
             }
         }
         c.restore();
+        const current = p.eggLayers.find(e => e.broken && e.spread < 1);
+        if (current && !p.heldEgg) {
+            for (const [i, area] of eggAreas.entries())
+                if (!current.covered[i])
+                    this.ellipse(area.x, area.y, 3, 1.5, '#fff3bd99');
+        }
+    }
+    eggShell(x, y, open) {
+        const c = this.ctx;
+        c.save();
+        c.translate(x, y);
+        for (const sign of [-1, 1]) {
+            c.save();
+            c.translate(sign * open * 34, -open * 6);
+            c.rotate(sign * open * .4);
+            c.beginPath();
+            c.moveTo(0, -22);
+            c.bezierCurveTo(sign * 23, -21, sign * 25, 15, sign * 10, 21);
+            c.quadraticCurveTo(sign * 4, 24, 0, 21);
+            c.lineTo(sign * 4, 12);
+            c.lineTo(-sign * 2, 6);
+            c.lineTo(sign * 4, -1);
+            c.lineTo(-sign * 2, -9);
+            c.lineTo(sign * 3, -15);
+            c.closePath();
+            c.fillStyle = sign < 0 ? '#fff0cc' : '#e7c497';
+            c.fill();
+            c.strokeStyle = '#9d7047';
+            c.lineWidth = 1.8;
+            c.stroke();
+            c.restore();
+        }
+        c.restore();
+    }
+    drawEggOpening(p) {
+        const c = this.ctx, held = p.heldEgg;
+        for (const egg of p.eggLayers)
+            if (egg.age < .55) {
+                const u = egg.age / .55;
+                c.save();
+                c.globalAlpha = 1 - u;
+                this.eggShell(egg.x, egg.y - 32 - u * 30, .8 + u);
+                if (egg.age < .28) {
+                    const fall = egg.age / .28;
+                    this.ellipse(egg.x, egg.y - 23 + fall * 23, 4 * (1 - fall) + 2, 12 * (1 - fall) + 2, '#ffd260');
+                }
+                c.restore();
+            }
+        if (!held)
+            return;
+        if (held.phase === 'held') {
+            c.save();
+            c.setLineDash([7, 8]);
+            c.lineWidth = 2;
+            c.strokeStyle = '#fff0b6b0';
+            c.beginPath();
+            c.ellipse(640, 502, 164, 68, 0, 0, Math.PI * 2);
+            c.stroke();
+            c.restore();
+            const x = this.pointer.x >= 340 && this.pointer.x <= 940 ? this.pointer.x : 640, y = this.pointer.y >= 420 && this.pointer.y < 600 ? this.pointer.y - 30 : 465;
+            this.ellipse(x, y + 28, 16, 4, '#3d2a2940');
+            c.save();
+            c.translate(x, y);
+            c.rotate(-.18);
+            this.ellipse(0, 0, 17, 23, '#fff0ce');
+            c.strokeStyle = '#a6774d';
+            c.lineWidth = 1.5;
+            c.stroke();
+            this.ellipse(-5, -7, 4, 9, '#fff9e5');
+            c.restore();
+            this.panel(474, 573, 332, 25, '#4c3a2af0', 8);
+            this.text('点饼面中央敲一下 · 再点蛋盘可放回', 640, 590, 11, '#fff1c9', 'center', 318);
+        }
+        else {
+            this.eggShell(held.x, held.y - 29, held.open);
+            for (const sign of [-1, 1]) {
+                const x = held.x + sign * (54 + Math.sin(this.clock * 4) * 4);
+                c.strokeStyle = '#ffe9aa';
+                c.lineWidth = 3;
+                c.beginPath();
+                c.moveTo(held.x + sign * 28, held.y - 25);
+                c.lineTo(x, held.y - 25);
+                c.lineTo(x - sign * 8, held.y - 31);
+                c.moveTo(x, held.y - 25);
+                c.lineTo(x - sign * 8, held.y - 19);
+                c.stroke();
+            }
+            this.panel(474, 573, 332, 25, '#4c3a2af0', 8);
+            this.text('按住蛋壳，向左或右拉开', 640, 590, 12, '#fff1c9', 'center', 318);
+        }
     }
     drawRestock(g, dt, bossX) {
         const remaining = g.inventory.refill, c = this.ctx;

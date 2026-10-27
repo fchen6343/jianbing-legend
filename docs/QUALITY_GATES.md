@@ -13,7 +13,7 @@ This changes implementation priority without cancelling scope. The linked Chines
 | Area / 项目 | Actual state / 实际状态 | Gate still pending / 待验收 |
 |---|---|---|
 | Batter / 摊糊 | v0.10.0 introduces angular coverage, local spreading and circular guidance / 改为旋转覆盖、局部铺开、环形引导 | Representative mouse and touch play; user enjoyment / 鼠标触屏代表性试玩、趣味性反馈 |
-| Eggs / 鸡蛋 | Click to add, independent whites/yolks and drag paths / 点击加蛋，独立蛋液和拖动笔触 | Manual crack/settle/spread control; not just a click with animation / 手动打蛋、落下、摊开的连贯控制 |
+| Eggs / 鸡蛋 | v0.11.0: pick, tap, pull shell, settle and spatially spread each egg / 手动拿蛋、敲壳、拉开、落液和逐蛋空间涂抹 | Browser whole-order review, human feel and physical touch / 浏览器整单、真人手感与实体触屏验收 |
 | Folding / 折叠 | Click initiates staged animation / 点击触发分段动画 | Player-directed folds, not one-button completion / 玩家参与分步折叠 |
 | Automation / 设备 | Not implemented / 未实现 | Working visible machines, upgrade cost/effect, off/on and pause / 可见运转、真实价格效果、开关与暂停 |
 | Saves / 存档 | One browser profile, no slots/import/export / 单个本机档案，无三槽导入导出 | Three isolated slots, migration and recovery / 三槽隔离、迁移、恢复 |
@@ -49,5 +49,7 @@ Every increment retains a complete cooking-to-service loop. Future screens/featu
 - Update status/gaps, version, log, source/outputs and verify deployment. State untested parts plainly.
   更新差距、版本、日志、源码和构建产物，核实部署；明确未测试部分。
 
-**Current acceptance / 当前验收**: v0.10.0 is only A1. Eggs, interactive folding, equipment, three-slot saves and fifty-day content are not declared complete. Physical touch tests and the ten-order feel review remain pending.
-**当前仅 A1 增量**：不得把打蛋、互动折叠、设备、三存档或五十天内容标为完成。实体触屏和十单手感验收尚待进行。
+**Current acceptance / 当前验收**: v0.11.0 adds A2 manual egg controls to A1. Interactive folding, equipment, three-slot saves and fifty-day content are not complete. Physical touch tests and the ten-order feel review remain pending.
+**当前 A1 + A2 增量**：互动折叠、设备、三存档或五十天内容未完成；A2 的真人趣味性与真机触屏仍待验收。实体触屏和十单手感验收尚待进行。
+
+全文逐项差距 / Full itemized audit: [REQUIREMENTS_STATUS.md](REQUIREMENTS_STATUS.md).

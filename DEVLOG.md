@@ -250,3 +250,23 @@ All 28 tests pass, including complete orders using real circular input and gestu
 
 Pages 工作流 `40468309475` 成功。在 Chrome 中从倒糊开始，先铺开部分区域、再完成绕圈，随后完成双蛋、抹蛋、葱花、翻面、甜酱、刷匀、果篦儿、折叠、装袋及正确交付，教程正常结束。这里只记录一张教程整单，不冒充十单手感或完整 50 天验收。
 Pages run `40468309475` succeeded. In Chrome, spread a partial region then completed circular coverage and the entire two-egg tutorial through filling, folding, bagging and correct service. The tutorial ended normally. This is one practice order, not the ten-order feel review or fifty-day acceptance.
+
+
+## 2026-10-27 · v0.11.0 · A2 手动打蛋 / Manual eggs
+
+- 对照用户完整版全文逐项检查，新增 docs/REQUIREMENTS_STATUS.md，公开标明未完成系统与验收，不宣称 50 天游戏完成。
+  Audited the entire original specification. The new itemized audit explicitly identifies missing systems and acceptance gates. This is not the complete fifty-day game.
+- 点蛋盘拿蛋，点饼面敲裂，再按住向任一侧拉开；蛋壳开合随指针变化，蛋液落下后才能摊。完成拉开时才同时扣一个库存并增加一个配方数量，重复输入不会再扣。
+  Pick an egg, tap the pancake to crack and pull the shell to either side. Shell separation follows the pointer; the liquid must land before spreading. Stock and recipe commit together exactly once when opening completes.
+- 未打开的蛋可再点蛋盘放回，不消耗食材；半开松手后可重新抓住继续。暂停/切页停止操作及落液，丢弃清理本张状态。加入单指捕获，避免第二个触点接管当前动作。
+  Return an unopened egg at no cost. Re-grab a partially opened shell after lifting. Pause/hiding freezes operation and liquid motion; discard clears the current pancake. Pointer capture prevents a second contact from taking over.
+- 摊蛋改为空间覆盖：先触及蛋黄或已有蛋液，再沿真实路径涂开。原地刷距离、跨越铁板跳点、抬手跨区都不能冒充抹匀。每枚蛋独立，后加蛋不会清空前一枚。绘制保留局部涂抹，不用全饼渐变遮罩伪装覆盖。
+  Egg spreading uses spatial coverage, picking liquid up at the yolk or an existing coating. Stationary distance, teleports and lifted strokes cannot paint untouched areas. Every egg retains independent layers and local strokes.
+- 更新十二步完整教程、双语指引和辅助操作说明；保留模式切换、老板补货、偷吃夹、配料数量和翻面遮挡。
+  Updated the complete twelve-step tutorial, bilingual guidance and accessible instructions; retained modes, restock, claw, portions and underside occlusion.
+
+验证：严格编译及 34 项自动测试通过，包含七项新打蛋回归。所有整单测试改为实际敲蛋、拉壳和空间涂抹路径。Canvas 实际渲染检查了半开蛋壳和局部摊蛋。在线浏览器操作与部署验收待记录；不将自动化输入或测试数当作趣味性通过。
+Validation: strict build and 34 tests passed, including seven new egg regressions. Whole-order tests now use real shell opening and spatial strokes. Actual Canvas renders checked partial shells and local coatings. Online browser/deployment review will be recorded separately; test counts do not establish enjoyment.
+
+仍待完成：手动分步折叠、真实自动化设备、场景/三存档、完整经济/剧情/50 天内容、十单手感和真机触屏。
+Still pending: interactive folds, real automation, scenes/saves, full economy/story/fifty days, ten-order feel review and physical touch testing.

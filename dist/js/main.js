@@ -17,7 +17,7 @@ try {
     profile = restoreProfile(localStorage.getItem('jianbing-legend:progress'));
 }
 catch { }
-let game = new Game(Math.random, profile), dragging = false, last = { x: 0, y: 0 }, saved = false;
+let game = new Game(Math.random, profile), dragging = false, eggDragging = false, activePointer = null, last = { x: 0, y: 0 }, saved = false;
 try {
     if (localStorage.getItem('jianbing-legend:language') === 'en')
         setLanguage('en');
@@ -40,7 +40,8 @@ catch {
     storageFailed = true;
     document.querySelector('#save-status').textContent = t('浏览器无法保存，进度仅在本次打开期间保留');
 } }
-function begin(tutorial = false) { game = new Game(Math.random, profile, tutorial); game.started = true; game.newCustomer(); game.spawn = 9; saved = false; scene.effects = []; scene.eggAge = 2; scene.crispAge = 2; scene.flipAge = 1; scene.toastAge = 0; scene.arrivals.clear(); scene.previousCustomers = []; scene.tutorialDone = profile.tutorial && !tutorial; sound.start(); toolbar(); }
+function stopGesture() { dragging = false; eggDragging = false; activePointer = null; game.cooking.endStroke(); }
+function begin(tutorial = false) { stopGesture(); game = new Game(Math.random, profile, tutorial); game.started = true; game.newCustomer(); game.spawn = 9; saved = false; scene.effects = []; scene.eggAge = 2; scene.crispAge = 2; scene.flipAge = 1; scene.toastAge = 0; scene.arrivals.clear(); scene.previousCustomers = []; scene.tutorialDone = profile.tutorial && !tutorial; sound.start(); toolbar(); }
 const bi = (zh, en) => getLanguage() === 'zh' ? zh : en;
 function renderShop() {
     const active = game.started && !game.ended;
@@ -70,7 +71,7 @@ function renderShop() {
     previewGame.started = true;
     previewScene.draw(previewGame, 0);
 }
-function showShop() { resumeAfterShop = game.started && !game.ended && !game.paused; game.paused = game.started && !game.ended; dragging = false; renderShop(); shopDialog.showModal(); toolbar(); }
+function showShop() { resumeAfterShop = game.started && !game.ended && !game.paused; game.paused = game.started && !game.ended; stopGesture(); renderShop(); shopDialog.showModal(); toolbar(); }
 document.querySelector('#shop-open').addEventListener('click', showShop);
 document.querySelector('#mode-open').addEventListener('click', () => { showShop(); document.querySelector('#mode-settings').scrollIntoView({ block: 'center' }); });
 function closeShop() { previewItem = ''; shopDialog.close(); if (resumeAfterShop)
@@ -119,7 +120,7 @@ languageButton.addEventListener('click', () => { setLanguage(getLanguage() === '
 catch { } });
 pauseButton.addEventListener('click', () => { if (game.started && !game.ended) {
     game.paused = !game.paused;
-    dragging = false;
+    stopGesture();
     toolbar();
 } });
 soundButton.addEventListener('click', () => { sound.muted = !sound.muted; if (!sound.muted)
@@ -129,6 +130,8 @@ soundButton.addEventListener('click', () => { sound.muted = !sound.muted; if (!s
 catch { } });
 function position(e) { const r = canvas.getBoundingClientRect(); return { x: (e.clientX - r.left) * 1280 / r.width, y: (e.clientY - r.top) * 720 / r.height }; }
 canvas.addEventListener('pointerdown', e => {
+    if (activePointer !== null)
+        return;
     const p = position(e);
     last = p;
     scene.pointer = p;
@@ -148,6 +151,23 @@ canvas.addEventListener('pointerdown', e => {
         return;
     }
     sound.start();
+    if (game.cooking.heldEgg && insideGriddle(p.x, p.y)) {
+        const held = game.cooking.heldEgg, focus = held.phase === 'held' ? 'egg:crack' : 'egg:open';
+        if (!tutorialAllows(game, focus))
+            return;
+        if (game.cooking.beginEgg(p.x, p.y)) {
+            if (focus === 'egg:crack')
+                sound.play('egg');
+            game.message = '按住蛋壳，向左或右拉开';
+            scene.notify(game.message);
+            eggDragging = true;
+            activePointer = e.pointerId;
+            canvas.setPointerCapture(e.pointerId);
+        }
+        else
+            scene.notify(held.phase === 'held' ? '点饼面中央敲蛋，边缘容易滑落' : '按住蛋壳，向左或右拉开');
+        return;
+    }
     let effect = '', success = true;
     if (hit) {
         const id = hit.id;
@@ -156,10 +176,10 @@ canvas.addEventListener('pointerdown', e => {
             return;
         }
         if (id.startsWith('food:')) {
-            const food = id.slice(5), before = game.inventory.stock[food];
+            const food = id.slice(5), before = game.inventory.stock[food], held = game.cooking.heldEgg;
             game.message = game.addFood(food);
-            success = game.inventory.stock[food] < before;
-            effect = success ? id : '';
+            success = food === 'egg' ? held !== game.cooking.heldEgg : game.inventory.stock[food] < before;
+            effect = success && food !== 'egg' ? id : '';
             scene.touchFocus = id;
             scene.touchAge = 1.5;
         }
@@ -201,6 +221,7 @@ canvas.addEventListener('pointerdown', e => {
             game.message = success ? '装袋完成，点击顾客交餐' : nextAction(game).detail;
         }
         else if (id === 'discard') {
+            stopGesture();
             game.cooking = new Cooking();
             game.message = '清空铁板，已用食材不会退回';
         }
@@ -224,36 +245,42 @@ canvas.addEventListener('pointerdown', e => {
             }
             if (!success)
                 sound.play('error');
-            else if (id.startsWith('food:'))
-                sound.play(id === 'food:egg' ? 'egg' : id === 'food:crisp' ? 'crisp' : id === 'food:batter' || id === 'food:sweet' || id === 'food:chili' ? 'pour' : 'sprinkle');
+            else if (id.startsWith('food:') && id !== 'food:egg')
+                sound.play(id === 'food:crisp' ? 'crisp' : id === 'food:batter' || id === 'food:sweet' || id === 'food:chili' ? 'pour' : 'sprinkle');
             else if (id === 'flip' || id === 'fold' || id === 'bag')
                 sound.play(id);
         }
     }
-    if (insideGriddle(p.x, p.y) && tutorialAllows(game, 'scrape')) {
-        game.cooking.strokeBreak = true;
-        game.cooking.eggStrokeBreak = true;
-        game.cooking.batterAngle = null;
+    if (!game.cooking.heldEgg && insideGriddle(p.x, p.y) && tutorialAllows(game, 'scrape')) {
+        game.cooking.endStroke();
         dragging = true;
+        activePointer = e.pointerId;
         canvas.setPointerCapture(e.pointerId);
     }
 });
-canvas.addEventListener('pointermove', e => { const p = position(e); scene.pointer = p; if (dragging && !game.paused && insideGriddle(p.x, p.y))
+canvas.addEventListener('pointermove', e => { const p = position(e); if (activePointer !== null && activePointer !== e.pointerId)
+    return; scene.pointer = p; if (eggDragging && !game.paused && game.cooking.pullEgg(p.x, p.y, game.inventory)) {
+    eggDragging = false;
+    game.message = '鸡蛋落到饼上了，从蛋黄开始摊匀';
+    scene.notify(game.message);
+    sound.play('pour');
+} if (dragging && !game.paused && insideGriddle(p.x, p.y))
     game.cooking.drag(p.x, p.y, Math.min(65, Math.hypot(p.x - last.x, p.y - last.y))); if (dragging)
     scene.toolAngle += ((Math.max(-.5, Math.min(.5, (p.x - last.x) * .04))) - scene.toolAngle) * .25; last = p; canvas.style.cursor = scene.hits.some(h => p.x >= h.x && p.x < h.x + h.w && p.y >= h.y && p.y < h.y + h.h) ? 'pointer' : insideGriddle(p.x, p.y) ? 'crosshair' : 'default'; });
-canvas.addEventListener('pointerleave', () => { if (!dragging)
+canvas.addEventListener('pointerleave', () => { if (!dragging && !eggDragging)
     scene.pointer = { x: -100, y: -100 }; });
 for (const event of ['pointerup', 'pointercancel', 'lostpointercapture'])
-    canvas.addEventListener(event, () => { dragging = false; game.cooking.strokeBreak = true; game.cooking.eggStrokeBreak = true; game.cooking.batterAngle = null; });
+    canvas.addEventListener(event, (e) => { if (activePointer === null || activePointer === e.pointerId)
+        stopGesture(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && !shopDialog.open && game.started && !game.ended) {
     game.paused = !game.paused;
-    dragging = false;
+    stopGesture();
     toolbar();
 } });
 document.addEventListener('visibilitychange', () => { if (document.hidden)
     sound.activity(false); if (document.hidden && game.started && !game.ended) {
     game.paused = true;
-    dragging = false;
+    stopGesture();
     toolbar();
 } });
 let previous = performance.now();

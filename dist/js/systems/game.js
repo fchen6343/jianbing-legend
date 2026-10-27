@@ -20,6 +20,8 @@ export class Inventory {
                 this.stock[id] = 8;
     } }
 }
+// Twenty-five sample areas describe the real coating, independent of input distance.
+export const eggAreas = [{ x: 640, y: 502 }, ...Array.from({ length: 8 }, (_, i) => ({ x: 640 + Math.cos(i / 8 * Math.PI * 2) * 73, y: 502 + Math.sin(i / 8 * Math.PI * 2) * 32 })), ...Array.from({ length: 16 }, (_, i) => ({ x: 640 + Math.cos(i / 16 * Math.PI * 2) * 145, y: 502 + Math.sin(i / 16 * Math.PI * 2) * 63 }))];
 export function theftReach(remaining) { return remaining < .8 ? Math.max(0, remaining / .8) : Math.min(1, (3 - remaining) / 1.1); }
 export class Cooking {
     constructor() {
@@ -27,6 +29,8 @@ export class Cooking {
         this.ingredients = {};
         this.underside = {};
         this.eggLayers = [];
+        this.heldEgg = null;
+        this.eggLast = null;
         this.eggStrokeBreak = true;
         this.spread = 0;
         this.batterSectors = Array(16).fill(false);
@@ -39,13 +43,13 @@ export class Cooking {
     }
     get eggSpread() { return this.eggLayers.length ? Math.min(...this.eggLayers.map(e => e.spread)) : 0; }
     add(id, inventory) {
+        if (id === 'egg')
+            return this.pickEgg(inventory);
+        if (this.heldEgg)
+            return '先打开手中的蛋，或再点蛋盘放回';
         if (id === 'batter') {
             if (this.stage !== 'empty')
                 return '先完成或丢弃这一张';
-        }
-        else if (id === 'egg') {
-            if (this.stage !== 'egg')
-                return '先倒面糊，拖动刮板摊匀';
         }
         else if (id === 'scallion' || id === 'sesame' || id === 'cilantro') {
             if (this.stage !== 'egg' && this.stage !== 'flipped')
@@ -60,36 +64,115 @@ export class Cooking {
         this.ingredients[id] = (this.ingredients[id] || 0) + 1;
         if (id === 'batter')
             this.stage = 'batter';
-        if (id === 'egg') {
-            const n = (this.ingredients.egg || 1) - 1;
-            this.eggLayers.push({ x: 585 + n % 3 * 55, y: 487 + Math.floor(n / 3) * 29, age: 0, spread: 0, strokes: [] });
-            this.eggStrokeBreak = true;
-        }
         if (this.stage === 'egg')
             this.underside[id] = (this.underside[id] || 0) + 1;
         return `${foods.find(f => f[0] === id)[1]}，加好了`;
     }
-    drag(x, y, distance) { if (this.stage === 'batter') {
-        this.spreadBatter(x, y, distance);
+    pickEgg(inventory) {
+        if (this.heldEgg) {
+            this.heldEgg = null;
+            return '鸡蛋已放回，没有消耗库存';
+        }
+        if (this.stage !== 'egg')
+            return '先倒面糊，拖动刮板摊匀';
+        if ((this.ingredients.egg || 0) >= 5)
+            return '每种最多五份';
+        if (inventory.stock.egg < 1)
+            return '用完了，叫右侧老板补货';
+        this.heldEgg = { phase: 'held', x: 640, y: 490, open: 0 };
+        this.endStroke();
+        return '拿好鸡蛋了，点饼面敲一下';
     }
-    else if (this.stage === 'egg' && this.ingredients.egg) {
+    beginEgg(x, y) {
+        const egg = this.heldEgg;
+        if (!egg || !Number.isFinite(x) || !Number.isFinite(y))
+            return false;
+        if (egg.phase === 'held') {
+            if (((x - 640) / 172) ** 2 + ((y - 502) / 72) ** 2 > 1)
+                return false;
+            egg.phase = 'cracked';
+            egg.x = x;
+            egg.y = y;
+            egg.open = 0;
+            return true;
+        }
+        return Math.abs(x - egg.x) <= 85 && Math.abs(y - (egg.y - 20)) <= 65;
+    }
+    pullEgg(x, y, inventory) {
+        const held = this.heldEgg;
+        if (!held || held.phase !== 'cracked' || !Number.isFinite(x) || !Number.isFinite(y) || Math.abs(y - held.y) > 85)
+            return false;
+        held.open = Math.min(1, Math.abs(x - held.x) / 58);
+        if (held.open < 1)
+            return false;
+        // Stock and recipe change together only after a complete manual opening.
+        if (!inventory.take('egg')) {
+            this.heldEgg = null;
+            return false;
+        }
+        this.ingredients.egg = (this.ingredients.egg || 0) + 1;
+        this.underside.egg = (this.underside.egg || 0) + 1;
+        this.eggLayers.push({ x: held.x, y: held.y, age: 0, spread: 0, broken: false, loaded: false, covered: eggAreas.map(() => false), strokes: [] });
+        this.heldEgg = null;
+        this.endStroke();
+        return true;
+    }
+    endStroke() { this.strokeBreak = true; this.eggStrokeBreak = true; this.eggLast = null; this.batterAngle = null; for (const egg of this.eggLayers)
+        egg.loaded = false; }
+    drag(x, y, distance) {
+        if (this.heldEgg)
+            return;
+        if (this.stage === 'batter')
+            this.spreadBatter(x, y, distance);
+        else if (this.stage === 'egg' && this.ingredients.egg)
+            this.spreadEgg(x, y, distance);
+        else if (this.stage === 'flipped' && (this.ingredients.sweet || this.ingredients.chili)) {
+            this.sauce = Math.min(1, this.sauce + distance / 300);
+            this.strokes.push({ x, y, move: this.strokeBreak });
+            this.strokeBreak = false;
+            if (this.strokes.length > 100)
+                this.strokes.shift();
+        }
+    }
+    spreadEgg(x, y, distance) {
+        if (!Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(distance) || distance <= 0 || ((x - 640) / 202) ** 2 + ((y - 502) / 88) ** 2 > 1) {
+            this.endStroke();
+            return;
+        }
+        const last = this.eggStrokeBreak ? null : this.eggLast;
+        const length = last ? Math.hypot(x - last.x, (y - last.y) * 2.2) : 0;
+        if (last && length < .5)
+            return;
+        // Lifting or jumping never draws a line across untouched food.
+        const connected = !!last && length <= 180, steps = connected ? Math.max(1, Math.ceil(length / 10)) : 1;
         for (const egg of this.eggLayers) {
-            egg.spread = Math.min(1, egg.spread + distance / 360);
-            if (egg.spread < 1 || egg.strokes.length < 2) {
-                egg.strokes.push({ x, y, move: this.eggStrokeBreak });
-                if (egg.strokes.length > 80)
+            if (egg.age < .28 || egg.spread >= 1)
+                continue;
+            if (!connected)
+                egg.loaded = false;
+            let move = !connected || !egg.loaded;
+            for (let n = 1; n <= steps; n++) {
+                const px = connected ? last.x + (x - last.x) * n / steps : x, py = connected ? last.y + (y - last.y) * n / steps : y;
+                const near = (ax, ay) => Math.hypot(px - ax, (py - ay) * 2.2) < 42;
+                if (!egg.loaded && (near(egg.x, egg.y) || eggAreas.some((a, i) => egg.covered[i] && near(a.x, a.y)))) {
+                    egg.loaded = true;
+                    egg.broken = true;
+                    move = true;
+                }
+                if (!egg.loaded)
+                    continue;
+                eggAreas.forEach((area, i) => { if (Math.hypot(px - area.x, (py - area.y) * 2.2) < 47)
+                    egg.covered[i] = true; });
+                egg.strokes.push({ x: px, y: py, move });
+                move = false;
+                if (egg.strokes.length > 320)
                     egg.strokes.shift();
             }
+            egg.spread = Math.min(1, egg.covered.filter(Boolean).length / 23);
         }
+        this.eggLast = { x, y };
         this.eggStrokeBreak = false;
     }
-    else if (this.stage === 'flipped' && (this.ingredients.sweet || this.ingredients.chili)) {
-        this.sauce = Math.min(1, this.sauce + distance / 300);
-        this.strokes.push({ x, y, move: this.strokeBreak });
-        this.strokeBreak = false;
-        if (this.strokes.length > 100)
-            this.strokes.shift();
-    } }
     spreadBatter(x, y, distance) { const dx = (x - 640) / 205, dy = (y - 505) / 94, r = Math.hypot(dx, dy); if (!Number.isFinite(r) || !Number.isFinite(distance) || distance <= 0 || r < .25 || r > .98) {
         this.batterAngle = null;
         return;
@@ -103,7 +186,7 @@ export class Cooking {
         }
     } this.batterAngle = angle; this.spread = this.batterSectors.filter(Boolean).length / 16; if (this.spread === 1)
         this.stage = 'egg'; }
-    flip() { if (this.stage !== 'egg' || !this.ingredients.egg || this.eggSpread < 1)
+    flip() { if (this.heldEgg || this.stage !== 'egg' || !this.ingredients.egg || this.eggSpread < 1)
         return false; this.stage = 'flipped'; return true; }
     fold() { if (this.stage !== 'flipped' || ((this.ingredients.sweet || this.ingredients.chili) && this.sauce < 1))
         return false; this.stage = 'folded'; this.foldTime = 0; return true; }

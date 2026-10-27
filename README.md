@@ -24,8 +24,8 @@ npm run dev
 - [开发日志 / Development log](DEVLOG.md)
 - [路线图与已知限制 / Roadmap and known limitations](docs/ROADMAP.md)
 
-当前为 v0.10.0 可玩原型，仍在迭代美术、动作与触屏体验。
-v0.10.0 is a playable prototype. Artwork, animation and touch controls are still being refined.
+当前为 v0.11.0 可玩原型，仍在迭代美术、动作与触屏体验。
+v0.11.0 is a playable prototype. Artwork, animation and touch controls are still being refined.
 
 ## v0.4.0 · 暖色手作摊位 / Warm illustrated stall
 
@@ -99,3 +99,11 @@ Hold and circle the griddle guide to spread batter locally. Distance scrubbing n
 
 [阶段质量门槛与真实差距 / Quality gates and actual gaps](docs/QUALITY_GATES.md)。五十天内容分阶段，核心手感优先；互动折叠、设备自动化与三存档尚未完成。
 Fifty-day content is phased behind core interaction quality. Interactive folding, equipment automation and three-slot saves are not yet complete.
+
+## v0.11.0 · A2 手动打蛋 / Manual eggs
+
+点蛋盘拿蛋，在饼面敲一下，按住向左或右拉开蛋壳；再点蛋盘可放回，未打开不消耗库存。蛋液落稳后，从蛋黄开始涂抹到整张饼，双蛋各自保留蛋液和覆盖区域。抬手、暂停后可接着做；原地刷距离不能抹匀。
+Tap the egg tray, tap the pancake to crack, then hold and pull left or right to open. Tap the tray again to return an unopened egg without using stock. Once the liquid lands, start at its yolk and spread it over the pancake. Each egg retains its own coating. Lift or pause and continue; stationary distance spam cannot finish spreading.
+
+[全文需求核对 / Full specification audit](docs/REQUIREMENTS_STATUS.md)明确列出已有、部分完成和未完成内容。分步手动折叠、真实设备、三存档及五十天成长仍未完成。鼠标实际操作与实体触屏、真人趣味性评价分别记录，不用自动测试代替。
+The audit distinguishes working, partial and missing functionality. Interactive folding, actual equipment, three saves and fifty-day progression remain unfinished. Browser play, physical touch and human enjoyment are separate acceptance gates.

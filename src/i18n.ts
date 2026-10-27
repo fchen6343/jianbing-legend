@@ -4,6 +4,21 @@ let language: Language = 'zh';
 export function getLanguage(){ return language; }
 export function setLanguage(value: Language){ language = value; }
 const english: Record<string,string> = {
+"敲开鸡蛋":"Tap to crack the egg",
+"拉开蛋壳":"Pull the shell open",
+"点蛋盘拿蛋":"Tap the tray to pick up an egg",
+"再点蛋盘放回":"Tap the tray again to put it back",
+"先打开手中的蛋，或再点蛋盘放回":"Open the held egg, or tap the tray again to put it back",
+"鸡蛋已放回，没有消耗库存":"Egg returned. No stock was used.",
+"拿好鸡蛋了，点饼面敲一下":"Egg picked up. Tap the pancake to crack it.",
+"按住蛋壳，向左或右拉开":"Hold the shell and pull left or right",
+"点饼面中央敲蛋，边缘容易滑落":"Tap nearer the middle of the pancake to crack the egg",
+"鸡蛋落到饼上了，从蛋黄开始摊匀":"Egg landed. Start at the yolk and spread it out.",
+"点饼面中央敲蛋，再按住向两侧拉开":"Tap the pancake to crack, then hold and pull to either side",
+"点蛋盘拿蛋，敲开并拉开蛋壳；共两个":"Pick up, crack and open two eggs, one at a time",
+"从蛋黄开始拖动，把蛋液涂到整张饼":"Start at the yolk; sweep the egg over the whole pancake",
+"点饼面中央敲一下 · 再点蛋盘可放回":"Tap the pancake to crack \u00b7 Tap the tray to return",
+
 "库存充足":"Stock full", "新鲜食材":"FRESH FOOD", "补满":"Full!", "夹子收好啦":"Claw retracted!", "有人用夹子偷吃！快点夹子！":"A sneaky claw! Tap it!", "叮！夹子收回去，想吃得先点单！":"Clink! Retract that claw and order first!", "请先交餐或清空铁板，再切换模式":"Serve or clear the griddle before changing mode", "模式已切换，顾客已重新点单":"Mode changed. Customers have reordered.",
 
 "点击加一份":"Tap to add one portion","请先完成箭头指向的步骤":"Follow the arrow to finish this step first","练习不限时，可丢弃重来":"Untimed practice. Discard to start again.","跳过教程":"Skip tutorial","点击面糊壶，开始制作":"Tap the batter pitcher to begin","加入双蛋":"Add two eggs","点击鸡蛋两次，订单需要两个蛋":"Tap eggs twice: this order needs two","撒上葱花":"Add scallions","点击葱花桶，加一份葱花":"Tap scallions to add one portion","加入甜面酱":"Add sweet sauce","点击甜面酱桶，加一份酱":"Tap sweet sauce to add one portion","放入果篦儿":"Add guobier crisp","点击脆片托盘，加一片果篦儿":"Tap the crisp tray to add one sheet",
@@ -115,7 +130,7 @@ const english: Record<string,string> = {
   "直接按住铁板移动，摊饼或刷酱": "Drag on the griddle to spread batter or brush sauce",
   "不要香菜": "NO cilantro",
   "煎饼摊传奇：点击食材、拖动摊饼、点击工具和顾客": "Jianbing Legend: select ingredients, drag to spread, and click tools or customers",
-  "鼠标或触屏操作。点击面糊，在铁板上拖动摊饼，加蛋后拖动抹匀，再点击铲子翻面，添加订单配料并拖动刷酱，折叠、装袋后点击顾客。点击老板补货，点击偷吃的夹子阻止偷吃。": "Use a mouse or touchscreen. Click batter and drag on the griddle. Add egg, drag to spread it, flip, add ordered toppings, drag to brush sauce, fold, bag, and serve. Click the boss to restock and tap sneaky claws."
+  "鼠标或触屏操作。点击面糊，绕圈摊开。点蛋盘拿蛋，在饼上敲开并向左或右拉开蛋壳，从蛋黄开始摊匀；再点蛋盘可放回未打开的蛋。随后翻面、加料、刷酱、折叠、装袋、点击顾客交餐。点击老板补货，点击偷吃的夹子阻止偷吃。": "Use a mouse or touchscreen. Circle to spread the batter. Pick up an egg, tap the pancake to crack it, and pull the shell left or right. Start at the yolk and spread it. Tap the egg tray again to return an unopened egg. Then flip, fill, brush, fold, bag and serve. Click the boss to restock and tap sneaky claws."
 };
 const foodEnglish: Record<string,string> = {batter:'Batter',egg:'Egg',scallion:'Scallions',cilantro:'Cilantro',sesame:'Sesame',sweet:'Sweet sauce',chili:'Chili sauce',crisp:'Guobier crisp',ham:'Ham',pork:'Pork',sausage:'Sausage',lettuce:'Lettuce',chicken:'Chicken',youtiao:'Youtiao'};
 const foodChinese: Record<string,string> = {batter:'面糊',egg:'鸡蛋',scallion:'葱花',cilantro:'香菜',sesame:'芝麻',sweet:'甜面酱',chili:'辣椒酱',crisp:'果篦儿',ham:'火腿',pork:'里脊',sausage:'烤肠',lettuce:'生菜',chicken:'鸡柳',youtiao:'果子'};

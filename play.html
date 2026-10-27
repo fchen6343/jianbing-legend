@@ -9,10 +9,24 @@
 #management{position:absolute;right:1.6%;top:13%;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;max-width:23%}#management button,dialog button{font:600 13px system-ui;background:#805239;color:#fff5dd;border:1px solid #c59d6d;border-radius:8px;padding:9px 12px;cursor:pointer}#management button{font-size:clamp(9px,1vw,13px);padding:6px 9px}button:disabled{opacity:.45;cursor:default}dialog{width:min(920px,94vw);max-height:90vh;overflow:auto;border:1px solid #d6b788;border-radius:20px;padding:25px;background:#fff5df;color:#563c2b;box-shadow:0 15px 100px #0008}dialog::backdrop{background:#21190edb}dialog h2{margin:0}dialog p{line-height:1.5;font-size:13px}dialog header{display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:-25px;padding:12px 0;background:#fff5df;z-index:1}.shop-balance{font-weight:bold;font-size:19px!important}.shop-settings{display:grid;grid-template-columns:1fr 1fr;gap:20px}.decor-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}.decor-grid article{background:#efdfbd;border-radius:12px;padding:15px}.decor-grid h3{font-size:16px}.festival-tabs{display:flex;gap:8px;flex-wrap:wrap}button[aria-pressed=true]{background:#b95d38!important}#save-status{position:fixed;bottom:0;background:#6d312b;color:white;font-size:12px;margin:0}@media(max-width:600px){.decor-grid{grid-template-columns:1fr 1fr}.shop-settings{grid-template-columns:1fr}dialog{padding:15px}dialog header{top:-15px}}
 #decor-preview{width:100%;max-width:640px;aspect-ratio:16/9;height:auto;border-radius:12px;display:block;touch-action:auto}button{touch-action:manipulation}dialog button{min-height:44px}#management button{min-height:32px}</style>
 <main id="game-shell"><canvas id="game" width="1280" height="720" aria-label="煎饼摊传奇：点击食材、拖动摊饼、点击工具和顾客" tabindex="0"></canvas><nav id="toolbar" aria-label="Game controls"><button id="language" type="button" aria-label="Switch to English">EN / 中文</button><button id="sound" type="button" aria-label="关闭声音">♪</button><button id="pause" type="button" aria-label="暂停" disabled>Ⅱ</button></nav><nav id="management"><button id="mode-open" type="button">普通模式 ▾</button><button id="shop-open" type="button">装饰与经营</button><button id="learn" type="button">新手教程</button></nav></main><dialog id="shop-dialog" aria-labelledby="shop-title"><header><h2 id="shop-title">装饰与经营</h2><button id="shop-close" type="button">返回煎饼摊</button></header><div id="shop-body"></div></dialog><p id="save-status" role="status"></p>
-<p id="orientation">横屏体验更好，转动手机后再开摊</p><p id="accessible">鼠标或触屏操作。点击面糊，在铁板上拖动摊饼，加蛋后拖动抹匀，再点击铲子翻面，添加订单配料并拖动刷酱，折叠、装袋后点击顾客。点击老板补货，点击偷吃的夹子阻止偷吃。</p><script>(()=>{let language = 'zh';
+<p id="orientation">横屏体验更好，转动手机后再开摊</p><p id="accessible">鼠标或触屏操作。点击面糊，绕圈摊开。点蛋盘拿蛋，在饼上敲开并向左或右拉开蛋壳，从蛋黄开始摊匀；再点蛋盘可放回未打开的蛋。随后翻面、加料、刷酱、折叠、装袋、点击顾客交餐。点击老板补货，点击偷吃的夹子阻止偷吃。</p><script>(()=>{let language = 'zh';
 function getLanguage() { return language; }
 function setLanguage(value) { language = value; }
 const english = {
+    "敲开鸡蛋": "Tap to crack the egg",
+    "拉开蛋壳": "Pull the shell open",
+    "点蛋盘拿蛋": "Tap the tray to pick up an egg",
+    "再点蛋盘放回": "Tap the tray again to put it back",
+    "先打开手中的蛋，或再点蛋盘放回": "Open the held egg, or tap the tray again to put it back",
+    "鸡蛋已放回，没有消耗库存": "Egg returned. No stock was used.",
+    "拿好鸡蛋了，点饼面敲一下": "Egg picked up. Tap the pancake to crack it.",
+    "按住蛋壳，向左或右拉开": "Hold the shell and pull left or right",
+    "点饼面中央敲蛋，边缘容易滑落": "Tap nearer the middle of the pancake to crack the egg",
+    "鸡蛋落到饼上了，从蛋黄开始摊匀": "Egg landed. Start at the yolk and spread it out.",
+    "点饼面中央敲蛋，再按住向两侧拉开": "Tap the pancake to crack, then hold and pull to either side",
+    "点蛋盘拿蛋，敲开并拉开蛋壳；共两个": "Pick up, crack and open two eggs, one at a time",
+    "从蛋黄开始拖动，把蛋液涂到整张饼": "Start at the yolk; sweep the egg over the whole pancake",
+    "点饼面中央敲一下 · 再点蛋盘可放回": "Tap the pancake to crack \u00b7 Tap the tray to return",
     "库存充足": "Stock full", "新鲜食材": "FRESH FOOD", "补满": "Full!", "夹子收好啦": "Claw retracted!", "有人用夹子偷吃！快点夹子！": "A sneaky claw! Tap it!", "叮！夹子收回去，想吃得先点单！": "Clink! Retract that claw and order first!", "请先交餐或清空铁板，再切换模式": "Serve or clear the griddle before changing mode", "模式已切换，顾客已重新点单": "Mode changed. Customers have reordered.",
     "点击加一份": "Tap to add one portion", "请先完成箭头指向的步骤": "Follow the arrow to finish this step first", "练习不限时，可丢弃重来": "Untimed practice. Discard to start again.", "跳过教程": "Skip tutorial", "点击面糊壶，开始制作": "Tap the batter pitcher to begin", "加入双蛋": "Add two eggs", "点击鸡蛋两次，订单需要两个蛋": "Tap eggs twice: this order needs two", "撒上葱花": "Add scallions", "点击葱花桶，加一份葱花": "Tap scallions to add one portion", "加入甜面酱": "Add sweet sauce", "点击甜面酱桶，加一份酱": "Tap sweet sauce to add one portion", "放入果篦儿": "Add guobier crisp", "点击脆片托盘，加一片果篦儿": "Tap the crisp tray to add one sheet",
     "配料不对哦……请清空铁板重试": "Wrong recipe. Try another pancake.", "果篦儿，加好了": "Guobier crisp added", "装饰与经营": "Decorate & grow", "新手教程": "Tutorial", "退出教程": "Exit tutorial", "游戏控制": "Game controls", "每种最多五份": "Up to five portions of each ingredient", "天津模式不提供这种配料": "This ingredient is unavailable in Tianjin mode", "纯血天津人模式": "Tianjin Purist Mode", "街角小店": "Neighborhood shop", "街角煎饼摊": "Street stall", "手作热煎饼": "Fresh Jianbing", "实操新手教程": "HANDS-ON TUTORIAL", "抹匀鸡蛋": "Spread the egg", "按住饼面来回拖动，把蛋液抹匀再翻面": "Drag over the pancake to spread the egg before flipping", "先加鸡蛋，并拖动抹匀蛋液": "Add egg, then drag to spread it evenly", "浏览器无法保存，进度仅在本次打开期间保留": "Storage unavailable: progress lasts only while this page is open", "教程完成": "Tutorial complete", "完成练习，准备正式开摊！": "Practice complete. Ready for business!", "练习不计收入，也不消耗顾客耐心": "Practice has no income or patience loss", "进入正式营业": "Start real service", "福": "FU",
@@ -121,7 +135,7 @@ const english = {
     "直接按住铁板移动，摊饼或刷酱": "Drag on the griddle to spread batter or brush sauce",
     "不要香菜": "NO cilantro",
     "煎饼摊传奇：点击食材、拖动摊饼、点击工具和顾客": "Jianbing Legend: select ingredients, drag to spread, and click tools or customers",
-    "鼠标或触屏操作。点击面糊，在铁板上拖动摊饼，加蛋后拖动抹匀，再点击铲子翻面，添加订单配料并拖动刷酱，折叠、装袋后点击顾客。点击老板补货，点击偷吃的夹子阻止偷吃。": "Use a mouse or touchscreen. Click batter and drag on the griddle. Add egg, drag to spread it, flip, add ordered toppings, drag to brush sauce, fold, bag, and serve. Click the boss to restock and tap sneaky claws."
+    "鼠标或触屏操作。点击面糊，绕圈摊开。点蛋盘拿蛋，在饼上敲开并向左或右拉开蛋壳，从蛋黄开始摊匀；再点蛋盘可放回未打开的蛋。随后翻面、加料、刷酱、折叠、装袋、点击顾客交餐。点击老板补货，点击偷吃的夹子阻止偷吃。": "Use a mouse or touchscreen. Circle to spread the batter. Pick up an egg, tap the pancake to crack it, and pull the shell left or right. Start at the yolk and spread it. Tap the egg tray again to return an unopened egg. Then flip, fill, brush, fold, bag and serve. Click the boss to restock and tap sneaky claws."
 };
 const foodEnglish = { batter: 'Batter', egg: 'Egg', scallion: 'Scallions', cilantro: 'Cilantro', sesame: 'Sesame', sweet: 'Sweet sauce', chili: 'Chili sauce', crisp: 'Guobier crisp', ham: 'Ham', pork: 'Pork', sausage: 'Sausage', lettuce: 'Lettuce', chicken: 'Chicken', youtiao: 'Youtiao' };
 const foodChinese = { batter: '面糊', egg: '鸡蛋', scallion: '葱花', cilantro: '香菜', sesame: '芝麻', sweet: '甜面酱', chili: '辣椒酱', crisp: '果篦儿', ham: '火腿', pork: '里脊', sausage: '烤肠', lettuce: '生菜', chicken: '鸡柳', youtiao: '果子' };
@@ -231,6 +245,8 @@ class Inventory {
                 this.stock[id] = 8;
     } }
 }
+// Twenty-five sample areas describe the real coating, independent of input distance.
+const eggAreas = [{ x: 640, y: 502 }, ...Array.from({ length: 8 }, (_, i) => ({ x: 640 + Math.cos(i / 8 * Math.PI * 2) * 73, y: 502 + Math.sin(i / 8 * Math.PI * 2) * 32 })), ...Array.from({ length: 16 }, (_, i) => ({ x: 640 + Math.cos(i / 16 * Math.PI * 2) * 145, y: 502 + Math.sin(i / 16 * Math.PI * 2) * 63 }))];
 function theftReach(remaining) { return remaining < .8 ? Math.max(0, remaining / .8) : Math.min(1, (3 - remaining) / 1.1); }
 class Cooking {
     constructor() {
@@ -238,6 +254,8 @@ class Cooking {
         this.ingredients = {};
         this.underside = {};
         this.eggLayers = [];
+        this.heldEgg = null;
+        this.eggLast = null;
         this.eggStrokeBreak = true;
         this.spread = 0;
         this.batterSectors = Array(16).fill(false);
@@ -250,13 +268,13 @@ class Cooking {
     }
     get eggSpread() { return this.eggLayers.length ? Math.min(...this.eggLayers.map(e => e.spread)) : 0; }
     add(id, inventory) {
+        if (id === 'egg')
+            return this.pickEgg(inventory);
+        if (this.heldEgg)
+            return '先打开手中的蛋，或再点蛋盘放回';
         if (id === 'batter') {
             if (this.stage !== 'empty')
                 return '先完成或丢弃这一张';
-        }
-        else if (id === 'egg') {
-            if (this.stage !== 'egg')
-                return '先倒面糊，拖动刮板摊匀';
         }
         else if (id === 'scallion' || id === 'sesame' || id === 'cilantro') {
             if (this.stage !== 'egg' && this.stage !== 'flipped')
@@ -271,36 +289,115 @@ class Cooking {
         this.ingredients[id] = (this.ingredients[id] || 0) + 1;
         if (id === 'batter')
             this.stage = 'batter';
-        if (id === 'egg') {
-            const n = (this.ingredients.egg || 1) - 1;
-            this.eggLayers.push({ x: 585 + n % 3 * 55, y: 487 + Math.floor(n / 3) * 29, age: 0, spread: 0, strokes: [] });
-            this.eggStrokeBreak = true;
-        }
         if (this.stage === 'egg')
             this.underside[id] = (this.underside[id] || 0) + 1;
         return `${foods.find(f => f[0] === id)[1]}，加好了`;
     }
-    drag(x, y, distance) { if (this.stage === 'batter') {
-        this.spreadBatter(x, y, distance);
+    pickEgg(inventory) {
+        if (this.heldEgg) {
+            this.heldEgg = null;
+            return '鸡蛋已放回，没有消耗库存';
+        }
+        if (this.stage !== 'egg')
+            return '先倒面糊，拖动刮板摊匀';
+        if ((this.ingredients.egg || 0) >= 5)
+            return '每种最多五份';
+        if (inventory.stock.egg < 1)
+            return '用完了，叫右侧老板补货';
+        this.heldEgg = { phase: 'held', x: 640, y: 490, open: 0 };
+        this.endStroke();
+        return '拿好鸡蛋了，点饼面敲一下';
     }
-    else if (this.stage === 'egg' && this.ingredients.egg) {
+    beginEgg(x, y) {
+        const egg = this.heldEgg;
+        if (!egg || !Number.isFinite(x) || !Number.isFinite(y))
+            return false;
+        if (egg.phase === 'held') {
+            if (((x - 640) / 172) ** 2 + ((y - 502) / 72) ** 2 > 1)
+                return false;
+            egg.phase = 'cracked';
+            egg.x = x;
+            egg.y = y;
+            egg.open = 0;
+            return true;
+        }
+        return Math.abs(x - egg.x) <= 85 && Math.abs(y - (egg.y - 20)) <= 65;
+    }
+    pullEgg(x, y, inventory) {
+        const held = this.heldEgg;
+        if (!held || held.phase !== 'cracked' || !Number.isFinite(x) || !Number.isFinite(y) || Math.abs(y - held.y) > 85)
+            return false;
+        held.open = Math.min(1, Math.abs(x - held.x) / 58);
+        if (held.open < 1)
+            return false;
+        // Stock and recipe change together only after a complete manual opening.
+        if (!inventory.take('egg')) {
+            this.heldEgg = null;
+            return false;
+        }
+        this.ingredients.egg = (this.ingredients.egg || 0) + 1;
+        this.underside.egg = (this.underside.egg || 0) + 1;
+        this.eggLayers.push({ x: held.x, y: held.y, age: 0, spread: 0, broken: false, loaded: false, covered: eggAreas.map(() => false), strokes: [] });
+        this.heldEgg = null;
+        this.endStroke();
+        return true;
+    }
+    endStroke() { this.strokeBreak = true; this.eggStrokeBreak = true; this.eggLast = null; this.batterAngle = null; for (const egg of this.eggLayers)
+        egg.loaded = false; }
+    drag(x, y, distance) {
+        if (this.heldEgg)
+            return;
+        if (this.stage === 'batter')
+            this.spreadBatter(x, y, distance);
+        else if (this.stage === 'egg' && this.ingredients.egg)
+            this.spreadEgg(x, y, distance);
+        else if (this.stage === 'flipped' && (this.ingredients.sweet || this.ingredients.chili)) {
+            this.sauce = Math.min(1, this.sauce + distance / 300);
+            this.strokes.push({ x, y, move: this.strokeBreak });
+            this.strokeBreak = false;
+            if (this.strokes.length > 100)
+                this.strokes.shift();
+        }
+    }
+    spreadEgg(x, y, distance) {
+        if (!Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(distance) || distance <= 0 || ((x - 640) / 202) ** 2 + ((y - 502) / 88) ** 2 > 1) {
+            this.endStroke();
+            return;
+        }
+        const last = this.eggStrokeBreak ? null : this.eggLast;
+        const length = last ? Math.hypot(x - last.x, (y - last.y) * 2.2) : 0;
+        if (last && length < .5)
+            return;
+        // Lifting or jumping never draws a line across untouched food.
+        const connected = !!last && length <= 180, steps = connected ? Math.max(1, Math.ceil(length / 10)) : 1;
         for (const egg of this.eggLayers) {
-            egg.spread = Math.min(1, egg.spread + distance / 360);
-            if (egg.spread < 1 || egg.strokes.length < 2) {
-                egg.strokes.push({ x, y, move: this.eggStrokeBreak });
-                if (egg.strokes.length > 80)
+            if (egg.age < .28 || egg.spread >= 1)
+                continue;
+            if (!connected)
+                egg.loaded = false;
+            let move = !connected || !egg.loaded;
+            for (let n = 1; n <= steps; n++) {
+                const px = connected ? last.x + (x - last.x) * n / steps : x, py = connected ? last.y + (y - last.y) * n / steps : y;
+                const near = (ax, ay) => Math.hypot(px - ax, (py - ay) * 2.2) < 42;
+                if (!egg.loaded && (near(egg.x, egg.y) || eggAreas.some((a, i) => egg.covered[i] && near(a.x, a.y)))) {
+                    egg.loaded = true;
+                    egg.broken = true;
+                    move = true;
+                }
+                if (!egg.loaded)
+                    continue;
+                eggAreas.forEach((area, i) => { if (Math.hypot(px - area.x, (py - area.y) * 2.2) < 47)
+                    egg.covered[i] = true; });
+                egg.strokes.push({ x: px, y: py, move });
+                move = false;
+                if (egg.strokes.length > 320)
                     egg.strokes.shift();
             }
+            egg.spread = Math.min(1, egg.covered.filter(Boolean).length / 23);
         }
+        this.eggLast = { x, y };
         this.eggStrokeBreak = false;
     }
-    else if (this.stage === 'flipped' && (this.ingredients.sweet || this.ingredients.chili)) {
-        this.sauce = Math.min(1, this.sauce + distance / 300);
-        this.strokes.push({ x, y, move: this.strokeBreak });
-        this.strokeBreak = false;
-        if (this.strokes.length > 100)
-            this.strokes.shift();
-    } }
     spreadBatter(x, y, distance) { const dx = (x - 640) / 205, dy = (y - 505) / 94, r = Math.hypot(dx, dy); if (!Number.isFinite(r) || !Number.isFinite(distance) || distance <= 0 || r < .25 || r > .98) {
         this.batterAngle = null;
         return;
@@ -314,7 +411,7 @@ class Cooking {
         }
     } this.batterAngle = angle; this.spread = this.batterSectors.filter(Boolean).length / 16; if (this.spread === 1)
         this.stage = 'egg'; }
-    flip() { if (this.stage !== 'egg' || !this.ingredients.egg || this.eggSpread < 1)
+    flip() { if (this.heldEgg || this.stage !== 'egg' || !this.ingredients.egg || this.eggSpread < 1)
         return false; this.stage = 'flipped'; return true; }
     fold() { if (this.stage !== 'flipped' || ((this.ingredients.sweet || this.ingredients.chili) && this.sauce < 1))
         return false; this.stage = 'folded'; this.foldTime = 0; return true; }
@@ -598,6 +695,8 @@ function nextAction(g) {
     if (g.tutorial)
         return tutorialAction(g);
     const p = g.cooking, c = g.target;
+    if (p.heldEgg)
+        return eggAction(g, 2);
     if (p.stage === 'empty')
         return { step: 1, key: '倒入面糊', detail: '点击面糊壶，开始制作', focus: ['food:batter'], progress: 0 };
     if (p.stage === 'batter')
@@ -605,7 +704,7 @@ function nextAction(g) {
     if (p.stage === 'egg') {
         const needed = foods.filter(([id]) => ['egg', 'scallion', 'sesame', 'cilantro'].includes(id) && (c?.recipe[id] || 0) > (p.ingredients[id] || 0)).map(([id]) => 'food:' + id);
         if (!needed.length && p.eggSpread < 1)
-            return { step: 2, key: '抹匀鸡蛋', detail: '按住饼面来回拖动，把蛋液抹匀再翻面', focus: ['scrape'], progress: p.eggSpread };
+            return { step: 2, key: '抹匀鸡蛋', detail: '从蛋黄开始拖动，把蛋液涂到整张饼', focus: ['scrape'], progress: p.eggSpread };
         return { step: 2, key: needed.length ? '加入蛋与小料' : '可以翻面了', detail: needed.length ? '按订单加入鸡蛋和小料' : '点击铲子，把煎饼翻过来', focus: needed.length ? needed : ['flip'], progress: 0 };
     }
     if (p.stage === 'flipped') {
@@ -618,17 +717,21 @@ function nextAction(g) {
     return { step: 5, key: '交给这位顾客', detail: '点击正在制作的顾客完成交餐', focus: g.target ? ['customer:' + g.target.id] : [], progress: 1 };
 }
 function ingredientStatus(g, id) { const expected = g.target?.recipe[id] || 0, actual = g.cooking.ingredients[id] || 0; return actual > expected ? 'extra' : actual >= expected && expected > 0 ? 'done' : 'needed'; }
-function toolEnabled(g, id) { const p = g.cooking; return id === 'discard' ? p.stage !== 'empty' : id === 'scrape' ? ['batter', 'egg', 'flipped'].includes(p.stage) : id === 'flip' ? p.stage === 'egg' && !!p.ingredients.egg && p.eggSpread >= 1 : id === 'fold' ? p.stage === 'flipped' && (!(p.ingredients.sweet || p.ingredients.chili) || p.sauce >= 1) : id === 'bag' ? p.stage === 'folded' && p.foldTime >= .65 : true; }
+function toolEnabled(g, id) { const p = g.cooking; if (p.heldEgg)
+    return id === 'discard'; return id === 'discard' ? p.stage !== 'empty' : id === 'scrape' ? ['batter', 'egg', 'flipped'].includes(p.stage) : id === 'flip' ? p.stage === 'egg' && !!p.ingredients.egg && p.eggSpread >= 1 : id === 'fold' ? p.stage === 'flipped' && (!(p.ingredients.sweet || p.ingredients.chili) || p.sauce >= 1) : id === 'bag' ? p.stage === 'folded' && p.foldTime >= .65 : true; }
 function customerX(index, shop) { return shop ? 373 + index * 137 : 445 + index * 190; }
+function eggAction(g, step) { const egg = g.cooking.heldEgg; return { step, key: egg.phase === 'held' ? '敲开鸡蛋' : '拉开蛋壳', detail: egg.phase === 'held' ? '点饼面中央敲蛋，再按住向两侧拉开' : '按住蛋壳，向左或右拉开', focus: [egg.phase === 'held' ? 'egg:crack' : 'egg:open'], progress: 0 }; }
 function tutorialAction(g) {
     const p = g.cooking;
+    if (p.heldEgg)
+        return eggAction(g, 3);
     const steps = [
-        ['倒入面糊', '点击面糊壶，开始制作', 'food:batter'], ['摊开煎饼', '按住铁板绕圈移动，让面糊铺满', 'scrape'], ['加入双蛋', '点击鸡蛋两次，订单需要两个蛋', 'food:egg'], ['抹匀鸡蛋', '按住饼面来回拖动，把蛋液抹匀再翻面', 'scrape'], ['撒上葱花', '点击葱花桶，加一份葱花', 'food:scallion'], ['可以翻面了', '点击铲子，把煎饼翻过来', 'flip'], ['加入甜面酱', '点击甜面酱桶，加一份酱', 'food:sweet'], ['刷匀酱料', '按住饼面拖动，将酱料刷匀', 'scrape'], ['放入果篦儿', '点击脆片托盘，加一片果篦儿', 'food:crisp'], ['可以折叠了', '点击折叠，准备打包', 'fold'], ['装进纸袋', '点击纸袋，准备交给顾客', 'bag'], ['交给这位顾客', '点击正在制作的顾客完成交餐', 'customer:' + g.target?.id]
+        ['倒入面糊', '点击面糊壶，开始制作', 'food:batter'], ['摊开煎饼', '按住铁板绕圈移动，让面糊铺满', 'scrape'], ['加入双蛋', '点蛋盘拿蛋，敲开并拉开蛋壳；共两个', 'food:egg'], ['抹匀鸡蛋', '从蛋黄开始拖动，把蛋液涂到整张饼', 'scrape'], ['撒上葱花', '点击葱花桶，加一份葱花', 'food:scallion'], ['可以翻面了', '点击铲子，把煎饼翻过来', 'flip'], ['加入甜面酱', '点击甜面酱桶，加一份酱', 'food:sweet'], ['刷匀酱料', '按住饼面拖动，将酱料刷匀', 'scrape'], ['放入果篦儿', '点击脆片托盘，加一片果篦儿', 'food:crisp'], ['可以折叠了', '点击折叠，准备打包', 'fold'], ['装进纸袋', '点击纸袋，准备交给顾客', 'bag'], ['交给这位顾客', '点击正在制作的顾客完成交餐', 'customer:' + g.target?.id]
     ];
     let i = p.stage === 'empty' ? 0 : p.stage === 'batter' ? 1 : p.stage === 'egg' ? ((p.ingredients.egg || 0) < 2 ? 2 : p.eggSpread < 1 ? 3 : !p.ingredients.scallion ? 4 : 5) : p.stage === 'flipped' ? (!p.ingredients.sweet ? 6 : p.sauce < 1 ? 7 : !p.ingredients.crisp ? 8 : 9) : p.stage === 'folded' ? 10 : 11;
     return { step: i + 1, key: steps[i][0], detail: steps[i][1], focus: p.stage === 'folded' && p.foldTime < .65 ? [] : [steps[i][2]], progress: i === 1 ? p.spread : i === 3 ? p.eggSpread : i === 7 ? p.sauce : 0 };
 }
-function tutorialAllows(g, id) { return !g.tutorial || ['discard', 'boss'].includes(id) || tutorialAction(g).focus.includes(id); }
+function tutorialAllows(g, id) { return !g.tutorial || (id === 'food:egg' && !!g.cooking.heldEgg) || ['discard', 'boss'].includes(id) || tutorialAction(g).focus.includes(id); }
 function restockPhase(remaining) { return remaining <= 0 ? 'ready' : remaining > 3.7 ? 'fetch' : remaining > 2.5 ? 'carry' : 'pour'; }
 function clawGeometry(g) { const th = g.theft; if (!th)
     return null; const ci = g.customers.findIndex(c => c.id === th.customer), sx = customerX(Math.max(0, ci), g.profile.shop), sy = 286, r = stationRect(foods.findIndex(f => f[0] === th.food)); const extension = th.slapped ? Math.max(0, th.remaining / .65) * (th.reach ?? 1) : theftReach(th.remaining), e = extension * extension * (3 - 2 * extension); return { sx, sy, hx: sx + (r.x + 44 - sx) * e, hy: sy + (r.y + 25 - sy) * e, extension }; }
@@ -1013,21 +1116,8 @@ class Scene {
                     c.restore();
                 }
         }
-        for (const egg of p.eggLayers)
-            if (p.stage === 'egg' && egg.age >= .46 && egg.age < .9) {
-                const u = (egg.age - .46) / .44;
-                c.save();
-                c.globalAlpha = 1 - u;
-                for (const sign of [-1, 1]) {
-                    c.save();
-                    c.translate(egg.x + sign * (16 + u * 47), egg.y - 40 - u * 12);
-                    c.rotate(sign * u * .8);
-                    this.path([[sign * 4, -17], [sign * 20, -10], [sign * 23, 7], [sign * 8, 13], [0, 5], [sign * 6, -1], [0, -7]], '#f1d7ad', '#aa8055', 1.5);
-                    c.restore();
-                }
-                this.ellipse(egg.x, egg.y - 27 + u * 27, 5 * (1 - u), 13 * (1 - u), '#ffd05e');
-                c.restore();
-            }
+        if (p.stage === 'egg')
+            this.drawEggOpening(p);
         if (this.flipAge < .46) {
             const u = this.flipAge / .46;
             c.save();
@@ -1142,7 +1232,7 @@ class Scene {
             c.fill();
             c.restore();
         }
-        if (this.dragging && ['batter', 'egg', 'flipped'].includes(p.stage)) {
+        if (this.dragging && !p.heldEgg && ['batter', 'egg', 'flipped'].includes(p.stage)) {
             c.save();
             c.beginPath();
             c.rect(335, 405, 610, 210);
@@ -1197,7 +1287,7 @@ class Scene {
             if (tip.startsWith('food:') && !g.tutorial) {
                 this.panel(x - 58, h.y - 114, 116, 78, '#fff1dbeF', 10);
                 this.foodArt(tip.split(':')[1], x - 44, h.y - 111, 88, 51);
-                this.text('点击加一份', x, h.y - 44, 10, '#72503b');
+                this.text(tip === 'food:egg' ? (p.heldEgg ? '再点蛋盘放回' : '点蛋盘拿蛋') : '点击加一份', x, h.y - 44, 10, '#72503b');
             }
         }
         if (g.tutorial && g.started && !g.paused && !g.ended) {
@@ -1209,7 +1299,7 @@ class Scene {
             this.text('练习不限时，可丢弃重来', 40, 275, 12, '#785c44', 'left', 265);
             this.text('跳过教程', 170, 312, 14, '#9f512f');
             this.hit('skip', 40, 288, 265, 40);
-            const focus = action.focus[0], h = focus === 'scrape' ? { x: 575, y: 460, w: 130, h: 60 } : this.hits.find(v => v.id === focus);
+            const focus = action.focus[0], h = focus === 'egg:crack' ? { x: 585, y: 464, w: 110, h: 65 } : focus === 'egg:open' && p.heldEgg ? { x: p.heldEgg.x - 55, y: p.heldEgg.y - 60, w: 110, h: 65 } : focus === 'scrape' ? { x: 575, y: 460, w: 130, h: 60 } : this.hits.find(v => v.id === focus);
             if (h) {
                 const x = h.x + h.w / 2, y = h.y - 12 - Math.sin(this.clock * 4) * 4;
                 this.path([[x - 10, y - 15], [x + 10, y - 15], [x, y]], '#fff1b5', '#a8662f');
@@ -1226,50 +1316,45 @@ class Scene {
         c.ellipse(640, 502, 199, 85, 0, 0, Math.PI * 2);
         c.clip();
         for (const egg of p.eggLayers) {
-            if (egg.age < .48)
+            if (egg.age < .16)
                 continue;
-            const settle = Math.min(1, (egg.age - .48) / .26), spread = egg.spread;
+            const settle = Math.min(1, (egg.age - .16) / .18), spread = egg.spread;
             const whites = c.createRadialGradient(egg.x - 8, egg.y - 5, 2, egg.x, egg.y, 54);
             whites.addColorStop(0, '#fff9dd');
             whites.addColorStop(1, '#fff0b5c0');
             c.fillStyle = whites;
-            const pool = Array.from({ length: 24 }, (_, j) => { const a = j / 24 * Math.PI * 2, wobble = 1 + Math.sin(a * 3) * .06 + Math.cos(a * 5) * .035; return { x: egg.x + Math.cos(a) * (30 + spread * 18) * settle * wobble, y: egg.y + Math.sin(a) * (15 + spread * 12) * settle * wobble }; });
+            const pool = Array.from({ length: 24 }, (_, j) => { const a = j / 24 * Math.PI * 2, wobble = 1 + Math.sin(a * 3) * .06 + Math.cos(a * 5) * .035; return { x: egg.x + Math.cos(a) * 34 * settle * wobble, y: egg.y + Math.sin(a) * 17 * settle * wobble }; });
+            c.save();
+            c.globalAlpha = egg.broken ? Math.max(.15, 1 - spread) : 1;
             c.beginPath();
             c.moveTo((pool[23].x + pool[0].x) / 2, (pool[23].y + pool[0].y) / 2);
             for (let j = 0; j < 24; j++) {
-                const p = pool[j], next = pool[(j + 1) % 24];
-                c.quadraticCurveTo(p.x, p.y, (p.x + next.x) / 2, (p.y + next.y) / 2);
+                const v = pool[j], next = pool[(j + 1) % 24];
+                c.quadraticCurveTo(v.x, v.y, (v.x + next.x) / 2, (v.y + next.y) / 2);
             }
             c.closePath();
             c.fill();
-            if (spread > 0) {
+            c.restore();
+            if (egg.strokes.length) {
                 c.save();
-                c.scale(1, .48);
-                c.strokeStyle = '#ffd34eae';
-                c.lineWidth = 49;
+                c.scale(1, .45);
                 c.lineCap = 'round';
                 c.lineJoin = 'round';
-                c.beginPath();
-                egg.strokes.forEach((v, i) => { if (!i || v.move)
-                    c.moveTo(v.x, v.y / .48);
-                else
-                    c.lineTo(v.x, v.y / .48); });
-                c.stroke();
-                c.restore();
-            }
-            if (spread > .5) {
-                c.save();
-                c.globalAlpha = (spread - .5) * 1.7;
-                const coat = c.createRadialGradient(603, 478, 15, 640, 502, 204);
-                coat.addColorStop(0, '#ffe387');
-                coat.addColorStop(1, '#efb93b');
-                this.ellipse(640, 502, 199, 85, coat);
-                for (let j = 0; j < 22; j++)
-                    this.ellipse(492 + j * 43 % 296, 465 + j * 17 % 73, 6 + j % 4, 2, '#fff0bf55');
+                for (const [color, width] of [['#fff0b1c0', 88], ['#ffcc55c9', 73], ['#ffe48b70', 48]]) {
+                    c.strokeStyle = color;
+                    c.lineWidth = width;
+                    c.beginPath();
+                    egg.strokes.forEach((v, i) => { if (!i || v.move)
+                        c.moveTo(v.x, v.y / .45);
+                    else
+                        c.lineTo(v.x, v.y / .45); });
+                    c.stroke();
+                }
                 c.restore();
             }
             if (spread < 1) {
-                const size = (1 - spread) * settle, yolk = c.createRadialGradient(egg.x - 4, egg.y - 4, 1, egg.x, egg.y, 17);
+                const size = (egg.broken ? Math.max(0, 1 - spread * 1.8) : 1) * settle;
+                const yolk = c.createRadialGradient(egg.x - 4, egg.y - 4, 1, egg.x, egg.y, 17);
                 yolk.addColorStop(0, '#fff2a4');
                 yolk.addColorStop(.3, '#ffc83d');
                 yolk.addColorStop(1, '#e79816');
@@ -1279,6 +1364,96 @@ class Scene {
             }
         }
         c.restore();
+        const current = p.eggLayers.find(e => e.broken && e.spread < 1);
+        if (current && !p.heldEgg) {
+            for (const [i, area] of eggAreas.entries())
+                if (!current.covered[i])
+                    this.ellipse(area.x, area.y, 3, 1.5, '#fff3bd99');
+        }
+    }
+    eggShell(x, y, open) {
+        const c = this.ctx;
+        c.save();
+        c.translate(x, y);
+        for (const sign of [-1, 1]) {
+            c.save();
+            c.translate(sign * open * 34, -open * 6);
+            c.rotate(sign * open * .4);
+            c.beginPath();
+            c.moveTo(0, -22);
+            c.bezierCurveTo(sign * 23, -21, sign * 25, 15, sign * 10, 21);
+            c.quadraticCurveTo(sign * 4, 24, 0, 21);
+            c.lineTo(sign * 4, 12);
+            c.lineTo(-sign * 2, 6);
+            c.lineTo(sign * 4, -1);
+            c.lineTo(-sign * 2, -9);
+            c.lineTo(sign * 3, -15);
+            c.closePath();
+            c.fillStyle = sign < 0 ? '#fff0cc' : '#e7c497';
+            c.fill();
+            c.strokeStyle = '#9d7047';
+            c.lineWidth = 1.8;
+            c.stroke();
+            c.restore();
+        }
+        c.restore();
+    }
+    drawEggOpening(p) {
+        const c = this.ctx, held = p.heldEgg;
+        for (const egg of p.eggLayers)
+            if (egg.age < .55) {
+                const u = egg.age / .55;
+                c.save();
+                c.globalAlpha = 1 - u;
+                this.eggShell(egg.x, egg.y - 32 - u * 30, .8 + u);
+                if (egg.age < .28) {
+                    const fall = egg.age / .28;
+                    this.ellipse(egg.x, egg.y - 23 + fall * 23, 4 * (1 - fall) + 2, 12 * (1 - fall) + 2, '#ffd260');
+                }
+                c.restore();
+            }
+        if (!held)
+            return;
+        if (held.phase === 'held') {
+            c.save();
+            c.setLineDash([7, 8]);
+            c.lineWidth = 2;
+            c.strokeStyle = '#fff0b6b0';
+            c.beginPath();
+            c.ellipse(640, 502, 164, 68, 0, 0, Math.PI * 2);
+            c.stroke();
+            c.restore();
+            const x = this.pointer.x >= 340 && this.pointer.x <= 940 ? this.pointer.x : 640, y = this.pointer.y >= 420 && this.pointer.y < 600 ? this.pointer.y - 30 : 465;
+            this.ellipse(x, y + 28, 16, 4, '#3d2a2940');
+            c.save();
+            c.translate(x, y);
+            c.rotate(-.18);
+            this.ellipse(0, 0, 17, 23, '#fff0ce');
+            c.strokeStyle = '#a6774d';
+            c.lineWidth = 1.5;
+            c.stroke();
+            this.ellipse(-5, -7, 4, 9, '#fff9e5');
+            c.restore();
+            this.panel(474, 573, 332, 25, '#4c3a2af0', 8);
+            this.text('点饼面中央敲一下 · 再点蛋盘可放回', 640, 590, 11, '#fff1c9', 'center', 318);
+        }
+        else {
+            this.eggShell(held.x, held.y - 29, held.open);
+            for (const sign of [-1, 1]) {
+                const x = held.x + sign * (54 + Math.sin(this.clock * 4) * 4);
+                c.strokeStyle = '#ffe9aa';
+                c.lineWidth = 3;
+                c.beginPath();
+                c.moveTo(held.x + sign * 28, held.y - 25);
+                c.lineTo(x, held.y - 25);
+                c.lineTo(x - sign * 8, held.y - 31);
+                c.moveTo(x, held.y - 25);
+                c.lineTo(x - sign * 8, held.y - 19);
+                c.stroke();
+            }
+            this.panel(474, 573, 332, 25, '#4c3a2af0', 8);
+            this.text('按住蛋壳，向左或右拉开', 640, 590, 12, '#fff1c9', 'center', 318);
+        }
     }
     drawRestock(g, dt, bossX) {
         const remaining = g.inventory.refill, c = this.ctx;
@@ -1414,7 +1589,7 @@ try {
     profile = restoreProfile(localStorage.getItem('jianbing-legend:progress'));
 }
 catch { }
-let game = new Game(Math.random, profile), dragging = false, last = { x: 0, y: 0 }, saved = false;
+let game = new Game(Math.random, profile), dragging = false, eggDragging = false, activePointer = null, last = { x: 0, y: 0 }, saved = false;
 try {
     if (localStorage.getItem('jianbing-legend:language') === 'en')
         setLanguage('en');
@@ -1437,7 +1612,8 @@ catch {
     storageFailed = true;
     document.querySelector('#save-status').textContent = t('浏览器无法保存，进度仅在本次打开期间保留');
 } }
-function begin(tutorial = false) { game = new Game(Math.random, profile, tutorial); game.started = true; game.newCustomer(); game.spawn = 9; saved = false; scene.effects = []; scene.eggAge = 2; scene.crispAge = 2; scene.flipAge = 1; scene.toastAge = 0; scene.arrivals.clear(); scene.previousCustomers = []; scene.tutorialDone = profile.tutorial && !tutorial; sound.start(); toolbar(); }
+function stopGesture() { dragging = false; eggDragging = false; activePointer = null; game.cooking.endStroke(); }
+function begin(tutorial = false) { stopGesture(); game = new Game(Math.random, profile, tutorial); game.started = true; game.newCustomer(); game.spawn = 9; saved = false; scene.effects = []; scene.eggAge = 2; scene.crispAge = 2; scene.flipAge = 1; scene.toastAge = 0; scene.arrivals.clear(); scene.previousCustomers = []; scene.tutorialDone = profile.tutorial && !tutorial; sound.start(); toolbar(); }
 const bi = (zh, en) => getLanguage() === 'zh' ? zh : en;
 function renderShop() {
     const active = game.started && !game.ended;
@@ -1467,7 +1643,7 @@ function renderShop() {
     previewGame.started = true;
     previewScene.draw(previewGame, 0);
 }
-function showShop() { resumeAfterShop = game.started && !game.ended && !game.paused; game.paused = game.started && !game.ended; dragging = false; renderShop(); shopDialog.showModal(); toolbar(); }
+function showShop() { resumeAfterShop = game.started && !game.ended && !game.paused; game.paused = game.started && !game.ended; stopGesture(); renderShop(); shopDialog.showModal(); toolbar(); }
 document.querySelector('#shop-open').addEventListener('click', showShop);
 document.querySelector('#mode-open').addEventListener('click', () => { showShop(); document.querySelector('#mode-settings').scrollIntoView({ block: 'center' }); });
 function closeShop() { previewItem = ''; shopDialog.close(); if (resumeAfterShop)
@@ -1516,7 +1692,7 @@ languageButton.addEventListener('click', () => { setLanguage(getLanguage() === '
 catch { } });
 pauseButton.addEventListener('click', () => { if (game.started && !game.ended) {
     game.paused = !game.paused;
-    dragging = false;
+    stopGesture();
     toolbar();
 } });
 soundButton.addEventListener('click', () => { sound.muted = !sound.muted; if (!sound.muted)
@@ -1526,6 +1702,8 @@ soundButton.addEventListener('click', () => { sound.muted = !sound.muted; if (!s
 catch { } });
 function position(e) { const r = canvas.getBoundingClientRect(); return { x: (e.clientX - r.left) * 1280 / r.width, y: (e.clientY - r.top) * 720 / r.height }; }
 canvas.addEventListener('pointerdown', e => {
+    if (activePointer !== null)
+        return;
     const p = position(e);
     last = p;
     scene.pointer = p;
@@ -1545,6 +1723,23 @@ canvas.addEventListener('pointerdown', e => {
         return;
     }
     sound.start();
+    if (game.cooking.heldEgg && insideGriddle(p.x, p.y)) {
+        const held = game.cooking.heldEgg, focus = held.phase === 'held' ? 'egg:crack' : 'egg:open';
+        if (!tutorialAllows(game, focus))
+            return;
+        if (game.cooking.beginEgg(p.x, p.y)) {
+            if (focus === 'egg:crack')
+                sound.play('egg');
+            game.message = '按住蛋壳，向左或右拉开';
+            scene.notify(game.message);
+            eggDragging = true;
+            activePointer = e.pointerId;
+            canvas.setPointerCapture(e.pointerId);
+        }
+        else
+            scene.notify(held.phase === 'held' ? '点饼面中央敲蛋，边缘容易滑落' : '按住蛋壳，向左或右拉开');
+        return;
+    }
     let effect = '', success = true;
     if (hit) {
         const id = hit.id;
@@ -1553,10 +1748,10 @@ canvas.addEventListener('pointerdown', e => {
             return;
         }
         if (id.startsWith('food:')) {
-            const food = id.slice(5), before = game.inventory.stock[food];
+            const food = id.slice(5), before = game.inventory.stock[food], held = game.cooking.heldEgg;
             game.message = game.addFood(food);
-            success = game.inventory.stock[food] < before;
-            effect = success ? id : '';
+            success = food === 'egg' ? held !== game.cooking.heldEgg : game.inventory.stock[food] < before;
+            effect = success && food !== 'egg' ? id : '';
             scene.touchFocus = id;
             scene.touchAge = 1.5;
         }
@@ -1598,6 +1793,7 @@ canvas.addEventListener('pointerdown', e => {
             game.message = success ? '装袋完成，点击顾客交餐' : nextAction(game).detail;
         }
         else if (id === 'discard') {
+            stopGesture();
             game.cooking = new Cooking();
             game.message = '清空铁板，已用食材不会退回';
         }
@@ -1621,36 +1817,42 @@ canvas.addEventListener('pointerdown', e => {
             }
             if (!success)
                 sound.play('error');
-            else if (id.startsWith('food:'))
-                sound.play(id === 'food:egg' ? 'egg' : id === 'food:crisp' ? 'crisp' : id === 'food:batter' || id === 'food:sweet' || id === 'food:chili' ? 'pour' : 'sprinkle');
+            else if (id.startsWith('food:') && id !== 'food:egg')
+                sound.play(id === 'food:crisp' ? 'crisp' : id === 'food:batter' || id === 'food:sweet' || id === 'food:chili' ? 'pour' : 'sprinkle');
             else if (id === 'flip' || id === 'fold' || id === 'bag')
                 sound.play(id);
         }
     }
-    if (insideGriddle(p.x, p.y) && tutorialAllows(game, 'scrape')) {
-        game.cooking.strokeBreak = true;
-        game.cooking.eggStrokeBreak = true;
-        game.cooking.batterAngle = null;
+    if (!game.cooking.heldEgg && insideGriddle(p.x, p.y) && tutorialAllows(game, 'scrape')) {
+        game.cooking.endStroke();
         dragging = true;
+        activePointer = e.pointerId;
         canvas.setPointerCapture(e.pointerId);
     }
 });
-canvas.addEventListener('pointermove', e => { const p = position(e); scene.pointer = p; if (dragging && !game.paused && insideGriddle(p.x, p.y))
+canvas.addEventListener('pointermove', e => { const p = position(e); if (activePointer !== null && activePointer !== e.pointerId)
+    return; scene.pointer = p; if (eggDragging && !game.paused && game.cooking.pullEgg(p.x, p.y, game.inventory)) {
+    eggDragging = false;
+    game.message = '鸡蛋落到饼上了，从蛋黄开始摊匀';
+    scene.notify(game.message);
+    sound.play('pour');
+} if (dragging && !game.paused && insideGriddle(p.x, p.y))
     game.cooking.drag(p.x, p.y, Math.min(65, Math.hypot(p.x - last.x, p.y - last.y))); if (dragging)
     scene.toolAngle += ((Math.max(-.5, Math.min(.5, (p.x - last.x) * .04))) - scene.toolAngle) * .25; last = p; canvas.style.cursor = scene.hits.some(h => p.x >= h.x && p.x < h.x + h.w && p.y >= h.y && p.y < h.y + h.h) ? 'pointer' : insideGriddle(p.x, p.y) ? 'crosshair' : 'default'; });
-canvas.addEventListener('pointerleave', () => { if (!dragging)
+canvas.addEventListener('pointerleave', () => { if (!dragging && !eggDragging)
     scene.pointer = { x: -100, y: -100 }; });
 for (const event of ['pointerup', 'pointercancel', 'lostpointercapture'])
-    canvas.addEventListener(event, () => { dragging = false; game.cooking.strokeBreak = true; game.cooking.eggStrokeBreak = true; game.cooking.batterAngle = null; });
+    canvas.addEventListener(event, (e) => { if (activePointer === null || activePointer === e.pointerId)
+        stopGesture(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && !shopDialog.open && game.started && !game.ended) {
     game.paused = !game.paused;
-    dragging = false;
+    stopGesture();
     toolbar();
 } });
 document.addEventListener('visibilitychange', () => { if (document.hidden)
     sound.activity(false); if (document.hidden && game.started && !game.ended) {
     game.paused = true;
-    dragging = false;
+    stopGesture();
     toolbar();
 } });
 let previous = performance.now();
