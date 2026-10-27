@@ -163,3 +163,16 @@ Completed the real Chrome tutorial in Tianjin mode: spread batter, spread two eg
 
 付费装饰、奖励阈值、魅力及五人队列通过自动规则测试验证；未通过浏览器实际攒够全部装饰费用或跑完所有节日。手机实机及完整多日平衡验收仍待后续。
 Purchases, reward thresholds, charm and the five-person queue are covered by automated rules tests. Browser testing did not grind the cost of all decorations or complete every festival. Physical-mobile and full multi-day balance review remain outstanding.
+
+## 2026-10-27 · v0.6.0 · 可辨认食材与逐步教学 / Readable ingredients and guided practice
+
+- 按反馈重画原生 Canvas 食材：相连长油条、大张起泡果篦儿、独立鸡蛋、葱花圆环、香菜叶梗、成片生菜及肉类；仅葱花、香菜和两种酱放铁桶，其余使用托盘或面糊壶。固定双语名牌、库存和悬停/触摸大图帮助识别。
+  Rebuilt native Canvas food illustrations: joined long youtiao, blistered guobier sheets, eggs, scallion rings, cilantro leaves/stems, lettuce and proteins. Only herbs and sauces use pails; other foods use trays or a batter pitcher. Bilingual labels, stock and enlarged hover/touch previews improve recognition.
+- 教程改成十二步固定双蛋、葱花、甜酱、单片果篦儿订单；当前步骤箭头、操作门槛、错误提示、丢弃重试及跳过/重玩。完整操作后才完成教学，无计时压力及经济奖励。
+  A twelve-step tutorial guides a two-egg, scallion, sweet-sauce and one-crisp order. Arrows and input gates enforce the current action, with recovery, skip and replay. Only a complete correctly served pancake completes practice; no time pressure or economic rewards.
+- 当前订单显示已加/需要，顾客携带简短图标订单；加料动画与食材造型一致。刷酱沿独立拖动路径连续绘制并限制在饼内；折叠分阶段，装袋时成品下滑，袋口露出饼边。
+  Active orders show added/required quantities, and customers carry short icon orders. Drops use matching food shapes. Sauce follows continuous independent drag paths clipped to the pancake. Folds proceed in stages; the pancake slides into the bag with an exposed edge.
+- 经营界面显示距离开店还差多少，所有装饰可免费场景预览，预览不修改钱包或存档。增加触屏按钮尺寸；验证食材及工具命中区域互不重叠。
+  The shop shows the remaining opening cost. Every decoration has a free scene preview that does not change money or saves. Touch controls are enlarged and ingredient/tool hit regions are checked for overlap.
+- 严格编译和十五项测试通过，含完整十二步教学、份数/经济验证、刷酱断笔与命中几何；使用真实 Scene 渲染器生成并检查原生画布预览。本轮浏览器连接工具未提供，因此不声称完成新版浏览器或实体手机验收。
+  Strict compilation and all fifteen tests pass, including the complete tutorial, quantities/economy, separate sauce strokes and hit geometry. Native previews use the actual Scene renderer. Browser connection tools were unavailable this round; new browser and physical-mobile acceptance is not claimed.

@@ -77,3 +77,11 @@ The shop pauses play and restores the previous pause state on close. Modes and f
 
 教程使用固定双蛋、双脆、甜面酱订单，保留真实库存与制作动作，但不耗时间、耐心，不出现偷吃，不发收入或活动奖励；正确交餐后标记完成。可丢弃重做、补货，或退出重来。
 The tutorial uses a fixed two-egg, two-crisp, sweet-sauce order with real inventory and cooking. It has no time/patience loss, theft, income or event rewards. Correct service marks completion. Discard, restock or exit to retry.
+
+## v0.6.0 当前交互 / Current interaction
+
+以十二步教程替代上文 v0.5.0 的双脆说明：当前练习订单为双蛋、葱花、甜面酱、单片果篦儿。一次仅接受当前步骤对应的制作输入；垃圾桶、补货和跳过仍可使用。正式营业不受教程门槛限制。
+The twelve-step tutorial supersedes the earlier v0.5.0 double-crisp description: practice uses two eggs, scallions, sweet sauce and one guobier. Only the current production action is accepted; discard, restock and skip remain available. Normal service is not tutorial-gated.
+
+固定名牌方便触屏识别，点一次加一份。订单中的分数为已加/需要。经营窗口中先点“预览”可免费查看装饰，不消耗钱包；点购买才产生游戏内支出。
+Fixed labels help touch recognition; one tap adds one portion. Order fractions show added/required amounts. Preview in the shop displays decorations for free; only Buy spends game currency.

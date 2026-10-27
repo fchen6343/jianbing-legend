@@ -24,8 +24,8 @@ npm run dev
 - [开发日志 / Development log](DEVLOG.md)
 - [路线图与已知限制 / Roadmap and known limitations](docs/ROADMAP.md)
 
-当前为 v0.5.0 可玩原型，仍在迭代美术、动作与触屏体验。
-v0.5.0 is a playable prototype. Artwork, animation and touch controls are still being refined.
+当前为 v0.6.0 可玩原型，仍在迭代美术、动作与触屏体验。
+v0.6.0 is a playable prototype. Artwork, animation and touch controls are still being refined.
 
 ## v0.4.0 · 暖色手作摊位 / Warm illustrated stall
 
@@ -58,3 +58,11 @@ Still an iterative prototype, with local progression and upgrades, but without p
 
 进度只存于当前浏览器；不跨设备同步，不涉及真实支付。旧版没有累计钱包，此版本从 ¥0 开始。
 Progress is local to this browser, without cross-device sync or real payments. Earlier versions had no cumulative wallet; this version starts at ¥0.
+
+## v0.6.0 · 清晰食材与十二步教程 / Clear food and twelve-step practice
+
+果子、果篦儿及其他食材使用独立实物造型、不同容器和固定名牌；悬停/触摸显示大图。订单显示已加/需要，顾客有简短订单气泡。只有葱花、香菜和酱料在铁桶中。
+Foods now have distinct shapes, appropriate containers and fixed labels with enlarged hover/touch previews. Orders show added/required counts, with short customer bubbles. Only scallions, cilantro and sauces use pails.
+
+教程逐步指引完成双蛋、葱花、甜酱、果篦儿煎饼：倒糊、摊开、双蛋、抹蛋、葱花、翻面、加酱、刷匀、脆片、折叠、装袋、交餐。每步有箭头，可跳过或重玩。经营页提供免费装饰预览与开店差额。界面继续支持中英文。
+The tutorial guides a complete pancake: batter, spread, two eggs, spread egg, scallions, flip, sauce, brush, crisp, fold, bag and serve. Each step has an arrow; skip or replay anytime between days. The shop offers free decoration previews and the remaining upgrade cost. Chinese and English remain available.

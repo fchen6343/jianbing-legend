@@ -53,6 +53,105 @@ export class Scene {
     else {
         this.ellipse(x + w / 2, y + h / 2, w * .3, h * .28, foods[index]?.[2] || '#dcb569');
     } }
+    foodArt(id, x, y, w, h) {
+        const c = this.ctx;
+        c.save();
+        c.translate(x, y);
+        c.scale(w / 100, h / 70);
+        if (id === 'youtiao') {
+            const grad = c.createLinearGradient(0, 0, 0, 70);
+            grad.addColorStop(0, '#ffe29a');
+            grad.addColorStop(.5, '#d9922f');
+            grad.addColorStop(1, '#9d581f');
+            for (let j = 0; j < 2; j++) {
+                this.box(3, 15 + j * 21, 94, 25, grad, 12);
+                for (let k = 0; k < 18; k++)
+                    this.ellipse(9 + k * 17 % 81, 20 + j * 21 + k * 7 % 13, 3 + k % 3, 2, '#f6cb7c99');
+            }
+            c.strokeStyle = '#a36b2b';
+            c.lineWidth = 2;
+            c.beginPath();
+            c.moveTo(13, 38);
+            c.lineTo(89, 38);
+            c.stroke();
+        }
+        else if (id === 'crisp') {
+            this.path([[5, 18], [76, 3], [96, 18], [83, 61], [18, 66], [3, 48]], '#e8b457', '#a1692b', 2);
+            this.path([[14, 23], [77, 10], [87, 20], [74, 53], [21, 57]], '#f5ce78', '#c08b3d', 1);
+            for (let n = 0; n < 30; n++) {
+                const px = 17 + n * 19 % 59, py = 19 + n * 13 % 31;
+                this.ellipse(px, py, 2 + n % 3, 1 + n % 2, n % 2 ? '#ffe3a0' : '#c18a37');
+            }
+        }
+        else if (id === 'scallion') {
+            for (let n = 0; n < 24; n++) {
+                const px = 9 + n * 23 % 82, py = 9 + n * 17 % 50;
+                this.ellipse(px, py, 5, 4, '#79ac51');
+                this.ellipse(px, py, 2.8, 2.2, '#d9e9a1');
+            }
+        }
+        else if (id === 'cilantro' || id === 'lettuce') {
+            for (let n = 0; n < (id === 'cilantro' ? 9 : 5); n++) {
+                const px = 17 + n * 29 % 65, py = 12 + n * 13 % 40;
+                c.strokeStyle = '#467739';
+                c.lineWidth = 2;
+                c.beginPath();
+                c.moveTo(px, py + 16);
+                c.lineTo(px + 6, py);
+                c.stroke();
+                for (let j = 0; j < 3; j++)
+                    this.ellipse(px + j * 5 - 3, py + j * 3, id === 'lettuce' ? 17 : 7, id === 'lettuce' ? 9 : 5, j % 2 ? '#619843' : '#83b35a');
+            }
+        }
+        else if (id === 'egg') {
+            this.ellipse(52, 37, 22, 29, '#b49364');
+            this.ellipse(50, 33, 21, 28, '#f5dfb8');
+            this.ellipse(44, 22, 4, 9, '#fff2d5');
+        }
+        else if (id === 'batter') {
+            this.box(21, 7, 52, 54, '#e2e8dc', 8);
+            this.ellipse(47, 12, 25, 9, '#f2d395');
+            this.path([[69, 15], [94, 11], [72, 36]], '#d7ded1', '#8a9d91');
+            c.strokeStyle = '#dce4d7';
+            c.lineWidth = 8;
+            c.beginPath();
+            c.ellipse(20, 32, 15, 18, 0, 1, 5);
+            c.stroke();
+        }
+        else if (id === 'sweet' || id === 'chili') {
+            this.ellipse(50, 35, 43, 24, id === 'sweet' ? '#6f3826' : '#c04229');
+            for (let n = 0; n < 10; n++)
+                this.ellipse(17 + n * 23 % 66, 23 + n * 11 % 25, 2, 1, id === 'sweet' ? '#a56b42' : '#f2c17c');
+        }
+        else if (id === 'sesame') {
+            for (let n = 0; n < 50; n++)
+                this.ellipse(7 + n * 31 % 86, 8 + n * 17 % 53, 2, 1, '#e5c888');
+        }
+        else if (id === 'ham') {
+            for (let n = 0; n < 4; n++) {
+                this.box(12 + n * 17, 15 + n * 4, 26, 36, '#bd6560', 7);
+                this.box(14 + n * 17, 17 + n * 4, 22, 30, '#eea38c', 5);
+            }
+        }
+        else if (id === 'sausage') {
+            for (let n = 0; n < 3; n++) {
+                this.box(8 + n * 28, 10 + n * 4, 24, 47, '#93412a', 11);
+                c.strokeStyle = '#e2a06b';
+                c.lineWidth = 2;
+                for (let j = 0; j < 3; j++) {
+                    c.beginPath();
+                    c.moveTo(13 + n * 28, 20 + j * 11 + n * 4);
+                    c.lineTo(26 + n * 28, 25 + j * 11 + n * 4);
+                    c.stroke();
+                }
+            }
+        }
+        else {
+            for (let n = 0; n < 5; n++)
+                this.box(6 + n * 17, 10 + n % 2 * 12, 19, 44, id === 'chicken' ? '#dba23e' : '#b77749', 7);
+        }
+        c.restore();
+    }
     person(look, x, y, w = 182, h = 208) { const im = this.neighbors, c = this.ctx; if (im.complete && im.naturalWidth) {
         const cw = im.naturalWidth / 2, ch = im.naturalHeight / 2;
         c.drawImage(im, look % 2 * cw, Math.floor(look / 2) * ch, cw, ch, x - w / 2, y, w, h);
@@ -127,6 +226,11 @@ export class Scene {
                 this.box(x - 53, 320, 106 * Math.max(0, v.patience / v.max), 5, v.patience < 30 ? '#c6563f' : '#8ea968', 3);
                 if (v.patience < 25)
                     this.text('!', x + 66, 171, 24, '#fff1cc');
+                if ('recipe' in v) {
+                    const entries = Object.entries(v.recipe).filter(([id]) => id !== 'batter').slice(0, 3);
+                    this.panel(x - 59, 269, 118, 35, '#fff1d8eb', 8);
+                    entries.forEach(([id, n], k) => { this.foodArt(id, x - 53 + k * 37, 271, 25, 22); this.text(String(n), x - 25 + k * 37, 297, 9, '#65462e'); });
+                }
                 this.hit('customer:' + v.id, x - (g.profile.shop ? 66 : 84), 102, g.profile.shop ? 132 : 168, 224);
                 if (selected && g.cooking.stage === 'bagged')
                     this.focusRing({ x: x - 84, y: 134, w: 168, h: 184 });
@@ -188,52 +292,35 @@ export class Scene {
                 this.focusRing(r, `rgba(255,220,144,${.45 + Math.sin(this.clock * 3) * .18})`);
             if (hover)
                 this.focusRing(r, '#fff1c5');
+            const bucket = ['scallion', 'cilantro', 'sweet', 'chili'].includes(id);
             const steel = c.createLinearGradient(r.x, 0, r.x + r.w, 0);
-            steel.addColorStop(0, '#596b69');
-            steel.addColorStop(.18, '#e8efeb');
-            steel.addColorStop(.43, '#8d9e98');
-            steel.addColorStop(.72, '#d8e3df');
-            steel.addColorStop(1, '#566864');
-            this.ellipse(r.x + 44, r.y + 61, 43, 10, '#243b3855');
-            this.box(r.x + 4, r.y + 19, 80, 43, steel, 9);
-            this.ellipse(r.x + 44, r.y + 59, 40, 10, steel);
-            this.ellipse(r.x + 44, r.y + 20, 44, 20, '#e8eeea');
-            this.ellipse(r.x + 44, r.y + 20, 39, 16, '#3b504c');
-            c.save();
-            c.beginPath();
-            c.ellipse(r.x + 44, r.y + 20, 37, 14, 0, 0, Math.PI * 2);
-            c.clip();
-            this.ellipse(r.x + 44, r.y + 24, 39, 16, count ? (id === 'egg' ? '#796d4a' : foods[i][2]) : '#35433c');
-            if (count) {
-                for (let z = 0; z < 18; z++) {
-                    const px = r.x + 13 + (z * 29 % 62), py = r.y + 10 + (z * 17 % 24);
-                    if (['scallion', 'cilantro', 'lettuce'].includes(id))
-                        this.box(px, py, 7, 3, z % 2 ? '#487b31' : '#a5bd59', 1);
-                    else if (['crisp', 'youtiao', 'ham', 'sausage', 'chicken', 'pork'].includes(id)) {
-                        c.save();
-                        c.translate(px, py);
-                        c.rotate(z * .8);
-                        this.box(-3, -3, id === 'youtiao' ? 18 : 11, 7, z % 2 ? '#e8b15e' : foods[i][2], 3);
-                        c.restore();
-                    }
-                    else if (id === 'egg' && z < 6) {
-                        const ex = r.x + 23 + (z % 3) * 21, ey = r.y + 13 + Math.floor(z / 3) * 17;
-                        this.ellipse(ex + 1, ey + 2, 9, 10, '#9c815b');
-                        this.ellipse(ex, ey, 8, 10, '#f1d6a1');
-                        this.ellipse(ex - 2, ey - 3, 2, 4, '#fff1cd');
-                    }
-                    else if (id === 'sesame')
-                        this.ellipse(px, py, 2, 1, '#fff3c9');
-                }
+            steel.addColorStop(0, '#64736e');
+            steel.addColorStop(.3, '#f0f2e5');
+            steel.addColorStop(.6, '#99aaa1');
+            steel.addColorStop(1, '#566964');
+            if (bucket) {
+                this.box(r.x + 5, r.y + 17, 78, 38, steel, 10);
+                this.ellipse(r.x + 44, r.y + 51, 39, 10, steel);
+                this.ellipse(r.x + 44, r.y + 18, 43, 19, '#e2e9df');
+                this.ellipse(r.x + 44, r.y + 18, 38, 15, '#35493e');
+                c.save();
+                c.beginPath();
+                c.ellipse(r.x + 44, r.y + 18, 37, 14, 0, 0, 7);
+                c.clip();
+                if (count)
+                    this.foodArt(id, r.x + 7, r.y + 1, 74, 34);
+                c.restore();
             }
-            c.restore();
-            c.strokeStyle = '#f3faf5';
-            c.lineWidth = 1.6;
-            c.beginPath();
-            c.ellipse(r.x + 44, r.y + 20, 42, 18, 0, 0, 7);
-            c.stroke();
-            this.box(r.x + r.w - 25, r.y + 40, 24, 20, count < 3 ? '#ad4b35' : '#344a44', 6);
-            this.text(String(count), r.x + r.w - 13, r.y + 54, 12, '#fff4d6');
+            else {
+                this.box(r.x + 1, r.y + 2, 86, 54, id === 'egg' ? '#86745c' : '#d0d7cd', 8);
+                this.box(r.x + 5, r.y + 6, 78, 43, id === 'egg' ? '#b5a386' : '#6f8175', 5);
+                if (count)
+                    this.foodArt(id, r.x + 5, r.y - 2, 78, 55);
+            }
+            this.box(r.x + 1, r.y + 55, 86, 18, '#fff0d0', 4);
+            this.text(foodLabel(id, true), r.x + 35, r.y + 68, 10, '#62452d', 'center', 66);
+            this.box(r.x + 70, r.y + 55, 18, 18, count < 3 ? '#ad4b35' : '#344a44', 4);
+            this.text(String(count), r.x + 79, r.y + 68, 10, '#fff4d6');
             if (need && g.started)
                 this.ellipse(r.x + 10, r.y + 11, 3, 3, '#ffe7a0');
         }
@@ -246,6 +333,8 @@ export class Scene {
             c.scale(1, Math.max(.08, Math.abs(Math.cos(Math.min(1, this.flipAge / .46) * Math.PI))));
             c.translate(-640, -505);
             if (p.stage === 'bagged') {
+                const bag = Math.min(1, p.foldTime / .65);
+                this.box(603, 419 + bag * 37, 74, 65, '#e8b95f', 9);
                 this.ellipse(640, 543, 77, 13, '#0003');
                 this.box(588, 454, 104, 103, '#b4834e', 7);
                 this.box(595, 460, 90, 90, '#e8c58b', 4);
@@ -254,12 +343,12 @@ export class Scene {
                 this.text('JIANBING', 640, 536, 10, '#99653c');
             }
             else if (p.stage === 'folded') {
-                const f = Math.min(1, p.foldTime / .65), width = 410 - 228 * f, height = 180 - 96 * f, l = 640 - width / 2, r = 640 + width / 2, top = 505 - height / 2, bottom = 505 + height / 2;
+                const f = Math.min(1, p.foldTime / .65), leftFold = Math.min(1, f / .33), rightFold = Math.max(0, Math.min(1, (f - .33) / .33)), width = 410 - 114 * leftFold - 114 * rightFold, height = 180 - 96 * Math.max(0, Math.min(1, (f - .6) / .4)), l = 640 - width / 2, r = 640 + width / 2, top = 505 - height / 2, bottom = 505 + height / 2;
                 this.ellipse(640, 535, width * .48, 14, '#0003');
                 if (f < .72) {
                     this.ellipse(640, 505, width / 2, height / 2, '#e6b968');
-                    this.path([[l, 499], [l + width * .35, top + 7], [l + width * .35, bottom - 7], [l, 519]], '#f2d18a', '#bd8e47');
-                    this.path([[r, 499], [r - width * .35, top + 7], [r - width * .35, bottom - 7], [r, 519]], '#e5b461', '#bd8e47');
+                    this.path([[l, 499], [l + width * .35 * leftFold, top + 7], [l + width * .35 * leftFold, bottom - 7], [l, 519]], '#f2d18a', '#bd8e47');
+                    this.path([[r, 499], [r - width * .35 * rightFold, top + 7], [r - width * .35 * rightFold, bottom - 7], [r, 519]], '#e5b461', '#bd8e47');
                 }
                 else {
                     this.box(l, top + 5, width, height, '#b77a35', 12);
@@ -298,11 +387,23 @@ export class Scene {
                     }
                 }
                 // Bounded sauce strokes avoid an unbounded draw loop during long gestures.
-                for (const v of p.strokes.slice(-100)) {
-                    this.ellipse(v.x, v.y, 22, 10, p.ingredients.chili ? '#a43e2377' : '#73402066');
-                }
-                foods.filter(([id]) => !['batter', 'egg', 'sweet', 'chili'].includes(id) && (p.ingredients[id] || 0) - (p.stage === 'flipped' ? (p.underside[id] || 0) : 0) > 0).forEach(([id], j) => { const index = id === 'youtiao' ? 20 : foods.findIndex(f => f[0] === id); for (let n = 0; n < Math.min(6, 2 * ((p.ingredients[id] || 0) - (p.stage === 'flipped' ? (p.underside[id] || 0) : 0))); n++)
-                    this.sprite(index, 544 + (n % 2) * 112 + Math.sin(j * 3) * 18, 459 + Math.floor(n / 2) * 39 + Math.cos(j * 4) * 12, 55, 38); });
+                c.save();
+                c.beginPath();
+                c.ellipse(640, 502, 199, 85, 0, 0, 7);
+                c.clip();
+                c.strokeStyle = p.ingredients.chili ? '#a43e2390' : '#73402090';
+                c.lineWidth = 27;
+                c.lineCap = 'round';
+                c.lineJoin = 'round';
+                c.beginPath();
+                p.strokes.forEach((v, i) => { if (!i || v.move)
+                    c.moveTo(v.x, v.y);
+                else
+                    c.lineTo(v.x, v.y); });
+                c.stroke();
+                c.restore();
+                foods.filter(([id]) => !['batter', 'egg', 'sweet', 'chili'].includes(id) && (p.ingredients[id] || 0) - (p.stage === 'flipped' ? (p.underside[id] || 0) : 0) > 0).forEach(([id], j) => { const index = id === 'youtiao' ? 20 : foods.findIndex(f => f[0] === id); for (let n = 0; n < Math.min(5, (p.ingredients[id] || 0) - (p.stage === 'flipped' ? (p.underside[id] || 0) : 0)); n++)
+                    this.foodArt(id, 530 + (n % 3) * 76 + Math.sin(j * 3) * 14, 462 + Math.floor(n / 3) * 40 + Math.cos(j * 4) * 12, 72, 44); });
             }
             c.restore();
             if (p.stage !== 'bagged')
@@ -334,12 +435,7 @@ export class Scene {
             }
             const items = foods.filter(([id]) => id !== 'batter' && (g.target.recipe[id] || p.ingredients[id]));
             const cell = Math.min(46, 535 / Math.max(1, items.length));
-            items.forEach(([id], i) => { const x = 374 + i * cell, status = ingredientStatus(g, id), index = id === 'youtiao' ? 20 : foods.findIndex(f => f[0] === id); this.hit('order:' + id, x - 4, 359, cell, 39); this.box(x - 1, 361, cell - 5, 35, status === 'done' ? '#e5ebd2' : status === 'extra' ? '#f5d4c6' : '#efe4c9', 8); this.sprite(index, x + 2, 362, 30, 30); if ((g.target.recipe[id] || 0) > 1) {
-                this.box(x + cell - 20, 359, 17, 14, '#a85434', 4);
-                this.text('×' + g.target.recipe[id], x + cell - 11, 370, 9, '#fff8e3');
-            } if (status === 'done')
-                this.text('✓', x + cell - 12, 391, 12, '#3f7446'); if (status === 'extra')
-                this.text('!', x + cell - 12, 391, 12, '#b14e33'); });
+            items.forEach(([id], i) => { const x = 374 + i * cell, status = ingredientStatus(g, id), index = id === 'youtiao' ? 20 : foods.findIndex(f => f[0] === id); this.hit('order:' + id, x - 4, 359, cell, 39); this.box(x - 1, 361, cell - 5, 35, status === 'done' ? '#e5ebd2' : status === 'extra' ? '#f5d4c6' : '#efe4c9', 8); this.foodArt(id, x + 2, 359, 30, 25); this.text(`${p.ingredients[id] || 0}/${g.target.recipe[id] || 0}`, x + 18, 393, 10, status === 'extra' ? '#b14e33' : '#3f7446'); });
         }
         // Bent sleeve + wrist + rotated fingers; a slapped arm retracts along the same route.
         if (g.theft) {
@@ -396,6 +492,8 @@ export class Scene {
             c.globalAlpha = f.kind === 'text' ? 1 - u : 1;
             if (f.kind === 'text')
                 this.text(f.label || '', x, y, 17, f.color || '#fff');
+            else if (f.kind === 'food')
+                this.foodArt(f.index === 20 ? 'youtiao' : foods[f.index][0], x - 25, y - 18, 50, 36);
             else
                 this.sprite(f.index, x - 20, y - 20, 40, 40);
             c.restore();
@@ -420,13 +518,27 @@ export class Scene {
             const x = Math.min(1178, Math.max(102, h.x + h.w / 2));
             this.panel(x - 84, h.y - 32, 168, 25, '#332d25f5', 8);
             this.text(label, x, h.y - 15, 12, '#fff0cf', 'center', 154);
+            if (tip.startsWith('food:')) {
+                this.panel(x - 58, h.y - 114, 116, 78, '#fff1dbeF', 10);
+                this.foodArt(tip.split(':')[1], x - 44, h.y - 111, 88, 51);
+                this.text('点击加一份', x, h.y - 44, 10, '#72503b');
+            }
         }
         if (g.tutorial && g.started && !g.paused && !g.ended) {
-            this.panel(20, 110, 305, 270, '#fff5dfef', 16);
-            this.text('实操新手教程', 40, 141, 21, '#6a432b', 'left', 265);
-            this.text(action.key, 40, 178, 18, '#b15a35', 'left', 265);
-            const lines = getLanguage() === 'zh' ? ['按发光物品操作，订单需要双蛋、双脆。', '倒面糊 → 拖动摊开 → 加两次鸡蛋', '拖动抹匀蛋液 → 翻面 → 加酱和脆', '拖动刷酱 → 折叠 → 装袋 → 点顾客', '练习不限时、不扣耐心，不赚取金币。', '做错可点垃圾桶重新做；右上可退出。'] : ['Follow the glow: two eggs, two crisps.', 'Batter → drag → add two eggs', 'Spread egg → flip → sauce + crisps', 'Brush → fold → bag → customer', 'No time limit, patience loss or income.', 'Discard to retry; exit at the top right.'];
-            lines.forEach((line, i) => this.text(line, 40, 213 + i * 27, 11, '#785c44', 'left', 265));
+            this.panel(20, 110, 305, 230, '#fff5dfef', 16);
+            this.text('实操新手教程', 40, 143, 21, '#6a432b', 'left', 265);
+            this.text(`${action.step} / 12`, 40, 173, 14, '#b15a35', 'left', 265);
+            this.text(action.key, 40, 207, 20, '#b15a35', 'left', 265);
+            this.text(action.detail, 40, 239, 12, '#785c44', 'left', 265);
+            this.text('练习不限时，可丢弃重来', 40, 275, 12, '#785c44', 'left', 265);
+            this.text('跳过教程', 170, 312, 14, '#9f512f');
+            this.hit('skip', 40, 288, 265, 40);
+            const focus = action.focus[0], h = focus === 'scrape' ? { x: 575, y: 460, w: 130, h: 60 } : this.hits.find(v => v.id === focus);
+            if (h) {
+                const x = h.x + h.w / 2, y = h.y - 12 - Math.sin(this.clock * 4) * 4;
+                this.path([[x - 10, y - 15], [x + 10, y - 15], [x, y]], '#fff1b5', '#a8662f');
+                this.focusRing(h);
+            }
         }
         if (!g.started || g.ended || g.paused)
             this.overlay(g);

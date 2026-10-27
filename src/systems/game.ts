@@ -1,7 +1,7 @@
 import {Profile,freshProfile,patienceMultiplier,rewardService} from './progress.js';
 import {foodLabel,getLanguage} from '../i18n.js';
 export const foods = [
- ['batter','面糊','#efcf84'],['egg','鸡蛋','#ffca46'],['scallion','葱花','#74a638'],['cilantro','香菜','#397842'],['sesame','芝麻','#f6dd9c'],['sweet','甜面酱','#814127'],['chili','辣椒酱','#ce472c'],['crisp','薄脆','#e5a243'],['ham','火腿','#d97d70'],['pork','里脊','#b97945'],['sausage','烤肠','#a94d30'],['lettuce','生菜','#83ad43'],['chicken','鸡柳','#dca154'],['youtiao','果子','#dba751']
+ ['batter','面糊','#efcf84'],['egg','鸡蛋','#ffca46'],['scallion','葱花','#74a638'],['cilantro','香菜','#397842'],['sesame','芝麻','#f6dd9c'],['sweet','甜面酱','#814127'],['chili','辣椒酱','#ce472c'],['crisp','果篦儿','#e5a243'],['ham','火腿','#d97d70'],['pork','里脊','#b97945'],['sausage','烤肠','#a94d30'],['lettuce','生菜','#83ad43'],['chicken','鸡柳','#dca154'],['youtiao','果子','#dba751']
 ] as const;
 export type Food = typeof foods[number][0];
 export type Recipe = Partial<Record<Food,number>>;
@@ -14,7 +14,7 @@ export class Inventory {
  tick(dt:number){if(this.refill>0){this.refill=Math.max(0,this.refill-dt);if(!this.refill)for(const [id] of foods)this.stock[id]=8;}}
 }
 export class Cooking {
- stage:Stage='empty'; ingredients:Recipe={}; underside:Recipe={}; eggSpread=0; spread=0; sauce=0; strokes:{x:number,y:number}[]=[]; heat=0; foldTime=0;
+ stage:Stage='empty'; ingredients:Recipe={}; underside:Recipe={}; eggSpread=0; spread=0; sauce=0; strokes:{x:number,y:number,move?:boolean}[]=[]; strokeBreak=true; heat=0; foldTime=0;
  add(id:Food,inventory:Inventory):string {
   if(id==='batter'){if(this.stage!=='empty')return '先完成或丢弃这一张';}
   else if(id==='egg'){if(this.stage!=='egg')return '先倒面糊，拖动刮板摊匀';}
@@ -28,11 +28,11 @@ export class Cooking {
   if(this.stage==='egg')this.underside[id]=(this.underside[id]||0)+1;
   return `${foods.find(f=>f[0]===id)![1]}，加好了`;
  }
- drag(x:number,y:number,distance:number){if(this.stage==='batter'){this.spread=Math.min(1,this.spread+distance/1200);if(this.spread>=1)this.stage='egg';}else if(this.stage==='egg'&&this.ingredients.egg){this.eggSpread=Math.min(1,this.eggSpread+distance/700);}else if(this.stage==='flipped'&&(this.ingredients.sweet||this.ingredients.chili)){this.sauce=Math.min(1,this.sauce+distance/550);this.strokes.push({x,y});if(this.strokes.length>100)this.strokes.shift();}}
+ drag(x:number,y:number,distance:number){if(this.stage==='batter'){this.spread=Math.min(1,this.spread+distance/1200);if(this.spread>=1)this.stage='egg';}else if(this.stage==='egg'&&this.ingredients.egg){this.eggSpread=Math.min(1,this.eggSpread+distance/700);}else if(this.stage==='flipped'&&(this.ingredients.sweet||this.ingredients.chili)){this.sauce=Math.min(1,this.sauce+distance/550);this.strokes.push({x,y,move:this.strokeBreak});this.strokeBreak=false;if(this.strokes.length>100)this.strokes.shift();}}
  flip(){if(this.stage!=='egg'||!this.ingredients.egg||this.eggSpread<1)return false;this.stage='flipped';return true;}
  fold(){if(this.stage!=='flipped'||((this.ingredients.sweet||this.ingredients.chili)&&this.sauce<1))return false;this.stage='folded';this.foldTime=0;return true;}
- bag(){if(this.stage!=='folded'||this.foldTime<.65)return false;this.stage='bagged';return true;}
- tick(dt:number){if(this.stage!=='empty'&&this.stage!=='bagged')this.heat+=dt;if(this.stage==='folded')this.foldTime+=dt;}
+ bag(){if(this.stage!=='folded'||this.foldTime<.65)return false;this.stage='bagged';this.foldTime=0;return true;}
+ tick(dt:number){if(this.stage!=='empty'&&this.stage!=='bagged')this.heat+=dt;if(this.stage==='folded'||this.stage==='bagged')this.foldTime+=dt;}
 }
 export interface Customer {id:number;look:number;recipe:Recipe;patience:number;max:number;noCilantro:boolean;}
 export class Game {
@@ -43,7 +43,7 @@ export class Game {
  newCustomer(){const egg=this.random()<.3?2:1;const recipe:Recipe={batter:1,egg,sweet:1};
  if(this.profile.mode==='tianjin'){recipe[this.random()<.5?'youtiao':'crisp']=this.random()<.3?2:1;for(const id of ['scallion','cilantro','chili'] as Food[])if(this.random()<.4)recipe[id]=1;}
  else{const protein=(['ham','pork','sausage','chicken'] as Food[])[Math.floor(this.random()*4)];recipe[protein]=this.random()<.2?2:1;for(const id of ['scallion','sesame','crisp','lettuce','chili','cilantro'] as Food[])if(this.random()<.35)recipe[id]=this.random()<.15?3:1;}
- const max=100*patienceMultiplier(this.profile);const c={id:++this.serial,look:this.serial%3,recipe:this.tutorial?{batter:1,egg:2,sweet:1,crisp:2}:recipe,patience:max,max,noCilantro:!recipe.cilantro};if(this.tutorial)c.noCilantro=true;this.customers.push(c);if(!this.next)this.next=c.id;}
+ const max=100*patienceMultiplier(this.profile);const c={id:++this.serial,look:this.serial%3,recipe:this.tutorial?{batter:1,egg:2,scallion:1,sweet:1,crisp:1}:recipe,patience:max,max,noCilantro:!recipe.cilantro};if(this.tutorial)c.noCilantro=true;this.customers.push(c);if(!this.next)this.next=c.id;}
 
  get target(){return this.customers.find(c=>c.id===this.next)||this.customers[0];}
  serve(){if(this.cooking.stage!=='bagged'||!this.target){this.message='先折叠装袋，再点顾客交餐';return false;}const c=this.target;const correct=foods.every(([id])=>(c.recipe[id]||0)===(this.cooking.ingredients[id]||0));const quality=Math.max(0,1-Math.max(0,this.cooking.heat-65)/70);const rating=correct?Math.round(65+25*c.patience/c.max+10*quality):20;const base=8+Object.values(c.recipe).reduce((a,b)=>a+(b||0),0);const earned=correct?Math.round(base*(.8+.2*quality)):3;if(!this.tutorial){this.money+=earned;rewardService(this.profile,earned,correct);}else if(correct)this.profile.tutorial=true;this.served++;this.ratings.push(rating);this.message=this.tutorial?(correct?'完成练习，准备正式开摊！':'配料不对哦……请清空铁板重试'):correct?`真香！收到 ¥${earned}，满意度 ${rating}`:'配料不对哦……只付 ¥3，注意不要香菜和双蛋';this.customers=this.customers.filter(v=>v.id!==c.id);this.next=this.customers[0]?.id||0;this.cooking=new Cooking();return correct;}

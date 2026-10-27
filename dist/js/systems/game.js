@@ -1,7 +1,7 @@
 import { freshProfile, patienceMultiplier, rewardService } from './progress.js';
 import { foodLabel } from '../i18n.js';
 export const foods = [
-    ['batter', '面糊', '#efcf84'], ['egg', '鸡蛋', '#ffca46'], ['scallion', '葱花', '#74a638'], ['cilantro', '香菜', '#397842'], ['sesame', '芝麻', '#f6dd9c'], ['sweet', '甜面酱', '#814127'], ['chili', '辣椒酱', '#ce472c'], ['crisp', '薄脆', '#e5a243'], ['ham', '火腿', '#d97d70'], ['pork', '里脊', '#b97945'], ['sausage', '烤肠', '#a94d30'], ['lettuce', '生菜', '#83ad43'], ['chicken', '鸡柳', '#dca154'], ['youtiao', '果子', '#dba751']
+    ['batter', '面糊', '#efcf84'], ['egg', '鸡蛋', '#ffca46'], ['scallion', '葱花', '#74a638'], ['cilantro', '香菜', '#397842'], ['sesame', '芝麻', '#f6dd9c'], ['sweet', '甜面酱', '#814127'], ['chili', '辣椒酱', '#ce472c'], ['crisp', '果篦儿', '#e5a243'], ['ham', '火腿', '#d97d70'], ['pork', '里脊', '#b97945'], ['sausage', '烤肠', '#a94d30'], ['lettuce', '生菜', '#83ad43'], ['chicken', '鸡柳', '#dca154'], ['youtiao', '果子', '#dba751']
 ];
 export class Inventory {
     constructor() {
@@ -28,6 +28,7 @@ export class Cooking {
         this.spread = 0;
         this.sauce = 0;
         this.strokes = [];
+        this.strokeBreak = true;
         this.heat = 0;
         this.foldTime = 0;
     }
@@ -69,7 +70,8 @@ export class Cooking {
     }
     else if (this.stage === 'flipped' && (this.ingredients.sweet || this.ingredients.chili)) {
         this.sauce = Math.min(1, this.sauce + distance / 550);
-        this.strokes.push({ x, y });
+        this.strokes.push({ x, y, move: this.strokeBreak });
+        this.strokeBreak = false;
         if (this.strokes.length > 100)
             this.strokes.shift();
     } }
@@ -78,9 +80,9 @@ export class Cooking {
     fold() { if (this.stage !== 'flipped' || ((this.ingredients.sweet || this.ingredients.chili) && this.sauce < 1))
         return false; this.stage = 'folded'; this.foldTime = 0; return true; }
     bag() { if (this.stage !== 'folded' || this.foldTime < .65)
-        return false; this.stage = 'bagged'; return true; }
+        return false; this.stage = 'bagged'; this.foldTime = 0; return true; }
     tick(dt) { if (this.stage !== 'empty' && this.stage !== 'bagged')
-        this.heat += dt; if (this.stage === 'folded')
+        this.heat += dt; if (this.stage === 'folded' || this.stage === 'bagged')
         this.foldTime += dt; }
 }
 export class Game {
@@ -126,7 +128,7 @@ export class Game {
                     recipe[id] = this.random() < .15 ? 3 : 1;
         }
         const max = 100 * patienceMultiplier(this.profile);
-        const c = { id: ++this.serial, look: this.serial % 3, recipe: this.tutorial ? { batter: 1, egg: 2, sweet: 1, crisp: 2 } : recipe, patience: max, max, noCilantro: !recipe.cilantro };
+        const c = { id: ++this.serial, look: this.serial % 3, recipe: this.tutorial ? { batter: 1, egg: 2, scallion: 1, sweet: 1, crisp: 1 } : recipe, patience: max, max, noCilantro: !recipe.cilantro };
         if (this.tutorial)
             c.noCilantro = true;
         this.customers.push(c);
