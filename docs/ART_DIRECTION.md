@@ -21,3 +21,8 @@ Use case: stylized-concept. Production sprite atlas for an original polished Chi
 
 上面保留原始英文提示词以便复现；实际输出尺寸及裁切以文件和渲染代码为准。
 The original English prompts are retained for reproducibility; actual dimensions and sampling are defined by the saved files and renderer.
+
+## v0.7.0 原生质感与动作 / Native finish and motion
+
+本轮直接细化 `Scene.foodArt` 中的向量绘制：暖色渐变、食物表面纹理、起泡与叶脉；没有生成或下载新的位图。敲蛋、脆片碎屑、工具握持和折叠由 Canvas 动画绘制。所有音效在 `Sound` 内通过 Web Audio 噪声过滤、短音与包络合成，不使用第三方录音。
+This iteration refines vector drawing in `Scene.foodArt` with warm gradients, surface textures, blisters and veins, with no generated/downloaded bitmaps. Canvas draws cracking eggs, crumbs, held tools and folding. `Sound` synthesizes effects using Web Audio filtered noise, tones and envelopes, without third-party recordings.

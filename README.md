@@ -24,8 +24,8 @@ npm run dev
 - [开发日志 / Development log](DEVLOG.md)
 - [路线图与已知限制 / Roadmap and known limitations](docs/ROADMAP.md)
 
-当前为 v0.6.0 可玩原型，仍在迭代美术、动作与触屏体验。
-v0.6.0 is a playable prototype. Artwork, animation and touch controls are still being refined.
+当前为 v0.7.0 可玩原型，仍在迭代美术、动作与触屏体验。
+v0.7.0 is a playable prototype. Artwork, animation and touch controls are still being refined.
 
 ## v0.4.0 · 暖色手作摊位 / Warm illustrated stall
 
@@ -66,3 +66,11 @@ Foods now have distinct shapes, appropriate containers and fixed labels with enl
 
 教程逐步指引完成双蛋、葱花、甜酱、果篦儿煎饼：倒糊、摊开、双蛋、抹蛋、葱花、翻面、加酱、刷匀、脆片、折叠、装袋、交餐。每步有箭头，可跳过或重玩。经营页提供免费装饰预览与开店差额。界面继续支持中英文。
 The tutorial guides a complete pancake: batter, spread, two eggs, spread egg, scallions, flip, sauce, brush, crisp, fold, bag and serve. Each step has an arrow; skip or replay anytime between days. The shop offers free decoration previews and the remaining upgrade cost. Chinese and English remain available.
+
+## v0.7.0 · 制作与声音 / Cooking and sound
+
+敲蛋裂壳、脆片碎裂、铲子翻面、跟手工具与可见馅料折叠；食材增加渐变、纹理和统一光影。新音效包括敲蛋、脆片、纸袋和收钱，制作时有持续铁板滋滋声。右上声音按钮可全部静音。
+Cracking shells, breaking crisps, spatula flips, held tools and filling-aware folds, with textured, shaded foods. New effects include egg cracks, crisps, paper and coins, plus continuous cooking sizzle. The sound button mutes everything.
+
+声音均由浏览器本机合成，无需下载录音；真实手机听感和性能仍待测试。
+Audio is generated locally in the browser with no recording downloads. Physical-phone sound and performance remain to be tested.

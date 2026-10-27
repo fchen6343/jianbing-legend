@@ -58,23 +58,23 @@ canvas.addEventListener('pointerdown',e=>{
  if(hit){const id=hit.id;
   if(!tutorialAllows(game,id)){scene.notify('请先完成箭头指向的步骤');return;}
   if(id.startsWith('food:')){const food=id.slice(5) as Food,before=game.inventory.stock[food];game.message=game.addFood(food);success=game.inventory.stock[food]<before;effect=success?id:'';scene.touchFocus=id;scene.touchAge=1.5;}
-  else if(id.startsWith('customer:')){game.next=Number(id.split(':')[1]);if(game.cooking.stage==='bagged'){success=game.serve();effect=success?'serve':'';sound.tone(success?660:160,.2);if(success&&game.tutorial){game.ended=true;scene.tutorialDone=true;toolbar();}saveProgress();}else game.message='已接单，请看铁板上方的完整订单';}
+  else if(id.startsWith('customer:')){game.next=Number(id.split(':')[1]);if(game.cooking.stage==='bagged'){success=game.serve();effect=success?'serve':'';sound.play(success?'coin':'error');if(success&&game.tutorial){game.ended=true;scene.tutorialDone=true;toolbar();}saveProgress();}else game.message='已接单，请看铁板上方的完整订单';}
   else if(id==='boss')game.message=game.inventory.request()?'老板：来了来了，五秒补齐！':'老板：库存还满着，或正在路上！';
   else if(id==='flip'){success=game.cooking.flip();game.message=success?'翻面完成，开始刷酱加配料':'先加鸡蛋，并拖动抹匀蛋液';effect=success?id:'';}
-  else if(id==='fold'){success=game.cooking.fold();game.message=success?'折起来，香气包住！':'先翻面；加酱后请拖动刷匀';}
-  else if(id==='bag'){success=game.cooking.bag();game.message=success?'装袋完成，点击顾客交餐':'先折叠好，再装袋';}
+  else if(id==='fold'){success=game.cooking.fold();effect=success?'fold':'';game.message=success?'折起来，香气包住！':'先翻面；加酱后请拖动刷匀';}
+  else if(id==='bag'){success=game.cooking.bag();effect=success?'bag':'';game.message=success?'装袋完成，点击顾客交餐':'先折叠好，再装袋';}
   else if(id==='discard'){game.cooking=new Cooking();game.message='清空铁板，已用食材不会退回';}
-  else if(id==='slap'){success=game.slap();game.message=success?'啪！小手收好，想吃得先点单！':game.message;sound.tone(100,.15,.12);}
+  else if(id==='slap'){success=game.slap();game.message=success?'啪！小手收好，想吃得先点单！':game.message;sound.play('slap');}
   else if(id==='scrape')game.message=nextAction(game).detail;
   else if(id.startsWith('order:')){scene.touchFocus=id;scene.touchAge=2;return;}
-  if(!id.startsWith('order:')){scene.notify(game.message,effect,game);if(!effect&&(id.startsWith('food:')||['scrape','flip','fold','bag','discard'].includes(id))){scene.touchFocus=id;scene.touchAge=1.5;}sound.tone(success?310:145,.05);}
+  if(!id.startsWith('order:')){scene.notify(game.message,effect,game);if(!effect&&(id.startsWith('food:')||['scrape','flip','fold','bag','discard'].includes(id))){scene.touchFocus=id;scene.touchAge=1.5;}if(!success)sound.play('error');else if(id.startsWith('food:'))sound.play(id==='food:egg'?'egg':id==='food:crisp'?'crisp':id==='food:batter'||id==='food:sweet'||id==='food:chili'?'pour':'sprinkle');else if(id==='flip'||id==='fold'||id==='bag')sound.play(id);}
  }
  if(insideGriddle(p.x,p.y)&&tutorialAllows(game,'scrape')){game.cooking.strokeBreak=true;dragging=true;canvas.setPointerCapture(e.pointerId);}
 });
-canvas.addEventListener('pointermove',e=>{const p=position(e);scene.pointer=p;if(dragging&&!game.paused&&insideGriddle(p.x,p.y))game.cooking.drag(p.x,p.y,Math.min(65,Math.hypot(p.x-last.x,p.y-last.y)));last=p;canvas.style.cursor=scene.hits.some(h=>p.x>=h.x&&p.x<h.x+h.w&&p.y>=h.y&&p.y<h.y+h.h)?'pointer':insideGriddle(p.x,p.y)?'crosshair':'default';});
+canvas.addEventListener('pointermove',e=>{const p=position(e);scene.pointer=p;if(dragging&&!game.paused&&insideGriddle(p.x,p.y))game.cooking.drag(p.x,p.y,Math.min(65,Math.hypot(p.x-last.x,p.y-last.y)));if(dragging)scene.toolAngle+=((Math.max(-.5,Math.min(.5,(p.x-last.x)*.04)))-scene.toolAngle)*.25;last=p;canvas.style.cursor=scene.hits.some(h=>p.x>=h.x&&p.x<h.x+h.w&&p.y>=h.y&&p.y<h.y+h.h)?'pointer':insideGriddle(p.x,p.y)?'crosshair':'default';});
 canvas.addEventListener('pointerleave',()=>{if(!dragging)scene.pointer={x:-100,y:-100};});
 for(const event of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(event,()=>{dragging=false;game.cooking.strokeBreak=true;});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!shopDialog.open&&game.started&&!game.ended){game.paused=!game.paused;dragging=false;toolbar();}});
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&game.started&&!game.ended){game.paused=true;dragging=false;toolbar();}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)sound.activity(false);if(document.hidden&&game.started&&!game.ended){game.paused=true;dragging=false;toolbar();}});
 let previous=performance.now();
-function frame(now:number){const dt=Math.min(.1,(now-previous)/1000);previous=now;if(!document.hidden){game.tick(dt);saveProgress();if(game.started&&!game.ended&&!game.paused)sound.tick(dt,game.cooking.stage!=='empty');scene.dragging=dragging;scene.muted=sound.muted;scene.draw(game,game.paused?0:dt);if(game.ended&&!saved){if(!game.tutorial){profile.days++;saveProgress();}try{localStorage.setItem('jianbing-legend:last-day',JSON.stringify({version:2,money:game.money,served:game.served,satisfaction:game.satisfaction,date:new Date().toISOString()}));}catch{}saved=true;toolbar();}}requestAnimationFrame(frame);}requestAnimationFrame(frame);
+function frame(now:number){const dt=Math.min(.1,(now-previous)/1000);previous=now;if(!document.hidden){game.tick(dt);saveProgress();if(game.started&&!game.ended&&!game.paused)sound.tick(dt,!['empty','bagged','folded'].includes(game.cooking.stage),dragging,game.cooking.stage==='flipped');else sound.activity(false);scene.dragging=dragging;scene.muted=sound.muted;scene.draw(game,game.paused?0:dt);if(game.ended&&!saved){if(!game.tutorial){profile.days++;saveProgress();}try{localStorage.setItem('jianbing-legend:last-day',JSON.stringify({version:2,money:game.money,served:game.served,satisfaction:game.satisfaction,date:new Date().toISOString()}));}catch{}saved=true;toolbar();}}requestAnimationFrame(frame);}requestAnimationFrame(frame);

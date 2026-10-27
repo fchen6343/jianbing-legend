@@ -181,3 +181,14 @@ Purchases, reward thresholds, charm and the five-person queue are covered by aut
 
 浏览器工具恢复后，在 Chrome 实际完成十二步教程：双蛋 2/2、葱花 1/1、翻面背面隐藏、连续刷酱、果篦儿 1/1、折叠、装袋及正确交餐，步骤未卡住。装饰预览选择月兔灯，钱包保持 ¥12；Pages 发布工作流 `40454774631` 成功。随后修复教程大图遮挡，并让点击装饰预览自动滚到画面。实体手机仍未验收。
 After browser tools returned, completed all twelve tutorial actions in Chrome, including 2/2 eggs, 1/1 scallions, hidden back side, continuous sauce, 1/1 guobier, folding, bagging and correct service without blocked steps. Selected the moon-lantern preview and the wallet stayed at ¥12. Pages run `40454774631` succeeded. A follow-up removes tutorial preview overlap and scrolls decoration previews into view. Physical-mobile testing remains outstanding.
+
+## 2026-10-27 · v0.7.0 · 制作手感、食材质感与声音 / Physical cooking, food finish and sound
+
+- 鸡蛋带壳飞到饼面后裂开，蛋壳两侧分离、蛋液下落；果篦儿落下后碎成三片并散出碎屑。翻面增加铲子动作，摊饼/刷酱工具跟随拖动方向，增加握持的手套。折叠过程中显示馅料，逐步盖住，收口增加层叠饼边。
+  Eggs travel in their shells, crack with separating halves and falling liquid. Guobier breaks into three shards with crumbs. Flips include the spatula; dragging tools tilt with movement and have a gloved grip. Folding shows the filling before the flaps close, with layered edges at the finish.
+- 食材保持可辨认的原生绘制：油条焦斑和油光、果篦儿起泡阴影、蛋壳渐变与斑点、肉类高光/纹理、叶脉和葱花切口。不添加外部素材或运行时依赖。
+  Readable native food art gains fried-dough dimples and highlights, guobier blisters, shaded speckled shells, meat highlights/texture and leaf/scallion detail. No external assets or runtime dependencies are added.
+- 通过 Web Audio 在本机合成敲蛋、碎脆片、倾倒、撒料、铲子、折叠、纸袋、收钱及错误反馈。铁板使用持续过滤噪声，制作时轻响、拖动时变化；空锅、打包后、暂停、商店或隐藏页面停止。背景旋律调轻。静音立即停止循环及已排程的短音，短音结束后断开节点，噪声缓冲复用。
+  Local Web Audio synthesizes egg cracks, crisp snaps, pouring, sprinkling, spatula, fold, paper, coins and errors. Filtered continuous sizzling changes during dragging and stops outside cooking, while paused/shopping or hidden. Music is softer. Muting stops looping and scheduled voices; finished one-shots disconnect and the noise buffer is reused.
+- 十七项自动测试通过；新增声音包络、各事件可播放、循环复用、静音/暂停停止和节点释放验证。以生产渲染器检查敲蛋、碎脆片及折叠画面。声音为程序合成，尚非实物录音；浏览器视觉/交互和听感验收在部署后补记，实体手机听感与性能仍待测试。
+  All seventeen tests pass, including sound envelopes, all event cues, loop reuse, mute/pause stopping and node cleanup. Production-renderer previews cover eggs, crisps and folding. Sounds are synthesized rather than recordings; live interaction/audio acceptance will be recorded after deployment. Physical-phone audio/performance review remains pending.

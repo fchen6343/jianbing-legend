@@ -164,7 +164,7 @@ canvas.addEventListener('pointerdown', e => {
             if (game.cooking.stage === 'bagged') {
                 success = game.serve();
                 effect = success ? 'serve' : '';
-                sound.tone(success ? 660 : 160, .2);
+                sound.play(success ? 'coin' : 'error');
                 if (success && game.tutorial) {
                     game.ended = true;
                     scene.tutorialDone = true;
@@ -184,10 +184,12 @@ canvas.addEventListener('pointerdown', e => {
         }
         else if (id === 'fold') {
             success = game.cooking.fold();
+            effect = success ? 'fold' : '';
             game.message = success ? '折起来，香气包住！' : '先翻面；加酱后请拖动刷匀';
         }
         else if (id === 'bag') {
             success = game.cooking.bag();
+            effect = success ? 'bag' : '';
             game.message = success ? '装袋完成，点击顾客交餐' : '先折叠好，再装袋';
         }
         else if (id === 'discard') {
@@ -197,7 +199,7 @@ canvas.addEventListener('pointerdown', e => {
         else if (id === 'slap') {
             success = game.slap();
             game.message = success ? '啪！小手收好，想吃得先点单！' : game.message;
-            sound.tone(100, .15, .12);
+            sound.play('slap');
         }
         else if (id === 'scrape')
             game.message = nextAction(game).detail;
@@ -212,7 +214,12 @@ canvas.addEventListener('pointerdown', e => {
                 scene.touchFocus = id;
                 scene.touchAge = 1.5;
             }
-            sound.tone(success ? 310 : 145, .05);
+            if (!success)
+                sound.play('error');
+            else if (id.startsWith('food:'))
+                sound.play(id === 'food:egg' ? 'egg' : id === 'food:crisp' ? 'crisp' : id === 'food:batter' || id === 'food:sweet' || id === 'food:chili' ? 'pour' : 'sprinkle');
+            else if (id === 'flip' || id === 'fold' || id === 'bag')
+                sound.play(id);
         }
     }
     if (insideGriddle(p.x, p.y) && tutorialAllows(game, 'scrape')) {
@@ -222,7 +229,8 @@ canvas.addEventListener('pointerdown', e => {
     }
 });
 canvas.addEventListener('pointermove', e => { const p = position(e); scene.pointer = p; if (dragging && !game.paused && insideGriddle(p.x, p.y))
-    game.cooking.drag(p.x, p.y, Math.min(65, Math.hypot(p.x - last.x, p.y - last.y))); last = p; canvas.style.cursor = scene.hits.some(h => p.x >= h.x && p.x < h.x + h.w && p.y >= h.y && p.y < h.y + h.h) ? 'pointer' : insideGriddle(p.x, p.y) ? 'crosshair' : 'default'; });
+    game.cooking.drag(p.x, p.y, Math.min(65, Math.hypot(p.x - last.x, p.y - last.y))); if (dragging)
+    scene.toolAngle += ((Math.max(-.5, Math.min(.5, (p.x - last.x) * .04))) - scene.toolAngle) * .25; last = p; canvas.style.cursor = scene.hits.some(h => p.x >= h.x && p.x < h.x + h.w && p.y >= h.y && p.y < h.y + h.h) ? 'pointer' : insideGriddle(p.x, p.y) ? 'crosshair' : 'default'; });
 canvas.addEventListener('pointerleave', () => { if (!dragging)
     scene.pointer = { x: -100, y: -100 }; });
 for (const event of ['pointerup', 'pointercancel', 'lostpointercapture'])
@@ -232,7 +240,8 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && !shopDialo
     dragging = false;
     toolbar();
 } });
-document.addEventListener('visibilitychange', () => { if (document.hidden && game.started && !game.ended) {
+document.addEventListener('visibilitychange', () => { if (document.hidden)
+    sound.activity(false); if (document.hidden && game.started && !game.ended) {
     game.paused = true;
     dragging = false;
     toolbar();
@@ -242,7 +251,9 @@ function frame(now) { const dt = Math.min(.1, (now - previous) / 1000); previous
     game.tick(dt);
     saveProgress();
     if (game.started && !game.ended && !game.paused)
-        sound.tick(dt, game.cooking.stage !== 'empty');
+        sound.tick(dt, !['empty', 'bagged', 'folded'].includes(game.cooking.stage), dragging, game.cooking.stage === 'flipped');
+    else
+        sound.activity(false);
     scene.dragging = dragging;
     scene.muted = sound.muted;
     scene.draw(game, game.paused ? 0 : dt);
