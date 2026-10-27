@@ -1,6 +1,6 @@
 # 全文需求核对 / Full specification audit
 
-核对版本 / Audited release: **v0.11.0 · A2**. 原文 / Original: [MASTER_PLAN.zh-CN.md](MASTER_PLAN.zh-CN.md). 优先级 / Priority: [QUALITY_GATES.md](QUALITY_GATES.md).
+核对版本 / Audited release: **v0.12.0 · A3**. 原文 / Original: [MASTER_PLAN.zh-CN.md](MASTER_PLAN.zh-CN.md). 优先级 / Priority: [QUALITY_GATES.md](QUALITY_GATES.md).
 
 **结论：尚未完成全文要求，仍是可玩原型。** “已有”只表示当前功能存在，不代表整个章节达标；代码测试通过不代表趣味性验收通过。
 **Conclusion: the full specification is not complete.** This remains a playable prototype. An existing feature does not establish completion of its chapter; automated tests do not establish enjoyment.
@@ -15,8 +15,8 @@
 | 4. 面糊 / Batter | 旋转覆盖驱动局部铺开，拒绝原地刷距离 / Circular coverage drives local geometry, rejects distance spam | 十单体验与真机触屏验收 / Ten-order feel review and physical touch testing |
 | 4. 打蛋 / Eggs | A2 手动拿蛋、敲壳、拉开、落液；触及蛋黄后按真实位置涂抹；每蛋独立 / A2 pick, tap, pull, drop and spatial spreading per egg | 真人手感反馈、触屏验收与后续辅助设备 / Human feedback, physical touch and egg-assist device |
 | 4. 刷酱 / Sauce | 跟随拖动留下轨迹 / Pointer-following sauce strokes | 完成判定仍依赖累计距离，需继续改为空间涂抹 / Completion still uses distance; spatial coating remains |
-| 4. 折叠 / Folding | 一键触发分段动画 / One click starts a staged animation | 左、右、下边的手动拖折、真实遮挡和纠错 / Manual left/right/bottom folds, occlusion and recovery |
-| 4. 食材层次 / Food layers | 果子与果篦儿分开，铁桶与托盘，翻面隐藏背面材料，独立袋子 / Distinct youtiao/guobier, pails/trays, underside hiding and separate bag | 折叠成品仍使用通用馅料图，需要与实际订单一致 / Folded generic filling art must match the recipe |
+| 4. 折叠 / Folding | A3 左/右/下三步拖折，回落和退回上一折 / A3 manual left/right/bottom folds, rollback and undo | 浏览器整单、十单体验与真机触屏验收 / Browser whole orders, ten-order feel and physical touch |
+| 4. 食材层次 / Food layers | 果子与果篦儿分开，铁桶与托盘，翻面隐藏背面材料，独立袋子 / Distinct youtiao/guobier, pails/trays, underside hiding and separate bag | 折叠成品已沿用实际馅料和纸袋前后遮挡，完整视觉审校待做 / Actual fillings and paper-bag occlusion now retained; full visual review pending |
 | 4. 保留玩法 / Existing mechanics | 普通/天津切换、伸缩夹、五秒老板补货、库存、双蛋完整教程 / Modes, telescoping claw, boss restock, stock and full double-egg tutorial | 随后阶段持续回归 / Preserve through future stages |
 | 5. 厨具屋 / Workshop | 无 / None | 独立厨房、等级/前后外观/价格/效果、购买及升级演出 / Room, levels, previews, prices, effects, purchase and upgrade animation |
 | 5. 八类厨具 / Eight devices | 无真实设备 / No actual equipment | 高级刮板、旋转刮板、蛋辅助、刷酱、配料盒、折叠辅助、加热、收银 / Spreader, rotor, egg assist, sauce, ingredient box, folding assist, heating and register |
@@ -39,13 +39,13 @@
 | 15. 音频 / Audio | 本机合成制作音、收钱、夹子、滋滋声，统一静音 / Local cooking/coin/claw/sizzle cues and mute | 三种氛围、欢呼、设备/剪彩声音、独立音量及实际听感 / Three atmospheres, cheers, upgrades, celebrations, separate volumes and listening review |
 | 16. 技术 / Architecture | TS 模块、纯本地核心、资源失败降级、笔触上限、暂停 / TS modules, offline core, fallback drawing, bounded strokes and pause | 数据驱动长线系统、场景管理、懒加载、完整资源生命周期与性能测量 / Data-driven progression, scene management, lazy loading, lifecycle and performance |
 | 17–18. 阶段/最终验收 / Acceptance | 编译、当前回归、部分实际整单操作 / Build, regressions and some real whole orders | 十单手感、移动真机、三槽、50 天、全部剧情和设备；不可称完整版 / Ten-order feel, mobile hardware, saves, 50 days, stories and devices |
-| 19. 交付 / Delivery | GitHub 源码/资源、离线 HTML、Pages、双语 README、DEVLOG、总需求与验收表 / Source/assets, offline HTML, Pages, bilingual docs, original scope and quality gates | 随完成系统补全 CHANGELOG、存档格式、最终全量报告 / Complete changelog, save format and final report as systems land |
+| 19. 交付 / Delivery | GitHub 源码/资源、离线 HTML、Pages、双语 README、DEVLOG、总需求与验收表 / Source/assets, offline HTML, Pages, bilingual docs, original scope and quality gates | 存档格式和最终全量报告随系统完成补全 / Save format and final report as systems land |
 | 20. 最终质量 / Final quality | 核心交互分阶段改善 / Core interactions improving in stages | 新鲜感、升级价值、长期目标、真人趣味性反馈；不能以数量代替 / Novelty, upgrade value, long-term goals and human enjoyment |
 
 ## 当前执行顺序 / Current sequence
 
-A1 摊糊 → **A2 打蛋** → A3 分步折叠 → A4 首台真实设备 → B 场景与三存档 → C 五日完整经营 → D 分章节扩展五十天 → E 全量验收。
-A1 batter → **A2 eggs** → A3 folding → A4 first working machine → B scenes/saves → C five complete days → D fifty days in playable chapters → E full acceptance.
+A1 摊糊 → A2 打蛋 → **A3 分步折叠** → A4 首台真实设备 → B 场景与三存档 → C 五日完整经营 → D 分章节扩展五十天 → E 全量验收。
+A1 batter → A2 eggs → **A3 folding** → A4 first working machine → B scenes/saves → C five complete days → D fifty days in playable chapters → E full acceptance.
 
 这张表记录尚未完成的范围，不取消任何原需求，也不把原型功能改名视为完成。
 This records outstanding scope without cancelling it or treating renamed prototype features as finished.

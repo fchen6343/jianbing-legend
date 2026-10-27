@@ -5,7 +5,7 @@ export const foods = [
 ] as const;
 export type Food = typeof foods[number][0];
 export type Recipe = Partial<Record<Food,number>>;
-export type Stage='empty'|'batter'|'egg'|'flipped'|'folded'|'bagged';
+export type Stage='empty'|'batter'|'egg'|'flipped'|'folding'|'folded'|'bagged';
 export class Inventory {
  stock=Object.fromEntries(foods.map(([id])=>[id,8])) as Record<Food,number>;
  refill=0; refillFoods:Food[]=[];
@@ -22,7 +22,7 @@ export interface HeldEgg {phase:'held'|'cracked';x:number;y:number;open:number;}
 export const eggAreas=[{x:640,y:502},...Array.from({length:8},(_,i)=>({x:640+Math.cos(i/8*Math.PI*2)*73,y:502+Math.sin(i/8*Math.PI*2)*32})),...Array.from({length:16},(_,i)=>({x:640+Math.cos(i/16*Math.PI*2)*145,y:502+Math.sin(i/16*Math.PI*2)*63}))];
 export function theftReach(remaining:number){return remaining<.8?Math.max(0,remaining/.8):Math.min(1,(3-remaining)/1.1);}
 export class Cooking {
- stage:Stage='empty'; ingredients:Recipe={}; underside:Recipe={}; eggLayers:EggLayer[]=[]; heldEgg:HeldEgg|null=null; eggLast:{x:number;y:number}|null=null; eggStrokeBreak=true; spread=0; batterSectors=Array<boolean>(16).fill(false); batterAngle:number|null=null; sauce=0; strokes:{x:number,y:number,move?:boolean}[]=[]; strokeBreak=true; heat=0; foldTime=0;
+ stage:Stage='empty'; ingredients:Recipe={}; underside:Recipe={}; eggLayers:EggLayer[]=[]; heldEgg:HeldEgg|null=null; eggLast:{x:number;y:number}|null=null; eggStrokeBreak=true; spread=0; batterSectors=Array<boolean>(16).fill(false); batterAngle:number|null=null; sauce=0; strokes:{x:number,y:number,move?:boolean}[]=[]; strokeBreak=true; heat=0; foldTime=0; foldStep=0; foldProgress=0; foldDragging=false;
  get eggSpread(){return this.eggLayers.length?Math.min(...this.eggLayers.map(e=>e.spread)):0;}
  add(id:Food,inventory:Inventory):string {
   if(id==='egg')return this.pickEgg(inventory);
@@ -96,10 +96,41 @@ export class Cooking {
  }
  spreadBatter(x:number,y:number,distance:number){const dx=(x-640)/205,dy=(y-505)/94,r=Math.hypot(dx,dy);if(!Number.isFinite(r)||!Number.isFinite(distance)||distance<=0||r<.25||r>.98){this.batterAngle=null;return;}const angle=Math.atan2(dy,dx);const mark=(a:number)=>{const positive=(a+Math.PI*2)%(Math.PI*2);this.batterSectors[Math.floor(positive/(Math.PI*2)*16)%16]=true;};mark(angle);if(this.batterAngle!==null){let delta=angle-this.batterAngle;delta=Math.atan2(Math.sin(delta),Math.cos(delta));if(Math.abs(delta)<=Math.PI/2){const steps=Math.ceil(Math.abs(delta)/(Math.PI/32));for(let i=1;i<=steps;i++)mark(this.batterAngle+delta*i/steps);}}this.batterAngle=angle;this.spread=this.batterSectors.filter(Boolean).length/16;if(this.spread===1)this.stage='egg';}
  flip(){if(this.heldEgg||this.stage!=='egg'||!this.ingredients.egg||this.eggSpread<1)return false;this.stage='flipped';return true;}
- fold(){if(this.stage!=='flipped'||((this.ingredients.sweet||this.ingredients.chili)&&this.sauce<1))return false;this.stage='folded';this.foldTime=0;return true;}
- bag(){if(this.stage!=='folded'||this.foldTime<.65)return false;this.stage='bagged';this.foldTime=0;return true;}
- tick(dt:number){for(const egg of this.eggLayers)egg.age+=dt;if(this.stage!=='empty'&&this.stage!=='bagged')this.heat+=dt;if(this.stage==='folded'||this.stage==='bagged')this.foldTime+=dt;}
+ fold(){
+  if(this.stage!=='flipped'||this.heldEgg||((this.ingredients.sweet||this.ingredients.chili)&&this.sauce<1))return false;
+  this.stage='folding';this.foldStep=0;this.foldProgress=0;this.foldDragging=false;this.endStroke();return true;
+ }
+ beginFold(x:number,y:number){
+  if(this.stage!=='folding'||this.foldDragging||!Number.isFinite(x)||!Number.isFinite(y))return false;
+  const h=foldTargets[this.foldStep];if(x<h.x-h.w/2||x>h.x+h.w/2||y<h.y-h.h/2||y>h.y+h.h/2)return false;
+  this.foldDragging=true;this.foldProgress=0;return true;
+ }
+ pullFold(x:number,y:number){
+  if(this.stage!=='folding'||!this.foldDragging||!Number.isFinite(x)||!Number.isFinite(y))return false;
+  const h=foldTargets[this.foldStep],aligned=this.foldStep===2?Math.abs(x-h.x)<65:Math.abs(y-h.y)<45;
+  if(!aligned){this.foldProgress=Math.max(0,this.foldProgress-.12);return false;}
+  this.foldProgress=Math.min(1,Math.max(0,this.foldStep===0?(x-h.x)/(h.tx-h.x):this.foldStep===1?(h.x-x)/(h.x-h.tx):(h.y-y)/(h.y-h.ty)));
+  if(this.foldProgress<.92||Math.abs(x-h.tx)>60||Math.abs(y-h.ty)>40)return false;
+  this.foldStep++;this.foldProgress=0;this.foldDragging=false;
+  if(this.foldStep===3){this.stage='folded';this.foldTime=0;}
+  return true;
+ }
+ releaseFold(){this.foldDragging=false;}
+ undoFold(){
+  if(this.stage!=='folding'&&this.stage!=='folded')return false;
+  if(this.foldStep<=0)return false;
+  this.foldStep--;this.foldProgress=0;this.foldDragging=false;this.foldTime=0;this.stage='folding';return true;
+ }
+
+ bag(){if(this.stage!=='folded'||this.foldTime<.22)return false;this.stage='bagged';this.foldTime=0;return true;}
+ tick(dt:number){if(this.stage==='folding'&&!this.foldDragging)this.foldProgress=Math.max(0,this.foldProgress-dt*5);for(const egg of this.eggLayers)egg.age+=dt;if(this.stage!=='empty'&&this.stage!=='bagged')this.heat+=dt;if(this.stage==='folded'||this.stage==='bagged')this.foldTime+=dt;}
 }
+// Generous, separate grab areas; a fold only commits near its directional target.
+export const foldTargets=[
+ {x:470,y:502,tx:620,ty:502,w:76,h:82},
+ {x:810,y:502,tx:660,ty:502,w:76,h:82},
+ {x:640,y:569,tx:640,ty:494,w:120,h:42},
+] as const;
 export interface Customer {id:number;look:number;recipe:Recipe;patience:number;max:number;noCilantro:boolean;}
 export class Game {
  inventory=new Inventory(); cooking=new Cooking(); customers:Customer[]=[]; time=180; money=0; served=0; streak=0; lost=0; ratings:number[]=[]; ended=false; started=false; paused=false; next=0; serial=0; spawn=0; theftIn=15; theft:{customer:number;food:Food;remaining:number;slapped:boolean;reach?:number}|null=null; message='开摊啦！点击顾客接单，照着订单做一张热煎饼。';

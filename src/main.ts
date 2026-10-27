@@ -13,14 +13,14 @@ const help=document.querySelector<HTMLElement>('#accessible')!;
 const titleKey=document.title,ariaKey=canvas.getAttribute('aria-label')!,helpKey=help.textContent!;
 const scene=new Scene(canvas),sound=new Sound();
 let profile=restoreProfile(null);try{profile=restoreProfile(localStorage.getItem('jianbing-legend:progress'));}catch{}
-let game=new Game(Math.random,profile),dragging=false,eggDragging=false,activePointer:number|null=null,last={x:0,y:0},saved=false;
+let game=new Game(Math.random,profile),dragging=false,eggDragging=false,foldDragging=false,activePointer:number|null=null,last={x:0,y:0},saved=false;
 try{if(localStorage.getItem('jianbing-legend:language')==='en')setLanguage('en');scene.tutorialDone=profile.tutorial;sound.muted=localStorage.getItem('jianbing-legend:muted')==='true';}catch{}
 function toolbar(){document.querySelector('#mode-open')!.textContent=bi(profile.mode==='classic'?'普通模式 ▾':'天津模式 ▾',profile.mode==='classic'?'Classic ▾':'Tianjin ▾');document.querySelector('#shop-open')!.textContent=t('装饰与经营');document.querySelector('#learn')!.textContent=t(game.tutorial&&game.started&&!game.ended?'退出教程':'新手教程');(document.querySelector('#learn') as HTMLButtonElement).disabled=game.started&&!game.ended&&!game.tutorial;document.querySelector('#toolbar')!.setAttribute('aria-label',t('游戏控制'));if(shopDialog.open)renderShop();document.documentElement.lang=getLanguage()==='en'?'en':'zh-CN';document.title=t(titleKey);canvas.setAttribute('aria-label',t(ariaKey));help.textContent=t(helpKey);languageButton.textContent=getLanguage()==='zh'?'EN / 中文':'中文 / EN';languageButton.setAttribute('aria-label',getLanguage()==='zh'?'Switch to English':'切换为中文');pauseButton.textContent=game.paused?'▶':'Ⅱ';pauseButton.setAttribute('aria-label',t(game.paused?'继续营业':'暂停'));pauseButton.disabled=!game.started||game.ended;soundButton.textContent=sound.muted?'♪ ×':'♪';soundButton.setAttribute('aria-label',t(sound.muted?'开启声音':'关闭声音'));soundButton.setAttribute('aria-pressed',String(!sound.muted));orientation.textContent=t('横屏体验更好，转动手机后再开摊');}
 const shopDialog=document.querySelector<HTMLDialogElement>('#shop-dialog')!;
 let previewItem='';
 let resumeAfterShop=false,lastProgress='',storageFailed=false;
 function saveProgress(){const raw=JSON.stringify(profile);if(raw===lastProgress)return;try{localStorage.setItem('jianbing-legend:progress',raw);lastProgress=raw;storageFailed=false;}catch{storageFailed=true;document.querySelector('#save-status')!.textContent=t('浏览器无法保存，进度仅在本次打开期间保留');}}
-function stopGesture(){dragging=false;eggDragging=false;activePointer=null;game.cooking.endStroke();}
+function stopGesture(){dragging=false;eggDragging=false;foldDragging=false;game.cooking.releaseFold();activePointer=null;game.cooking.endStroke();}
 function begin(tutorial=false){stopGesture();game=new Game(Math.random,profile,tutorial);game.started=true;game.newCustomer();game.spawn=9;saved=false;scene.effects=[];scene.eggAge=2;scene.crispAge=2;scene.flipAge=1;scene.toastAge=0;scene.arrivals.clear();scene.previousCustomers=[];scene.tutorialDone=profile.tutorial&&!tutorial;sound.start();toolbar();}
 const bi=(zh:string,en:string)=>getLanguage()==='zh'?zh:en;
 function renderShop(){
@@ -70,6 +70,11 @@ canvas.addEventListener('pointerdown',e=>{
   }else scene.notify(held.phase==='held'?'点饼面中央敲蛋，边缘容易滑落':'按住蛋壳，向左或右拉开');
   return;
  }
+ if(game.cooking.stage==='folding'&&insideGriddle(p.x,p.y)){
+  if(game.cooking.beginFold(p.x,p.y)){foldDragging=true;activePointer=e.pointerId;canvas.setPointerCapture(e.pointerId);}
+  else scene.notify('按住发光的饼边，沿箭头拖到圆点');
+  return;
+ }
  let effect='',success=true;
  if(hit){const id=hit.id;
   if(!tutorialAllows(game,id)){scene.notify('请先完成箭头指向的步骤');return;}
@@ -77,7 +82,7 @@ canvas.addEventListener('pointerdown',e=>{
   else if(id.startsWith('customer:')){game.next=Number(id.split(':')[1]);if(game.cooking.stage==='bagged'){success=game.serve();effect=success?'serve':'';sound.play(success?'coin':'error');if(success&&game.tutorial){game.ended=true;scene.tutorialDone=true;toolbar();}saveProgress();}else game.message='已接单，请看铁板上方的完整订单';}
   else if(id==='boss'){success=game.inventory.request();game.message=success?'老板：来了来了，五秒补齐！':'老板：库存还满着，或正在路上！';if(success)sound.play('fold');}
   else if(id==='flip'){success=game.cooking.flip();game.message=success?'翻面完成，开始刷酱加配料':nextAction(game).detail;effect=success?id:'';}
-  else if(id==='fold'){success=game.cooking.fold();effect=success?'fold':'';game.message=success?'折起来，香气包住！':nextAction(game).detail;}
+  else if(id==='fold'){const undo=['folding','folded'].includes(game.cooking.stage);success=undo?game.cooking.undoFold():game.cooking.fold();game.message=success?(undo?'已退回上一折，可以重新拖折':'按住发光的饼边，沿箭头拖到圆点'):nextAction(game).detail;}
   else if(id==='bag'){success=game.cooking.bag();effect=success?'bag':'';game.message=success?'装袋完成，点击顾客交餐':nextAction(game).detail;}
   else if(id==='discard'){stopGesture();game.cooking=new Cooking();game.message='清空铁板，已用食材不会退回';}
   else if(id==='slap'){success=game.slap();game.message=success?'叮！夹子收回去，想吃得先点单！':game.message;sound.play('flip');}
@@ -85,12 +90,12 @@ canvas.addEventListener('pointerdown',e=>{
   else if(id.startsWith('order:')){scene.touchFocus=id;scene.touchAge=2;return;}
   if(!id.startsWith('order:')){scene.notify(game.message,effect,game);if(!effect&&(id.startsWith('food:')||['scrape','flip','fold','bag','discard'].includes(id))){scene.touchFocus=id;scene.touchAge=1.5;}if(!success)sound.play('error');else if(id.startsWith('food:')&&id!=='food:egg')sound.play(id==='food:crisp'?'crisp':id==='food:batter'||id==='food:sweet'||id==='food:chili'?'pour':'sprinkle');else if(id==='flip'||id==='fold'||id==='bag')sound.play(id);}
  }
- if(!game.cooking.heldEgg&&insideGriddle(p.x,p.y)&&tutorialAllows(game,'scrape')){game.cooking.endStroke();dragging=true;activePointer=e.pointerId;canvas.setPointerCapture(e.pointerId);}
+ if(!game.cooking.heldEgg&&game.cooking.stage!=='folding'&&insideGriddle(p.x,p.y)&&tutorialAllows(game,'scrape')){game.cooking.endStroke();dragging=true;activePointer=e.pointerId;canvas.setPointerCapture(e.pointerId);}
 });
-canvas.addEventListener('pointermove',e=>{const p=position(e);if(activePointer!==null&&activePointer!==e.pointerId)return;scene.pointer=p;if(eggDragging&&!game.paused&&game.cooking.pullEgg(p.x,p.y,game.inventory)){eggDragging=false;game.message='鸡蛋落到饼上了，从蛋黄开始摊匀';scene.notify(game.message);sound.play('pour');}if(dragging&&!game.paused&&insideGriddle(p.x,p.y))game.cooking.drag(p.x,p.y,Math.min(65,Math.hypot(p.x-last.x,p.y-last.y)));if(dragging)scene.toolAngle+=((Math.max(-.5,Math.min(.5,(p.x-last.x)*.04)))-scene.toolAngle)*.25;last=p;canvas.style.cursor=scene.hits.some(h=>p.x>=h.x&&p.x<h.x+h.w&&p.y>=h.y&&p.y<h.y+h.h)?'pointer':insideGriddle(p.x,p.y)?'crosshair':'default';});
-canvas.addEventListener('pointerleave',()=>{if(!dragging&&!eggDragging)scene.pointer={x:-100,y:-100};});
+canvas.addEventListener('pointermove',e=>{const p=position(e);if(activePointer!==null&&activePointer!==e.pointerId)return;scene.pointer=p;const canCook=game.started&&!game.ended&&!game.paused;if(foldDragging&&canCook&&game.cooking.pullFold(p.x,p.y)){foldDragging=false;game.message=game.cooking.stage==='folded'?'三折完成，装进纸袋吧':'这一边折好了，接着拖下一边';scene.notify(game.message);sound.play('fold');}if(eggDragging&&canCook&&game.cooking.pullEgg(p.x,p.y,game.inventory)){eggDragging=false;game.message='鸡蛋落到饼上了，从蛋黄开始摊匀';scene.notify(game.message);sound.play('pour');}if(dragging&&canCook&&insideGriddle(p.x,p.y))game.cooking.drag(p.x,p.y,Math.min(65,Math.hypot(p.x-last.x,p.y-last.y)));if(dragging)scene.toolAngle+=((Math.max(-.5,Math.min(.5,(p.x-last.x)*.04)))-scene.toolAngle)*.25;last=p;canvas.style.cursor=scene.hits.some(h=>p.x>=h.x&&p.x<h.x+h.w&&p.y>=h.y&&p.y<h.y+h.h)?'pointer':insideGriddle(p.x,p.y)?'crosshair':'default';});
+canvas.addEventListener('pointerleave',()=>{if(!dragging&&!eggDragging&&!foldDragging)scene.pointer={x:-100,y:-100};});
 for(const event of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(event,(e)=>{if(activePointer===null||activePointer===(e as PointerEvent).pointerId)stopGesture();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!shopDialog.open&&game.started&&!game.ended){game.paused=!game.paused;stopGesture();toolbar();}});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)sound.activity(false);if(document.hidden&&game.started&&!game.ended){game.paused=true;stopGesture();toolbar();}});
 let previous=performance.now();
-function frame(now:number){const dt=Math.min(.1,(now-previous)/1000);previous=now;if(!document.hidden){const wasRefilling=game.inventory.refill>0;game.tick(dt);if(wasRefilling&&!game.inventory.refill)sound.play('sprinkle');saveProgress();if(game.started&&!game.ended&&!game.paused)sound.tick(dt,!['empty','bagged','folded'].includes(game.cooking.stage),dragging,game.cooking.stage==='flipped');else sound.activity(false);scene.dragging=dragging;scene.muted=sound.muted;scene.draw(game,game.paused?0:dt);if(game.ended&&!saved){if(!game.tutorial){profile.days++;saveProgress();}try{localStorage.setItem('jianbing-legend:last-day',JSON.stringify({version:2,money:game.money,served:game.served,satisfaction:game.satisfaction,date:new Date().toISOString()}));}catch{}saved=true;toolbar();}}requestAnimationFrame(frame);}requestAnimationFrame(frame);
+function frame(now:number){const dt=Math.min(.1,(now-previous)/1000);previous=now;if(!document.hidden){const wasRefilling=game.inventory.refill>0;game.tick(dt);if(wasRefilling&&!game.inventory.refill)sound.play('sprinkle');saveProgress();if(game.started&&!game.ended&&!game.paused)sound.tick(dt,!['empty','bagged','folded'].includes(game.cooking.stage),dragging,game.cooking.stage==='flipped');else sound.activity(false);scene.dragging=dragging;scene.muted=sound.muted;scene.draw(game,game.paused?0:dt);if(game.ended&&!saved){stopGesture();if(!game.tutorial){profile.days++;saveProgress();}try{localStorage.setItem('jianbing-legend:last-day',JSON.stringify({version:2,money:game.money,served:game.served,satisfaction:game.satisfaction,date:new Date().toISOString()}));}catch{}saved=true;toolbar();}}requestAnimationFrame(frame);}requestAnimationFrame(frame);

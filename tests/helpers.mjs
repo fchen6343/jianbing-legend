@@ -14,3 +14,9 @@ export function spreadEgg(p){
   p.endStroke();
  }
 }
+
+export function completeFold(p){
+ for(const h of [{x:470,y:502,tx:620,ty:502},{x:810,y:502,tx:660,ty:502},{x:640,y:569,tx:640,ty:494}].slice(p.foldStep)){
+  p.beginFold(h.x,h.y);for(let k=1;k<=10;k++)p.pullFold(h.x+(h.tx-h.x)*k/10,h.y+(h.ty-h.y)*k/10);p.releaseFold();
+ }
+}

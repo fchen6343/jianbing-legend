@@ -1,21 +1,18 @@
-# 需求验收差距 / Roadmap and acceptance gaps
+# 当前路线图 / Current roadmap
 
-| 项目 / Area | 当前情况 / Current status | 后续 / Next |
-| --- | --- | --- |
-| 第一视角、16:9、连续操作台 / First-person 16:9 stall | 已实现 / Implemented | 全面视觉验收 / Full visual review |
-| 顾客、随机订单、双蛋 / Customers, random orders, double eggs | 规则与绘制已实现 / Rules and drawing implemented | 已加入过渡和收钱反馈；后续补姿势动画 / Transitions and coins added; pose animation remains |
-| 14 种食材与库存 / 14 ingredients and inventory | 已实现 / Implemented | 小铁桶台面、果子、多份加料 / Steel pails, youtiao and multiple portions |
-| 摊饼、刷酱、折叠 / Spreading, sauce brushing and folding | 简化版本 / Simplified version | 蛋液抹匀、背面隐藏、折叠和装袋已改进；无流体模拟 / Egg spreading, hidden underside, folding and bagging improved; no fluid simulation |
-| 补货、偷吃打手 / Restocking and sneaking hands | 已实现 / Implemented | 搬货与倒料动作 / Carrying and refill animation |
-| 收入、满意度、单日结算 / Revenue, rating and daily results | 已实现并自动测试 / Implemented and automatically tested | 已加入钱包、装饰、开店与节日解锁；跨设备同步待做 / Wallet, decor, shop and festivals added; cloud sync pending |
-| 背景音乐与音效 / Music and sound | 合成旋律和提示音 / Synthesized melody and cues | 更好音色与连续滋滋声 / Improved instruments and continuous sizzling |
-| 统一美术 / Consistent artwork | 背景与统一手绘人物、食材、工具已接入 / Background and consistent illustrated characters, ingredients and tools integrated | 更多表情与状态姿势 / More expressions and state-specific poses |
-| 街道动态 / Street activity | 静态 / Static | 行人、电动车、树叶 / Pedestrians, scooters and leaves |
-| Phaser / Vite | 实际为 TS/Canvas / Currently TS/Canvas | 按需要评估迁移 / Evaluate migration when useful |
-| 中英文 / Chinese and English | 界面、订单、提示、结算、文档支持双语 / Bilingual UI, orders, hints, results and documentation | 持续检查新增文案与布局 / Review new strings and layout |
-| 浏览器与手机 / Browser and mobile | 自动规则测试通过；全面实机验收待完成 / Rules pass; full device review pending | 完整一局、触屏与性能验收 / Full-day, touch and performance review |
-| GitHub 与在线试玩 / GitHub and online play | 仓库已上传；Pages 使用 main /docs 发布 / Repository uploaded; Pages deployment uses main /docs | 每次构建同步并提交 docs/index.html / Rebuild and commit docs/index.html with updates |
+本页以最新体验优先原则为准；完整原文不删减，逐项状态见[全文需求核对](REQUIREMENTS_STATUS.md)。
+This roadmap follows the latest experience-first priority. The full original scope is retained; consult the [itemized audit](REQUIREMENTS_STATUS.md).
 
-| 实操教程 / Hands-on tutorial | 固定订单、无限耐心、可重玩 / Fixed order, unlimited patience, replayable | 更多异常操作教学 / More recovery lessons |
-| 天津模式 / Tianjin mode | 限定菜单、果子与果篦儿 / Restricted menu, youtiao and guobier | 更多地方口味 / More regional recipes |
-| 节日主题 / Festivals | 三主题可选、购买与六单奖励 / Three selectable themes, purchases and six-order rewards | 更多服装、角色及活动剧情 / More outfits, characters and stories |
+| 阶段 / Stage | 状态 / Status | 交付 / Deliverable |
+|---|---|---|
+| A1 摊糊 / Batter | v0.10.0 已实现，手感/触屏待验收 / Implemented; feel/touch pending | 实际旋转覆盖 / Real circular coverage |
+| A2 打蛋 / Eggs | v0.11.0 已实现，一张双蛋浏览器整单通过 / Implemented; one browser double-egg order passed | 拿、敲、拉壳、落液、空间涂抹 / Pick, tap, open, settle, spatial spreading |
+| A3 折叠 / Folds | v0.12.0 已实现，线上验收另记 / Implemented; live review recorded separately | 三边拖折、回落、撤回、正确装袋 / Three edges, rollback, undo and bag occlusion |
+| A4 首台设备 / First device | 未做 / Pending | 真实旋转刮板、购买/保存、可关闭、手动回退 / Real rotor, cost/save, switch and fallback |
+| B 场景与存档 / Scenes and saves | 未做 / Pending | 独立主菜单/经营中心、三槽隔离、导入导出和迁移 / Menu/hub, isolated slots, import/export and migration |
+| C 五日经营 / Five-day loop | 未做 / Pending | 准备、采购、成本/净利、结算、明确升级价值 / Prep, purchasing, costs/net profit, results and valuable upgrades |
+| D 五十天 / Fifty days | 未做 / Pending | 按章完成熟客、剧情、事件、建筑、装修、图鉴、分店 / Playable chapters with cast, story, events, buildings, decor, collections and franchises |
+| E 全量验收 / Full acceptance | 未做 / Pending | 五十天经济模拟、剧情/设备/三档、十单手感、真机及性能 / Economy simulation, stories/devices/saves, ten-order feel, devices and performance |
+
+每阶段保留可运行、可测试、可完整交餐的游戏；不用空按钮或假升级填数量。通过自动测试不能替代真人趣味性。当前不是完整版。
+Each stage must run, be testable and complete full orders. No empty buttons or fake upgrades. Automated tests do not replace human enjoyment. This is not the full game.

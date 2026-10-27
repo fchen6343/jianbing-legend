@@ -2,6 +2,18 @@ let language = 'zh';
 export function getLanguage() { return language; }
 export function setLanguage(value) { language = value; }
 const english = {
+    "折起左边": "Fold the left edge",
+    "折起右边": "Fold the right edge",
+    "托起下边": "Lift the bottom edge",
+    "从左边拖向中间，包住馅料": "Drag the left edge to the middle",
+    "从右边拖向中间，盖好饼边": "Drag the right edge to the middle",
+    "从下边向上托起，完成最后一折": "Drag the bottom edge upward to finish",
+    "按住发光的饼边，沿箭头拖到圆点": "Hold the glowing edge; drag along the arrow to the circle",
+    "已退回上一折，可以重新拖折": "Last fold undone. Drag the edge again.",
+    "这一边折好了，接着拖下一边": "Edge folded. Continue with the next edge.",
+    "三折完成，装进纸袋吧": "Three folds done. Time to bag it!",
+    "退回上一折": "Undo the last fold",
+    "热煎饼": "HOT JIANBING",
     "敲开鸡蛋": "Tap to crack the egg",
     "拉开蛋壳": "Pull the shell open",
     "点蛋盘拿蛋": "Tap the tray to pick up an egg",
@@ -60,7 +72,7 @@ const english = {
     "可以折叠了": "Ready to fold",
     "发光的食材是这张订单还缺的": "Glowing ingredients are still needed for this order",
     "按住饼面拖动，将酱料刷匀": "Hold and drag on the pancake to brush the sauce",
-    "点击折叠，准备打包": "Tap the folded pancake tool to wrap it up",
+    "点击折叠，开始三步拖折": "Tap Fold, then drag the three edges",
     "正在折叠": "Folding…",
     "装进纸袋": "Bag it up",
     "稍等一下，热煎饼马上包好": "Just a moment while the pancake folds",
@@ -124,7 +136,7 @@ const english = {
     "直接按住铁板移动，摊饼或刷酱": "Drag on the griddle to spread batter or brush sauce",
     "不要香菜": "NO cilantro",
     "煎饼摊传奇：点击食材、拖动摊饼、点击工具和顾客": "Jianbing Legend: select ingredients, drag to spread, and click tools or customers",
-    "鼠标或触屏操作。点击面糊，绕圈摊开。点蛋盘拿蛋，在饼上敲开并向左或右拉开蛋壳，从蛋黄开始摊匀；再点蛋盘可放回未打开的蛋。随后翻面、加料、刷酱、折叠、装袋、点击顾客交餐。点击老板补货，点击偷吃的夹子阻止偷吃。": "Use a mouse or touchscreen. Circle to spread the batter. Pick up an egg, tap the pancake to crack it, and pull the shell left or right. Start at the yolk and spread it. Tap the egg tray again to return an unopened egg. Then flip, fill, brush, fold, bag and serve. Click the boss to restock and tap sneaky claws."
+    "鼠标或触屏操作。点击面糊，绕圈摊开。点蛋盘拿蛋，在饼上敲开并向左或右拉开蛋壳，从蛋黄开始摊匀；再点蛋盘可放回未打开的蛋。随后翻面、加料、刷酱，依次拖折左边、右边和下边；折叠工具可退回上一折。装袋后点击顾客交餐。点击老板补货，点击偷吃的夹子阻止偷吃。": "Use a mouse or touchscreen. Circle to spread the batter. Pick up an egg, tap the pancake to crack it, and pull the shell left or right. Start at the yolk and spread it. Tap the egg tray again to return an unopened egg. Then flip, fill and brush. Drag the left, right and bottom edges to fold; the fold tool undoes the last edge. Bag and serve. Click the boss to restock and tap sneaky claws."
 };
 const foodEnglish = { batter: 'Batter', egg: 'Egg', scallion: 'Scallions', cilantro: 'Cilantro', sesame: 'Sesame', sweet: 'Sweet sauce', chili: 'Chili sauce', crisp: 'Guobier crisp', ham: 'Ham', pork: 'Pork', sausage: 'Sausage', lettuce: 'Lettuce', chicken: 'Chicken', youtiao: 'Youtiao' };
 const foodChinese = { batter: '面糊', egg: '鸡蛋', scallion: '葱花', cilantro: '香菜', sesame: '芝麻', sweet: '甜面酱', chili: '辣椒酱', crisp: '果篦儿', ham: '火腿', pork: '里脊', sausage: '烤肠', lettuce: '生菜', chicken: '鸡柳', youtiao: '果子' };

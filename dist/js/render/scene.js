@@ -1,7 +1,7 @@
 import { charm, patienceMultiplier } from '../systems/progress.js';
 import { t, getLanguage, foodLabel } from '../i18n.js';
 import { foods, eggAreas } from '../systems/game.js';
-import { stationRect, toolRect, toolIds, nextAction, ingredientStatus, toolEnabled, customerX, restockPhase, clawGeometry } from '../ui.js';
+import { stationRect, toolRect, toolIds, nextAction, ingredientStatus, toolEnabled, customerX, restockPhase, clawGeometry, foldTarget } from '../ui.js';
 export class Scene {
     constructor(canvas) {
         this.canvas = canvas;
@@ -272,97 +272,12 @@ export class Scene {
             c.translate(640, 505 - flip * 44);
             c.scale(1, Math.max(.08, Math.abs(Math.cos(Math.min(1, this.flipAge / .46) * Math.PI))));
             c.translate(-640, -505);
-            if (p.stage === 'bagged') {
-                const bag = Math.min(1, p.foldTime / .65);
-                this.ellipse(640, 550, 70, 12, '#0003');
-                this.atlasFood(14, 604, 415 + bag * 35, 72, 80);
-                this.atlasFood(15, 578, 438, 124, 120);
-            }
-            else if (p.stage === 'folded') {
-                const f = Math.min(1, p.foldTime / .65), leftFold = Math.min(1, f / .33), rightFold = Math.max(0, Math.min(1, (f - .33) / .33)), width = 410 - 114 * leftFold - 114 * rightFold, height = 180 - 96 * Math.max(0, Math.min(1, (f - .6) / .4)), l = 640 - width / 2, r = 640 + width / 2, top = 505 - height / 2, bottom = 505 + height / 2;
-                this.ellipse(640, 535, width * .48, 14, '#0003');
-                if (f < .72) {
-                    this.ellipse(640, 505, width / 2, height / 2, '#e6b968');
-                    c.save();
-                    c.beginPath();
-                    c.ellipse(640, 505, Math.max(30, width / 2 - 6), Math.max(10, height / 2 - 5), 0, 0, 7);
-                    c.clip();
-                    foods.filter(([id]) => !['batter', 'egg', 'sweet', 'chili'].includes(id) && p.ingredients[id] && !p.underside[id]).forEach(([id], j) => this.foodArt(id, 600 + j % 2 * 35, 482 + j % 2 * 13, 65, 35));
-                    c.restore();
-                    this.path([[l, 499], [l + width * .35 * leftFold, top + 7], [l + width * .35 * leftFold, bottom - 7], [l, 519]], '#f2d18a', '#bd8e47');
-                    this.path([[r, 499], [r - width * .35 * rightFold, top + 7], [r - width * .35 * rightFold, bottom - 7], [r, 519]], '#e5b461', '#bd8e47');
-                }
-                else {
-                    this.atlasFood(14, 543, 446, 194, 121);
-                }
-            }
-            else {
-                const rx = p.stage === 'batter' ? 58 + 147 * p.spread : 205;
-                if (p.stage === 'batter') {
-                    const points = Array.from({ length: 32 }, (_, j) => { const a = j / 32 * Math.PI * 2, sector = Math.floor(j / 2), coverage = (p.batterSectors[sector] ? .5 : 0) + (p.batterSectors[(sector + 15) % 16] ? .25 : 0) + (p.batterSectors[(sector + 1) % 16] ? .25 : 0), radius = 58 + 144 * coverage; return { x: 640 + Math.cos(a) * radius, y: 502 + Math.sin(a) * radius * .435 }; });
-                    c.beginPath();
-                    c.moveTo((points[31].x + points[0].x) / 2, (points[31].y + points[0].y) / 2);
-                    points.forEach((v, i) => { const next = points[(i + 1) % points.length]; c.quadraticCurveTo(v.x, v.y, (v.x + next.x) / 2, (v.y + next.y) / 2); });
-                    c.closePath();
-                    c.fillStyle = '#edca7c';
-                    c.fill();
-                    c.strokeStyle = '#b77f3b';
-                    c.lineWidth = 2;
-                    c.stroke();
-                }
-                else {
-                    this.ellipse(640, 505, rx, rx * .445, '#b77f3b');
-                    this.ellipse(640, 502, rx - 3, rx * .435, '#edca7c');
-                }
-                for (let n = 0; n < (p.stage === 'batter' ? 0 : 90); n++) {
-                    const x = Math.sin(n * 13.3) * rx * .94, y = Math.cos(n * 7.1) * rx * .4;
-                    if (x * x / (rx * rx) + y * y / (rx * rx * .2) < .9)
-                        this.ellipse(640 + x, 502 + y, 1 + n % 3, 1, '#b4773e44');
-                }
-                if (p.stage === 'egg')
-                    this.drawEggs(p);
-                // Bounded sauce strokes avoid an unbounded draw loop during long gestures.
-                c.save();
-                c.beginPath();
-                c.ellipse(640, 502, 199, 85, 0, 0, 7);
-                c.clip();
-                c.strokeStyle = p.ingredients.chili ? '#a43e2390' : '#73402090';
-                c.lineWidth = 27;
-                c.lineCap = 'round';
-                c.lineJoin = 'round';
-                c.beginPath();
-                p.strokes.forEach((v, i) => { if (!i || v.move)
-                    c.moveTo(v.x, v.y);
-                else
-                    c.lineTo(v.x, v.y); });
-                c.stroke();
-                c.restore();
-                foods.filter(([id]) => !['batter', 'egg', 'sweet', 'chili'].includes(id) && (p.ingredients[id] || 0) - (p.stage === 'flipped' ? (p.underside[id] || 0) : 0) > 0).forEach(([id], j) => { const index = id === 'youtiao' ? 20 : foods.findIndex(f => f[0] === id); for (let n = 0; n < Math.min(5, (p.ingredients[id] || 0) - (p.stage === 'flipped' ? (p.underside[id] || 0) : 0)); n++) {
-                    const fx = 530 + (n % 3) * 76 + Math.sin(j * 3) * 14, fy = 462 + Math.floor(n / 3) * 40 + Math.cos(j * 4) * 12;
-                    if (id === 'crisp') {
-                        if (n === this.crispCount - 1 && this.crispAge < .48)
-                            continue;
-                        for (let k = 0; k < 3; k++) {
-                            c.save();
-                            c.translate(fx + k * 28, fy + k % 2 * 13);
-                            c.rotate((k - 1) * .3);
-                            c.beginPath();
-                            c.moveTo(0, 0);
-                            c.lineTo(32, 4);
-                            c.lineTo(9, 28);
-                            c.closePath();
-                            c.clip();
-                            this.foodArt('crisp', -2, -1, 36, 32);
-                            c.restore();
-                        }
-                        if (this.crispAge < .9)
-                            for (let k = 0; k < 9; k++)
-                                this.ellipse(fx + 30 + Math.sin(k * 3) * this.crispAge * 60, fy + 20 + Math.cos(k) * this.crispAge * 20, 2, 1, '#ecc375');
-                    }
-                    else
-                        this.foodArt(id, fx, fy, 72, 44);
-                } ; });
-            }
+            if (p.stage === 'bagged')
+                this.drawFilledBag(p);
+            else if (p.stage === 'folding' || p.stage === 'folded')
+                this.drawWrapped(p);
+            else
+                this.drawPancake(p);
             c.restore();
             if (p.stage !== 'bagged')
                 for (let n = 0; n < 4; n++) {
@@ -390,8 +305,14 @@ export class Scene {
         }
         // Tools sit in a single physical rail and reveal names on hover/touch.
         this.panel(349, 614, 582, 66, '#563c2bea', 14);
-        toolIds.forEach((id, i) => { const r = toolRect(i), enabled = toolEnabled(g, id); this.hit(id, r.x, r.y, r.w, r.h); const hover = this.hovered(id); this.ellipse(r.x + 52, r.y + 49, 31, 4, '#25180f66'); c.save(); c.globalAlpha = (enabled || !g.started) ? .98 : .47; if (id === 'fold' || id === 'bag')
-            this.atlasFood(id === 'fold' ? 14 : 15, r.x + 18, r.y - 2, 68, 58);
+        toolIds.forEach((id, i) => { const r = toolRect(i), enabled = toolEnabled(g, id); this.hit(id, r.x, r.y, r.w, r.h); const hover = this.hovered(id); this.ellipse(r.x + 52, r.y + 49, 31, 4, '#25180f66'); c.save(); c.globalAlpha = (enabled || !g.started) ? .98 : .47; if (id === 'bag')
+            this.atlasFood(15, r.x + 18, r.y - 2, 68, 58);
+        else if (id === 'fold') {
+            this.path([[r.x + 26, r.y + 7], [r.x + 76, r.y + 7], [r.x + 68, r.y + 44], [r.x + 32, r.y + 44]], '#ecc985', '#a47242', 1.5);
+            this.path([[r.x + 26, r.y + 7], [r.x + 53, r.y + 26], [r.x + 76, r.y + 7]], '#f7dba2', '#a47242', 1.5);
+            if (['folding', 'folded'].includes(p.stage))
+                this.text('↶', r.x + 52, r.y + 34, 27, '#80532e');
+        }
         else
             this.sprite([13, 14, 15, 16, 17][i], r.x + 20, r.y - 2, 65, 58); c.restore(); if (hover)
             this.focusRing(r); if (action.focus.includes(id) && g.started && !g.ended)
@@ -494,6 +415,7 @@ export class Scene {
             c.fill();
             c.restore();
         }
+        this.drawFoldGuide(g);
         if (this.dragging && !p.heldEgg && ['batter', 'egg', 'flipped'].includes(p.stage)) {
             c.save();
             c.beginPath();
@@ -542,7 +464,7 @@ export class Scene {
         const tip = hoverHit?.id || (this.touchAge ? this.touchFocus : '');
         if (tip && (tip.startsWith('food:') || tip.startsWith('order:') || toolIds.includes(tip))) {
             const h = this.hits.find(v => v.id === tip) || { x: 550, y: 620, w: 180, h: 30 };
-            const label = tip.includes(':') ? foodLabel(tip.split(':')[1], g.profile.mode === 'tianjin') : ['刮板', '铲子 · 翻面', '折叠', '纸袋', '丢弃'][toolIds.indexOf(tip)];
+            const label = tip === 'fold' && ['folding', 'folded'].includes(p.stage) ? '退回上一折' : tip.includes(':') ? foodLabel(tip.split(':')[1], g.profile.mode === 'tianjin') : ['刮板', '铲子 · 翻面', '折叠', '纸袋', '丢弃'][toolIds.indexOf(tip)];
             const x = Math.min(1178, Math.max(102, h.x + h.w / 2));
             this.panel(x - 84, h.y - 32, 168, 25, '#332d25f5', 8);
             this.text(label, x, h.y - 15, 12, '#fff0cf', 'center', 154);
@@ -565,11 +487,176 @@ export class Scene {
             if (h) {
                 const x = h.x + h.w / 2, y = h.y - 12 - Math.sin(this.clock * 4) * 4;
                 this.path([[x - 10, y - 15], [x + 10, y - 15], [x, y]], '#fff1b5', '#a8662f');
-                this.focusRing(h);
+                if (focus !== 'fold:edge' || !p.foldDragging)
+                    this.focusRing(h);
             }
         }
         if (!g.started || g.ended || g.paused)
             this.overlay(g);
+    }
+    drawPancake(p) {
+        const c = this.ctx;
+        const rx = p.stage === 'batter' ? 58 + 147 * p.spread : 205;
+        if (p.stage === 'batter') {
+            const points = Array.from({ length: 32 }, (_, j) => { const a = j / 32 * Math.PI * 2, sector = Math.floor(j / 2), coverage = (p.batterSectors[sector] ? .5 : 0) + (p.batterSectors[(sector + 15) % 16] ? .25 : 0) + (p.batterSectors[(sector + 1) % 16] ? .25 : 0), radius = 58 + 144 * coverage; return { x: 640 + Math.cos(a) * radius, y: 502 + Math.sin(a) * radius * .435 }; });
+            c.beginPath();
+            c.moveTo((points[31].x + points[0].x) / 2, (points[31].y + points[0].y) / 2);
+            points.forEach((v, i) => { const next = points[(i + 1) % points.length]; c.quadraticCurveTo(v.x, v.y, (v.x + next.x) / 2, (v.y + next.y) / 2); });
+            c.closePath();
+            c.fillStyle = '#edca7c';
+            c.fill();
+            c.strokeStyle = '#b77f3b';
+            c.lineWidth = 2;
+            c.stroke();
+        }
+        else {
+            this.ellipse(640, 505, rx, rx * .445, '#b77f3b');
+            this.ellipse(640, 502, rx - 3, rx * .435, '#edca7c');
+        }
+        for (let n = 0; n < (p.stage === 'batter' ? 0 : 90); n++) {
+            const x = Math.sin(n * 13.3) * rx * .94, y = Math.cos(n * 7.1) * rx * .4;
+            if (x * x / (rx * rx) + y * y / (rx * rx * .2) < .9)
+                this.ellipse(640 + x, 502 + y, 1 + n % 3, 1, '#b4773e44');
+        }
+        if (p.stage === 'egg')
+            this.drawEggs(p);
+        // Bounded sauce strokes avoid an unbounded draw loop during long gestures.
+        c.save();
+        c.beginPath();
+        c.ellipse(640, 502, 199, 85, 0, 0, 7);
+        c.clip();
+        c.strokeStyle = p.ingredients.chili ? '#a43e2390' : '#73402090';
+        c.lineWidth = 27;
+        c.lineCap = 'round';
+        c.lineJoin = 'round';
+        c.beginPath();
+        p.strokes.forEach((v, i) => { if (!i || v.move)
+            c.moveTo(v.x, v.y);
+        else
+            c.lineTo(v.x, v.y); });
+        c.stroke();
+        c.restore();
+        foods.filter(([id]) => !['batter', 'egg', 'sweet', 'chili'].includes(id) && (p.ingredients[id] || 0) - (p.stage !== 'egg' ? (p.underside[id] || 0) : 0) > 0).forEach(([id], j) => { const index = id === 'youtiao' ? 20 : foods.findIndex(f => f[0] === id); for (let n = 0; n < Math.min(5, (p.ingredients[id] || 0) - (p.stage !== 'egg' ? (p.underside[id] || 0) : 0)); n++) {
+            const pack = ['folding', 'folded', 'bagged'].includes(p.stage) ? Math.min(1, p.foldStep + p.foldProgress) : 0, ox = 530 + (n % 3) * 76 + Math.sin(j * 3) * 14, oy = 462 + Math.floor(n / 3) * 40 + Math.cos(j * 4) * 12, fx = ox + (600 + n % 2 * 35 + Math.sin(j * 3) * 8 - ox) * pack, fy = oy + (435 + Math.floor(n / 2) * 12 + Math.cos(j * 4) * 5 - oy) * pack;
+            if (id === 'crisp') {
+                if (n === this.crispCount - 1 && this.crispAge < .48)
+                    continue;
+                for (let k = 0; k < 3; k++) {
+                    c.save();
+                    c.translate(fx + k * 28, fy + k % 2 * 13);
+                    c.rotate((k - 1) * .3);
+                    c.beginPath();
+                    c.moveTo(0, 0);
+                    c.lineTo(32, 4);
+                    c.lineTo(9, 28);
+                    c.closePath();
+                    c.clip();
+                    this.foodArt('crisp', -2, -1, 36, 32);
+                    c.restore();
+                }
+                if (this.crispAge < .9)
+                    for (let k = 0; k < 9; k++)
+                        this.ellipse(fx + 30 + Math.sin(k * 3) * this.crispAge * 60, fy + 20 + Math.cos(k) * this.crispAge * 20, 2, 1, '#ecc375');
+            }
+            else
+                this.foodArt(id, fx, fy, 72, 44);
+        } ; });
+    }
+    drawWrapped(p) {
+        const c = this.ctx;
+        const left = p.foldStep > 0 ? 1 : p.foldProgress, right = p.foldStep > 1 ? 1 : p.foldStep === 1 ? p.foldProgress : 0, bottom = p.foldStep > 2 ? 1 : p.foldStep === 2 ? p.foldProgress : 0;
+        const lx = 550 - Math.cos(left * Math.PI) * 115, rx = 730 + Math.cos(right * Math.PI) * 115, by = 535 + Math.cos(bottom * Math.PI) * 55;
+        c.save();
+        c.beginPath();
+        c.rect(Math.min(550, lx), 410, Math.max(730, rx) - Math.min(550, lx), Math.max(535, by) - 410);
+        c.clip();
+        this.drawPancake(p);
+        const flap = (points, t, color) => { c.save(); this.path(points, color, '#ad753b', 2); c.clip(); for (let n = 0; n < 36; n++)
+            this.ellipse(545 + n * 37 % 195, 427 + n * 23 % 145, 1 + n % 3, 1, '#a970383a'); c.restore(); if (t > .5) {
+            c.save();
+            c.globalAlpha = (t - .5) * .55;
+            c.strokeStyle = '#7d4b2944';
+            c.lineWidth = 4;
+            c.beginPath();
+            c.moveTo(points[0][0], points[0][1]);
+            c.lineTo(points[points.length - 1][0], points[points.length - 1][1]);
+            c.stroke();
+            c.restore();
+        } };
+        if (left > 0)
+            flap([[550, 430], [lx, 478], [lx, 524], [550, 574]], left, left > .5 ? '#f2d294' : '#e6b969');
+        if (right > 0)
+            flap([[730, 430], [rx, 478], [rx, 524], [730, 574]], right, right > .5 ? '#eac57f' : '#e4b466');
+        if (bottom > 0)
+            flap([[550, 535], [568, by], [712, by], [730, 535]], bottom, '#f2d294');
+        c.restore();
+    }
+    drawFilledBag(p) {
+        const c = this.ctx, u = Math.min(1, p.foldTime / .45), top = 475 + (1 - u) * 90;
+        this.ellipse(640, 561, 69, 9, '#0003');
+        this.ellipse(640, top, 62, 10, '#8b5835');
+        c.save();
+        c.translate(640, 500 - u * 13);
+        c.scale(1 - u * .4, 1 - u * .4);
+        c.translate(-640, -500);
+        this.drawWrapped(p);
+        c.restore();
+        const rim = Array.from({ length: 17 }, (_, i) => [580 + i * 7.5, top + (i % 2 ? 3 : 0)]);
+        this.path([...rim, [704, 556], [578, 556]], '#d69b56', '#8c5b34', 2);
+        this.path([[687, top + 2], [700, top], [704, 556], [684, 547]], '#ba7b40', '#a86d39', 1);
+        c.strokeStyle = '#f7c67f';
+        c.lineWidth = 1.5;
+        c.beginPath();
+        c.moveTo(586, top + 10);
+        c.lineTo(584, 547);
+        c.lineTo(680, 547);
+        c.lineTo(688, top + 9);
+        c.stroke();
+        c.strokeStyle = '#a56f3e66';
+        c.beginPath();
+        c.moveTo(588, top + 14);
+        c.lineTo(642, 541);
+        c.lineTo(682, top + 15);
+        c.stroke();
+        if (u > .65)
+            this.text('热煎饼', 634, 528, 12, '#86522f', 'center', 78);
+    }
+    drawFoldGuide(g) {
+        if (g.cooking.stage !== 'folding')
+            return;
+        const c = this.ctx, p = g.cooking, h = foldTarget(g);
+        const r = { x: h.x - h.w / 2, y: h.y - h.h / 2, w: h.w, h: h.h };
+        this.hit('fold:edge', r.x, r.y, r.w, r.h);
+        if (!p.foldDragging)
+            this.focusRing(r, '#fff0ab');
+        c.save();
+        c.lineCap = 'round';
+        c.lineWidth = 3;
+        c.setLineDash([6, 7]);
+        c.strokeStyle = '#fff0aa';
+        c.beginPath();
+        c.moveTo(h.x, h.y);
+        c.lineTo(h.tx, h.ty);
+        c.stroke();
+        c.setLineDash([]);
+        const a = Math.atan2(h.ty - h.y, h.tx - h.x);
+        for (const sign of [-1, 1]) {
+            c.beginPath();
+            c.moveTo(h.tx - 13 * Math.cos(a + sign * .5), h.ty - 13 * Math.sin(a + sign * .5));
+            c.lineTo(h.tx, h.ty);
+            c.stroke();
+        }
+        c.strokeStyle = '#fff3c6';
+        c.lineWidth = 2;
+        c.beginPath();
+        c.ellipse(h.tx, h.ty, 12, 8, 0, 0, Math.PI * 2);
+        c.stroke();
+        c.restore();
+        const guide = nextAction(g);
+        this.panel(471, 581, 338, 25, '#4c3a2af0', 8);
+        this.text(guide.detail, 640, 598, 11, '#fff1c9', 'center', 322);
+        for (let i = 0; i < 3; i++)
+            this.ellipse(622 + i * 18, 612, 4, 2.5, i < p.foldStep ? '#b4d782' : i === p.foldStep ? '#ffe29a' : '#b6996899');
     }
     drawEggs(p) {
         const c = this.ctx;

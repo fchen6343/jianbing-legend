@@ -17,7 +17,7 @@ try {
     profile = restoreProfile(localStorage.getItem('jianbing-legend:progress'));
 }
 catch { }
-let game = new Game(Math.random, profile), dragging = false, eggDragging = false, activePointer = null, last = { x: 0, y: 0 }, saved = false;
+let game = new Game(Math.random, profile), dragging = false, eggDragging = false, foldDragging = false, activePointer = null, last = { x: 0, y: 0 }, saved = false;
 try {
     if (localStorage.getItem('jianbing-legend:language') === 'en')
         setLanguage('en');
@@ -40,7 +40,7 @@ catch {
     storageFailed = true;
     document.querySelector('#save-status').textContent = t('浏览器无法保存，进度仅在本次打开期间保留');
 } }
-function stopGesture() { dragging = false; eggDragging = false; activePointer = null; game.cooking.endStroke(); }
+function stopGesture() { dragging = false; eggDragging = false; foldDragging = false; game.cooking.releaseFold(); activePointer = null; game.cooking.endStroke(); }
 function begin(tutorial = false) { stopGesture(); game = new Game(Math.random, profile, tutorial); game.started = true; game.newCustomer(); game.spawn = 9; saved = false; scene.effects = []; scene.eggAge = 2; scene.crispAge = 2; scene.flipAge = 1; scene.toastAge = 0; scene.arrivals.clear(); scene.previousCustomers = []; scene.tutorialDone = profile.tutorial && !tutorial; sound.start(); toolbar(); }
 const bi = (zh, en) => getLanguage() === 'zh' ? zh : en;
 function renderShop() {
@@ -168,6 +168,16 @@ canvas.addEventListener('pointerdown', e => {
             scene.notify(held.phase === 'held' ? '点饼面中央敲蛋，边缘容易滑落' : '按住蛋壳，向左或右拉开');
         return;
     }
+    if (game.cooking.stage === 'folding' && insideGriddle(p.x, p.y)) {
+        if (game.cooking.beginFold(p.x, p.y)) {
+            foldDragging = true;
+            activePointer = e.pointerId;
+            canvas.setPointerCapture(e.pointerId);
+        }
+        else
+            scene.notify('按住发光的饼边，沿箭头拖到圆点');
+        return;
+    }
     let effect = '', success = true;
     if (hit) {
         const id = hit.id;
@@ -211,9 +221,9 @@ canvas.addEventListener('pointerdown', e => {
             effect = success ? id : '';
         }
         else if (id === 'fold') {
-            success = game.cooking.fold();
-            effect = success ? 'fold' : '';
-            game.message = success ? '折起来，香气包住！' : nextAction(game).detail;
+            const undo = ['folding', 'folded'].includes(game.cooking.stage);
+            success = undo ? game.cooking.undoFold() : game.cooking.fold();
+            game.message = success ? (undo ? '已退回上一折，可以重新拖折' : '按住发光的饼边，沿箭头拖到圆点') : nextAction(game).detail;
         }
         else if (id === 'bag') {
             success = game.cooking.bag();
@@ -251,7 +261,7 @@ canvas.addEventListener('pointerdown', e => {
                 sound.play(id);
         }
     }
-    if (!game.cooking.heldEgg && insideGriddle(p.x, p.y) && tutorialAllows(game, 'scrape')) {
+    if (!game.cooking.heldEgg && game.cooking.stage !== 'folding' && insideGriddle(p.x, p.y) && tutorialAllows(game, 'scrape')) {
         game.cooking.endStroke();
         dragging = true;
         activePointer = e.pointerId;
@@ -259,15 +269,20 @@ canvas.addEventListener('pointerdown', e => {
     }
 });
 canvas.addEventListener('pointermove', e => { const p = position(e); if (activePointer !== null && activePointer !== e.pointerId)
-    return; scene.pointer = p; if (eggDragging && !game.paused && game.cooking.pullEgg(p.x, p.y, game.inventory)) {
+    return; scene.pointer = p; const canCook = game.started && !game.ended && !game.paused; if (foldDragging && canCook && game.cooking.pullFold(p.x, p.y)) {
+    foldDragging = false;
+    game.message = game.cooking.stage === 'folded' ? '三折完成，装进纸袋吧' : '这一边折好了，接着拖下一边';
+    scene.notify(game.message);
+    sound.play('fold');
+} if (eggDragging && canCook && game.cooking.pullEgg(p.x, p.y, game.inventory)) {
     eggDragging = false;
     game.message = '鸡蛋落到饼上了，从蛋黄开始摊匀';
     scene.notify(game.message);
     sound.play('pour');
-} if (dragging && !game.paused && insideGriddle(p.x, p.y))
+} if (dragging && canCook && insideGriddle(p.x, p.y))
     game.cooking.drag(p.x, p.y, Math.min(65, Math.hypot(p.x - last.x, p.y - last.y))); if (dragging)
     scene.toolAngle += ((Math.max(-.5, Math.min(.5, (p.x - last.x) * .04))) - scene.toolAngle) * .25; last = p; canvas.style.cursor = scene.hits.some(h => p.x >= h.x && p.x < h.x + h.w && p.y >= h.y && p.y < h.y + h.h) ? 'pointer' : insideGriddle(p.x, p.y) ? 'crosshair' : 'default'; });
-canvas.addEventListener('pointerleave', () => { if (!dragging && !eggDragging)
+canvas.addEventListener('pointerleave', () => { if (!dragging && !eggDragging && !foldDragging)
     scene.pointer = { x: -100, y: -100 }; });
 for (const event of ['pointerup', 'pointercancel', 'lostpointercapture'])
     canvas.addEventListener(event, (e) => { if (activePointer === null || activePointer === e.pointerId)
@@ -298,6 +313,7 @@ function frame(now) { const dt = Math.min(.1, (now - previous) / 1000); previous
     scene.muted = sound.muted;
     scene.draw(game, game.paused ? 0 : dt);
     if (game.ended && !saved) {
+        stopGesture();
         if (!game.tutorial) {
             profile.days++;
             saveProgress();

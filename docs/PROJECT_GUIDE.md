@@ -1,95 +1,62 @@
-# 煎饼摊传奇 · 街角烟火 / Jianbing Legend · Street Corner
+# 操作与技术说明 / Gameplay and technical guide
 
-第一视角煎饼摊经营网页游戏，当前版本 v0.5.0。游戏支持中英文切换，并记住当前浏览器的选择。
-A first-person Chinese pancake-stall game, currently v0.5.0. Switch between Chinese and English at any time; the browser remembers your choice.
+当前版本 / Current version: **v0.12.0 · A1/A2/A3 可玩增量 / playable increments**.
 
-## 试玩 / Play
-
-在线地址 / Online: https://fchen6343.github.io/jianbing-legend/
-
-离线：下载项目，用桌面 Chrome / Edge 打开根目录 `play.html`，无需安装或服务器。推荐横屏。
-Offline: download the project and open root-level `play.html` in desktop Chrome or Edge. No installation or server is required. Landscape is recommended.
-
-开发：安装 Node.js 后执行 `npm ci`、`npm test`。`npm run dev` 使用 Python 3 启动 dist 目录，访问 http://localhost:5173 。
-Development: install Node.js, run `npm ci`, then `npm test`. `npm run dev` serves `dist` using Python 3 at http://localhost:5173 .
+在线 / Online: https://fchen6343.github.io/jianbing-legend/ . 离线 / Offline: 下载项目后打开 / Download and open `play.html`.
 
 ## 操作 / Controls
 
 | 步骤 / Step | 中文 | English |
-| --- | --- | --- |
-| 1 | 点击顾客接单，查看铁板上方完整清单。 | Select a customer and read the full order above the griddle. |
-| 2 | 点击面糊，在铁板内按住拖动至摊匀。 | Click batter, then drag inside the griddle until evenly spread. |
-| 3 | 按订单重复加鸡蛋和小料，拖动抹匀蛋液后点击铲子翻面。 | Add ordered portions of eggs and herbs, drag to spread the egg, then flip. |
-| 4 | 加入指定酱料、肉类、小料，在饼上拖动刷匀酱料。 | Add the requested sauces, proteins and toppings; drag to spread sauce. |
-| 5 | 折叠，等待动作完成，装袋，点击顾客交餐。 | Fold, wait for the fold to finish, bag, then click a customer to serve. |
-| 6 | 点击老板补货，耗时五秒；点伸来的夹头或握柄，否则最多损失两份库存。 | Ask the boss to restock in five seconds. Tap sneaky claws or lose up to two portions. |
-| 7 | 三分钟收摊；错单只付 ¥3，丢弃不返还食材。右上“声 / SFX”切换声音。 | Each day lasts three minutes. Wrong orders pay ¥3; discarded ingredients are not refunded. Use “声 / SFX” to toggle sound. |
-| 8 | 右上角 English / 中文 随时切换语言，不重置当前游戏。 | Use English / 中文 at top right without resetting the current game. |
+|---|---|---|
+| 接单 / Order | 点击顾客，看铁板上方的完整图标与已加/需要数量。 | Select a customer; check the full icon order and added/required counts. |
+| 摊糊 / Batter | 点击面糊，在铁板内按住绕圈，铺开各个方向；原地刷距离无效。 | Tap batter and circle the griddle to spread every direction; stationary distance cannot finish it. |
+| 打蛋 / Egg | 点蛋盘拿蛋，点饼面中央敲壳，再按住向左或右拉开。没打开前再点蛋盘可放回，不扣库存。 | Pick an egg, tap the pancake to crack, then hold and pull left or right. Return an unopened egg via the tray at no cost. |
+| 摊蛋 / Spread egg | 从落稳的蛋黄开始拖动，将蛋液涂到整张饼；双蛋都要抹匀。松手可接着做。 | Start at a settled yolk and spread it over the pancake; coat both eggs when ordered. Lift and resume as needed. |
+| 翻面 / Flip | 按订单加葱花等，蛋液摊好后点铲子；背面材料不再显示。 | Add ordered herbs, then flip when the eggs are spread. Underside ingredients become hidden. |
+| 刷酱 / Sauce | 加入订单酱料和馅料，按住饼面刷匀。果子和果篦儿使用不同图标。 | Add ordered sauces/fillings and brush the pancake. Youtiao and guobier use distinct art. |
+| 三折 / Folds | 点折叠，按箭头拖左、右、下边；不到位松手会回落。点折叠工具可退回上一折。 | Tap Fold, then drag left/right/bottom edges along the arrows. Short releases roll back; tap Fold again to undo an edge. |
+| 交餐 / Serve | 三折完成后点纸袋，再点目标顾客。 | After all folds, tap Bag, then the selected customer. |
+| 补货 / Restock | 点击右侧老板，五秒搬货补齐；库存不够时可在教程中补货。 | Ask the boss to fetch and refill stock in five seconds; practice also supports restocking. |
+| 偷吃 / Theft | 点击夹头或握柄打断伸缩夹，避免丢失最多两份库存。 | Tap a claw tip or grip to stop theft of up to two portions. |
+| 重做 / Retry | 丢弃清理当前饼，已用食材不退；拿起但未打开的蛋不扣库存。 | Discard clears the pancake without refunding used ingredients; unopened eggs use no stock. |
+| 暂停 / Pause | 顶部暂停、Escape 或切到其他页面；回到游戏后手动继续。 | Use Pause, Escape or switch away. Resume manually on return. |
+| 双语 / Language | 顶部中文/English 随时切换，保留当前制作；声音按钮统一静音。 | Switch Chinese/English mid-order without resetting; the sound control mutes all cues. |
 
-## 架构 / Architecture
+新手教程为不限时完整双蛋、葱花、甜面酱、单片果篦儿订单，不减少耐心、不产生收入或活动奖励。可跳过、重玩、丢弃、补货、放回未开鸡蛋、退回上一折。
+The untimed tutorial completes a two-egg/scallion/sweet-sauce/one-guobier order without patience loss, income or festival rewards. Skip, replay, discard, restock, return unopened eggs and undo folds are supported.
 
-| 路径 / Path | 中文 | English |
-| --- | --- | --- |
-| `src/systems/game.ts` | 库存、烹饪状态机、订单、耐心、偷吃、收入与满意度。 | Inventory, cooking states, orders, patience, theft, revenue and ratings. |
-| `src/systems/audio.ts` | 首次点击后激活的 Web Audio 旋律与提示音。 | Web Audio melody and cues, activated after the first click. |
-| `src/render/scene.ts` | 1280×720 场景、人物、食材及命中区域。 | The 1280×720 scene, characters, ingredients and hit regions. |
-| `src/main.ts` | 指针输入、帧循环、结算存储和语言按钮。 | Pointer input, frame loop, local results and the language button. |
-| `src/ui.ts` | 制作引导、工具状态、食材核对和点击几何。 | Cooking guidance, tool readiness, ingredient checks and hit geometry. |
-| `src/i18n.ts` | 中英文文案、食材名和动态消息翻译。 | Chinese/English UI, ingredient names and dynamic messages. |
-| `assets/street.png` | 本项目生成的卡通街景背景。 | The generated cartoon street background. |
-| `tools/build.mjs` | 生成 dist、离线单文件和 Pages 入口。只支持当前具名导入形式。 | Builds dist, offline HTML and the Pages entry point; supports the current named-import format. |
-| `tests/*.test.mjs` | 玩法规则、翻译及发布文件检查。 | Gameplay, translation and deployment-output checks. |
+普通/天津模式在空锅且夹子收回时可切换；排队顾客重新点单，耐心、库存和金钱保留。节日只能在局间切换。装饰魅力延长新顾客耐心；当前简单开店仍为 ¥180。
+Switch Classic/Tianjin on an empty griddle with no active claw. Customers reorder while keeping patience, stock and money. Festivals change between days. Charm increases new-customer patience; the current simple shop unlock still costs ¥180.
 
-实际技术为 TypeScript 5.8 + Canvas 2D，暂无第三方运行时依赖、广告、付费服务或数据采集。原计划 Phaser/Vite 因当时下载受限未接入。
-The actual stack is TypeScript 5.8 and Canvas 2D, with no third-party runtime, ads, paid services or data collection. Phaser/Vite were not added because downloads were blocked during the original build.
+## 开发 / Development
 
-## 发布与验证 / Publishing and validation
+```sh
+npm ci
+npm test
+npm run dev
+```
 
-GitHub Pages 使用 main 分支的 `/docs`；每次 `npm run build` 会把最新的离线游戏同步到 `docs/index.html`。提交更新时应包括构建产物。
-GitHub Pages serves `/docs` on `main`. Each `npm run build` copies the latest standalone game to `docs/index.html`. Commit generated outputs with source changes.
+`npm run dev` 使用 Python 3 在 http://localhost:5173 提供 `dist`。`npm test` 先严格编译再运行规则回归。`npm run build` 同步生成 `dist`、离线 `play.html`、Pages `docs/index.html`；源码和发布产物一起提交。
+The dev command uses Python 3 to serve `dist` at localhost:5173. Tests compile first. Build synchronizes dist, offline HTML and Pages; commit outputs with source.
 
-`npm test` 执行严格编译和自动测试。语言切换覆盖界面、订单、食材、提示、结算、页面标题与辅助文字；保留背景图片里的装饰性中文招牌。
-`npm test` runs strict compilation and automated tests. Switching language updates UI, orders, ingredients, hints, results, page title and accessible text. Decorative Chinese shop signs remain in the background artwork.
+| 路径 / Path | 职责 / Responsibility |
+|---|---|
+| `src/systems/game.ts` | 库存、烹饪状态与手势、订单、耐心、夹子、收入 / Stock, cooking/gestures, orders, patience, claw and revenue |
+| `src/systems/progress.ts` | 一个本机档案的钱包、装饰、活动、模式 / Single local profile: wallet, decor, events and mode |
+| `src/systems/audio.ts` | 有生命周期上限的本机 Web Audio 声音 / Local Web Audio with bounded lifetimes |
+| `src/render/scene.ts` | 卡通 Canvas、实物命中、局部涂抹、折叠与遮挡 / Cartoon Canvas, physical hits, spatial coating, folds and occlusion |
+| `src/ui.ts` | 可测试的引导、状态和几何 / Testable guidance, readiness and geometry |
+| `src/main.ts` | 单指输入、捕获/释放、暂停、帧循环、存储 / Single-pointer input, capture/release, pause, loop and storage |
+| `src/i18n.ts` | 中英文文字和动态消息 / Bilingual UI and dynamic messages |
+| `assets/*-toon.png` | 原创卡通街景、四人、食材与短手工具图集 / Original street, four-character, food and short-hand atlases |
+| `tools/build.mjs` | 具名导入 TS 产物的离线打包 / Offline packaging of compiled named-import modules |
 
-尚未完成全面手机、触屏、帧率和音频兼容验收；人物、食材与工具已改为生成的统一手绘素材。动作仍需要完善，无真实蛋液物理或专业录音；钱包、装饰、模式和节日进度保存在本机；街道背景静态。
-Full mobile, touch, frame-rate and audio compatibility testing remains outstanding. Characters, ingredients and tools now use consistent generated illustrations. Animations still need refinement; there is no egg-fluid physics or professional audio. Wallet, decorations, mode and festival progress save locally. The street background is static.
+实际运行时为 TypeScript 5.8 + Canvas 2D，无付费 API、广告或第三方运行时。Pages 使用 main 分支 `/docs`。当前核心资源内嵌单文件，尚未懒加载所有资源或完成性能/真机验收。
+The actual stack is TypeScript 5.8 + Canvas 2D without paid APIs, ads or third-party runtime. Pages serves main `/docs`. Core art is embedded in one file; lazy loading and performance/device acceptance remain outstanding.
 
-[开发日志 / Development log](../DEVLOG.md) · [路线图 / Roadmap](ROADMAP.md)
+## 存档与限制 / Saves and limits
 
-## v0.4.0 UI 与交互 / UI and interaction
+存档键 `jianbing-legend:progress`，版本 1，自动保存钱包、装饰装备、活动、模式、天数和教程标记。语言和静音单独保存。当前只有一个本机档案，不是三存档；刷新保留已保存经营进度，但不恢复正在制作的铁板。A2/A3 不更换存储键、不重置旧钱包。
+Key `jianbing-legend:progress`, version 1, saves wallet, equipped decorations, festivals, mode, days and tutorial completion. Language/mute are separate. There is only one local profile; reload retains saved progression, not the current pancake. A2/A3 do not change the key or reset old wallets.
 
-订单栏只保留当前订单，用图标和数量展示；绿色勾表示已放够，红色警告表示额外配料。把指针移到食材、工具或订单图标上可查看名称；触屏点击后短暂显示名称。食材库存仍会消耗，丢弃仍不会返还。
-The active order uses icons and quantities. Green checks mean enough has been added; red warnings mean an extra ingredient. Hover over ingredients, tools or order icons to see names; touch reveals names briefly. Ingredients are consumed and discarded stock is not refunded.
-
-顶部按钮支持暂停、声音与中英文切换；暂停会冻结营业时间、顾客耐心、补货、烹饪和偷吃计时。Escape 可暂停或继续；切出页面自动暂停，返回后手动继续。
-The top toolbar provides pause, sound and language controls. Pause freezes day time, patience, restocking, cooking and theft. Escape toggles pause; switching away pauses automatically and requires manual resume.
-
-素材映射：`assets/neighbors-v2.png` 为四名街坊 / 老板图集；`assets/kitchen-v2.png` 为食材与工具图集。渲染器按实际透明间隙裁切，不依赖图片中的文字，游戏文案全部由代码绘制。
-Asset mapping: `assets/neighbors-v2.png` holds four neighbor/owner portraits; `assets/kitchen-v2.png` holds ingredients and tools. The renderer samples actual transparent gaps. UI text is drawn in code rather than baked into images.
-
-## 经营与教学 / Progression and tutorial
-
-`src/systems/progress.ts` 管理钱包、装饰购买/装备、开店、魅力、节日奖励与经过校验的存档恢复。存档键为 `jianbing-legend:progress`，版本 1；旧版最近一日成绩保留，不作为累计资产导入。
-`src/systems/progress.ts` handles wallet, purchases/equipment, shop upgrades, charm, event rewards and validated save restoration. The save key is `jianbing-legend:progress`, version 1. Older last-day records are retained but are not imported as cumulative assets.
-
-商店打开时冻结游戏；关闭后恢复之前的暂停状态。玩法模式及活动只能在开局前或收摊后切换，避免订单途中改变规则。装饰的耐心加成在新顾客到来时计算。开店提高队列上限（三到五）并缩短来客间隔（九到五秒）。
-The shop pauses play and restores the previous pause state on close. Modes and festivals change only before or after a day. Patience bonuses apply to newly arriving customers. A shop raises queue capacity from three to five and cuts arrival intervals from nine to five seconds.
-
-教程使用固定双蛋、双脆、甜面酱订单，保留真实库存与制作动作，但不耗时间、耐心，不出现偷吃，不发收入或活动奖励；正确交餐后标记完成。可丢弃重做、补货，或退出重来。
-The tutorial uses a fixed two-egg, two-crisp, sweet-sauce order with real inventory and cooking. It has no time/patience loss, theft, income or event rewards. Correct service marks completion. Discard, restock or exit to retry.
-
-## v0.6.0 当前交互 / Current interaction
-
-以十二步教程替代上文 v0.5.0 的双脆说明：当前练习订单为双蛋、葱花、甜面酱、单片果篦儿。一次仅接受当前步骤对应的制作输入；垃圾桶、补货和跳过仍可使用。正式营业不受教程门槛限制。
-The twelve-step tutorial supersedes the earlier v0.5.0 double-crisp description: practice uses two eggs, scallions, sweet sauce and one guobier. Only the current production action is accepted; discard, restock and skip remain available. Normal service is not tutorial-gated.
-
-固定名牌方便触屏识别，点一次加一份。订单中的分数为已加/需要。经营窗口中先点“预览”可免费查看装饰，不消耗钱包；点购买才产生游戏内支出。
-Fixed labels help touch recognition; one tap adds one portion. Order fractions show added/required amounts. Preview in the shop displays decorations for free; only Buy spends game currency.
-
-## v0.9.0 当前模式与动作 / Current modes and actions
-
-主界面模式按钮打开普通/天津两个选项。不同于早期版本只允许局间切换，现在空锅且无偷吃工具时可以营业中切换；顾客按新模式重新点单，耐心、身份、金钱和库存保持。收摊后不受空锅限制。节日主题仍只在局间切换。
-The main mode button opens Classic/Tianjin choices. Unlike earlier versions, modes can change mid-day on an empty griddle with no sneaky tool: customers reorder, keeping identity/patience and money/stock. Closing-day changes do not require an empty griddle. Festivals still change between days.
-
-`Cooking.eggLayers` 保存每颗蛋的状态与有界笔触，`Inventory.refillFoods` 为当前补货的缺料清单，`clawGeometry`/`theftReach` 统一工具显示与被阻止后的收回位置。补货库存仍五秒完成；动画与玩法均服从暂停。
-`Cooking.eggLayers` stores per-egg state and bounded strokes; `Inventory.refillFoods` records missing items. `clawGeometry`/`theftReach` share displayed reach and interrupted retraction positions. Restocking still completes at five seconds; pause governs both animation and rules.
+[全文差距 / Full audit](REQUIREMENTS_STATUS.md) · [体验门槛 / Quality gates](QUALITY_GATES.md) · [开发日志 / Development log](../DEVLOG.md).

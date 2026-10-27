@@ -24,8 +24,8 @@ npm run dev
 - [开发日志 / Development log](DEVLOG.md)
 - [路线图与已知限制 / Roadmap and known limitations](docs/ROADMAP.md)
 
-当前为 v0.11.0 可玩原型，仍在迭代美术、动作与触屏体验。
-v0.11.0 is a playable prototype. Artwork, animation and touch controls are still being refined.
+当前为 v0.12.0 可玩原型，仍在迭代美术、动作与触屏体验。
+v0.12.0 is a playable prototype. Artwork, animation and touch controls are still being refined.
 
 ## v0.4.0 · 暖色手作摊位 / Warm illustrated stall
 
@@ -107,3 +107,11 @@ Tap the egg tray, tap the pancake to crack, then hold and pull left or right to 
 
 [全文需求核对 / Full specification audit](docs/REQUIREMENTS_STATUS.md)明确列出已有、部分完成和未完成内容。分步手动折叠、真实设备、三存档及五十天成长仍未完成。鼠标实际操作与实体触屏、真人趣味性评价分别记录，不用自动测试代替。
 The audit distinguishes working, partial and missing functionality. Interactive folding, actual equipment, three saves and fifty-day progression remain unfinished. Browser play, physical touch and human enjoyment are separate acceptance gates.
+
+## v0.12.0 · A3 三步拖折 / Three manual folds
+
+刷好酱并加齐料后，点折叠工具进入包饼：从发光边沿箭头依次拖左、右、下边。不到位松手会回落，已完成的边保留；再点折叠工具可退回上一折。三折完成才可装袋。成品沿用本张饼的实际馅料，并在纸袋中正确遮挡。
+After filling and brushing, tap Fold. Drag the glowing left, right and bottom edges along their arrows. A short release rolls the current edge back while keeping finished folds. Tap the fold tool again to undo one completed edge. Bagging requires all three folds. The finished pancake retains the actual filling and is occluded by one paper bag.
+
+42 项自动测试通过，涵盖实际制作交餐、折错重试、暂停和中英提示；十单手感、实体触屏和真人反馈仍待验收。设备、三存档与五十天内容仍未完成。
+42 automated tests pass, including whole orders, folding recovery, pause and bilingual guidance. Ten varied orders, physical touch and human feedback remain separate gates. Equipment, three saves and fifty-day content remain unfinished.

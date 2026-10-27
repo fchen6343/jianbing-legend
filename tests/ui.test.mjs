@@ -1,4 +1,4 @@
-import {spreadBatter,crackEgg,spreadEgg} from './helpers.mjs';
+import {spreadBatter,crackEgg,spreadEgg,completeFold} from './helpers.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {Game,foods} from '../dist/js/systems/game.js';
@@ -20,7 +20,7 @@ test('coaching follows a real double-egg order through spread, flip, sauce, bag 
  assert.ok(toolEnabled(g,'flip'));assert.ok(g.cooking.flip());
  for(const [id] of foods)if(g.target.recipe[id]&&!g.cooking.ingredients[id])g.cooking.add(id,g.inventory);
  assert.deepEqual(nextAction(g).focus,['scrape']);assert.equal(toolEnabled(g,'fold'),false);
- g.cooking.drag(640,505,550);assert.deepEqual(nextAction(g).focus,['fold']);assert.ok(g.cooking.fold());
+ g.cooking.drag(640,505,550);assert.deepEqual(nextAction(g).focus,['fold']);assert.ok(g.cooking.fold());completeFold(g.cooking);
  assert.equal(toolEnabled(g,'bag'),false);g.cooking.tick(.7);assert.deepEqual(nextAction(g).focus,['bag']);assert.ok(g.cooking.bag());
  assert.deepEqual(nextAction(g).focus,['customer:'+g.target.id]);assert.ok(g.serve());
  assert.ok(insideGriddle(640,505));assert.equal(insideGriddle(850,610),false);

@@ -270,3 +270,33 @@ Validation: strict build and 34 tests passed, including seven new egg regression
 
 仍待完成：手动分步折叠、真实自动化设备、场景/三存档、完整经济/剧情/50 天内容、十单手感和真机触屏。
 Still pending: interactive folds, real automation, scenes/saves, full economy/story/fifty days, ten-order feel review and physical touch testing.
+
+
+### A2 线上验收 / A2 live acceptance
+
+- 提交 3e914618b89e65dd92bf47847d62cb1aba1dffa2；Pages 40479597206 部署成功。59 个远端文件与本地路径、大小及 Git Blob SHA 全部一致。
+  Commit 3e914618b89e65dd92bf47847d62cb1aba1dffa2; Pages run 40479597206 succeeded. All 59 remote files matched local paths, sizes and Git blob SHAs.
+- Chrome 实际输入完成双蛋葱花甜酱果篦儿教程整单（1 单，满意度 95%，练习收入 ¥0）；查看蛋液空间涂抹后才进入后续步骤。
+  Real Chrome pointer input completed a double-egg/scallion/sweet-sauce/guobier practice order (one served, rating 95%, ¥0 practice income). Spatial egg strokes unlocked subsequent steps.
+- 检查半开蛋壳松手后重抓、暂停/继续、中途切换英文、拿蛋后放回再拿：最终鸡蛋库存 8 → 6，订单 2/2，练习前后钱包 ¥30、魅力 13、已开店状态保留。未修改或重置本机档案。
+  Checked partial-shell re-grabbing, pause/resume, mid-order English switching and pick/return/pick. Eggs changed 8 → 6 with 2/2 ordered; wallet ¥30, charm 13 and the existing shop remained unchanged. The local profile was not reset.
+- 此记录为一张双蛋练习单的浏览器操作验收；不是十张不同订单手感验收，不代表实体触屏或真人趣味性已通过。
+  This is one browser practice order, not ten varied orders, physical touch validation or human enjoyment acceptance.
+
+
+## 2026-10-27 · v0.12.0 · A3 三步拖折 / Three manual folds
+
+- 折叠工具只进入包饼状态，等待或再次点击不会完成。玩家依次抓住左/右/下边，沿箭头拖至目标；饼边围绕折痕随指针翻起，完成一边才出现下一边。
+  Fold enters wrapping mode without completing it. Grab left/right/bottom edges and drag toward targets; each flap rotates around its crease with the pointer before the next edge becomes available.
+- 未到位松手回落，已完成部分保留；折叠工具变为退回上一折，支持最终装袋前重折，不消耗额外食材。反向、偏移、超出目标、非有限输入不会冒充折好。
+  Short releases roll back the current flap while retaining completed edges. The fold tool undoes one edge before bagging without consuming extra stock. Wrong direction, misalignment, overshoot and invalid input cannot finish a fold.
+- 包饼保留实际酱料和馅料，饼皮按当前折叠阶段遮住材料。移除通用鸡柳成品图，装袋使用一组纸袋后缘/实际煎饼/纸袋前面的正确层次，不再叠两张不匹配的图片。
+  Wrapping retains actual sauce/fillings with flap occlusion. Removed the generic chicken-filled result. Bagging uses a rear rim, this pancake and one bag front.
+- 十二步教程中的折叠步骤持续指导三边，支持退回重做；中英提示、辅助说明与操作指南同步更新。营业结束后释放当前指针，阻止结果页底下继续拖动制作。
+  Tutorial step ten guides all three edges with undo. Bilingual hints, accessible help and controls were updated. Service end releases pointer input to stop hidden cooking beneath results.
+
+验证：严格构建和 42 项测试通过，包括八项新折叠回归，以及普通/天津、单蛋/双蛋四种实际制作交餐路径。使用真实 Canvas 渲染器检查起折、半折、三折成品和入袋层次，修正下边折起后侧边残留的问题。线上浏览器验收与部署另记；十单真人手感和实体触屏尚未完成。
+Validation: strict build and 42 tests passed, including eight folding regressions and four Classic/Tianjin single/double-egg whole orders. Actual Canvas renders checked initial/partial/final folds and bag occlusion, correcting side flaps protruding below the final fold. Online browser acceptance is recorded separately; ten-order human feel and physical touch remain pending.
+
+范围：A1/A2/A3 操作增量，不是完整版。下一项为 A4 首台真实、可关闭的旋转刮板；八设备、三存档、独立场景、完整经济/剧情/50 天仍待实现。
+Scope: A1/A2/A3 interaction increments, not the full game. Next is A4, the first visible switchable rotating spreader. Eight devices, three saves, separate scenes and full economy/story/fifty days remain outstanding.

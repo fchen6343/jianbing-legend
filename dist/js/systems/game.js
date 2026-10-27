@@ -40,6 +40,9 @@ export class Cooking {
         this.strokeBreak = true;
         this.heat = 0;
         this.foldTime = 0;
+        this.foldStep = 0;
+        this.foldProgress = 0;
+        this.foldDragging = false;
     }
     get eggSpread() { return this.eggLayers.length ? Math.min(...this.eggLayers.map(e => e.spread)) : 0; }
     add(id, inventory) {
@@ -188,15 +191,73 @@ export class Cooking {
         this.stage = 'egg'; }
     flip() { if (this.heldEgg || this.stage !== 'egg' || !this.ingredients.egg || this.eggSpread < 1)
         return false; this.stage = 'flipped'; return true; }
-    fold() { if (this.stage !== 'flipped' || ((this.ingredients.sweet || this.ingredients.chili) && this.sauce < 1))
-        return false; this.stage = 'folded'; this.foldTime = 0; return true; }
-    bag() { if (this.stage !== 'folded' || this.foldTime < .65)
+    fold() {
+        if (this.stage !== 'flipped' || this.heldEgg || ((this.ingredients.sweet || this.ingredients.chili) && this.sauce < 1))
+            return false;
+        this.stage = 'folding';
+        this.foldStep = 0;
+        this.foldProgress = 0;
+        this.foldDragging = false;
+        this.endStroke();
+        return true;
+    }
+    beginFold(x, y) {
+        if (this.stage !== 'folding' || this.foldDragging || !Number.isFinite(x) || !Number.isFinite(y))
+            return false;
+        const h = foldTargets[this.foldStep];
+        if (x < h.x - h.w / 2 || x > h.x + h.w / 2 || y < h.y - h.h / 2 || y > h.y + h.h / 2)
+            return false;
+        this.foldDragging = true;
+        this.foldProgress = 0;
+        return true;
+    }
+    pullFold(x, y) {
+        if (this.stage !== 'folding' || !this.foldDragging || !Number.isFinite(x) || !Number.isFinite(y))
+            return false;
+        const h = foldTargets[this.foldStep], aligned = this.foldStep === 2 ? Math.abs(x - h.x) < 65 : Math.abs(y - h.y) < 45;
+        if (!aligned) {
+            this.foldProgress = Math.max(0, this.foldProgress - .12);
+            return false;
+        }
+        this.foldProgress = Math.min(1, Math.max(0, this.foldStep === 0 ? (x - h.x) / (h.tx - h.x) : this.foldStep === 1 ? (h.x - x) / (h.x - h.tx) : (h.y - y) / (h.y - h.ty)));
+        if (this.foldProgress < .92 || Math.abs(x - h.tx) > 60 || Math.abs(y - h.ty) > 40)
+            return false;
+        this.foldStep++;
+        this.foldProgress = 0;
+        this.foldDragging = false;
+        if (this.foldStep === 3) {
+            this.stage = 'folded';
+            this.foldTime = 0;
+        }
+        return true;
+    }
+    releaseFold() { this.foldDragging = false; }
+    undoFold() {
+        if (this.stage !== 'folding' && this.stage !== 'folded')
+            return false;
+        if (this.foldStep <= 0)
+            return false;
+        this.foldStep--;
+        this.foldProgress = 0;
+        this.foldDragging = false;
+        this.foldTime = 0;
+        this.stage = 'folding';
+        return true;
+    }
+    bag() { if (this.stage !== 'folded' || this.foldTime < .22)
         return false; this.stage = 'bagged'; this.foldTime = 0; return true; }
-    tick(dt) { for (const egg of this.eggLayers)
+    tick(dt) { if (this.stage === 'folding' && !this.foldDragging)
+        this.foldProgress = Math.max(0, this.foldProgress - dt * 5); for (const egg of this.eggLayers)
         egg.age += dt; if (this.stage !== 'empty' && this.stage !== 'bagged')
         this.heat += dt; if (this.stage === 'folded' || this.stage === 'bagged')
         this.foldTime += dt; }
 }
+// Generous, separate grab areas; a fold only commits near its directional target.
+export const foldTargets = [
+    { x: 470, y: 502, tx: 620, ty: 502, w: 76, h: 82 },
+    { x: 810, y: 502, tx: 660, ty: 502, w: 76, h: 82 },
+    { x: 640, y: 569, tx: 640, ty: 494, w: 120, h: 42 },
+];
 export class Game {
     constructor(random = Math.random, profile = freshProfile(), tutorial = false) {
         this.random = random;
