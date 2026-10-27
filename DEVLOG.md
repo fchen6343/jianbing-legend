@@ -192,3 +192,8 @@ After browser tools returned, completed all twelve tutorial actions in Chrome, i
   Local Web Audio synthesizes egg cracks, crisp snaps, pouring, sprinkling, spatula, fold, paper, coins and errors. Filtered continuous sizzling changes during dragging and stops outside cooking, while paused/shopping or hidden. Music is softer. Muting stops looping and scheduled voices; finished one-shots disconnect and the noise buffer is reused.
 - 十七项自动测试通过；新增声音包络、各事件可播放、循环复用、静音/暂停停止和节点释放验证。以生产渲染器检查敲蛋、碎脆片及折叠画面。声音为程序合成，尚非实物录音；浏览器视觉/交互和听感验收在部署后补记，实体手机听感与性能仍待测试。
   All seventeen tests pass, including sound envelopes, all event cues, loop reuse, mute/pause stopping and node cleanup. Production-renderer previews cover eggs, crisps and folding. Sounds are synthesized rather than recordings; live interaction/audio acceptance will be recorded after deployment. Physical-phone audio/performance review remains pending.
+
+### v0.7.0 上线验收 / Live acceptance
+
+部署提交 `eb0706342422ad26792e1bc7242f4074d35005fd`，Pages 工作流 `40460164097` 成功；42 个文件的路径、大小与 Git blob 哈希均与本地匹配。Chrome 实际倒糊、拖动摊开、加入双蛋，静音按钮状态切换及暂停正常，未发现游戏来源的控制台错误。动作关键帧由生产渲染器核验。声音接入与生命周期通过自动测试，本轮未完成主观听感评估及手机实机音频验收。
+Release `eb0706342422ad26792e1bc7242f4074d35005fd`, successful Pages run `40460164097`; all 42 file paths, sizes and Git blob hashes matched local output. In Chrome, poured/spread batter and added two eggs; mute-state and pause controls worked, with no game-origin console errors. Production-renderer keyframes cover the motions. Audio integration/lifecycle tests pass; subjective listening and physical-phone audio testing were not completed.
