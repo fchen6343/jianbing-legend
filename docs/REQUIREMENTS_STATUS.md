@@ -39,7 +39,7 @@
 | 15. 音频 / Audio | 本机合成制作音、收钱、夹子、滋滋声，统一静音 / Local cooking/coin/claw/sizzle cues and mute | 三种氛围、欢呼、设备/剪彩声音、独立音量及实际听感 / Three atmospheres, cheers, upgrades, celebrations, separate volumes and listening review |
 | 16. 技术 / Architecture | TS 模块、纯本地核心、资源失败降级、笔触上限、暂停 / TS modules, offline core, fallback drawing, bounded strokes and pause | 数据驱动长线系统、场景管理、懒加载、完整资源生命周期与性能测量 / Data-driven progression, scene management, lazy loading, lifecycle and performance |
 | 17–18. 阶段/最终验收 / Acceptance | 编译、当前回归、部分实际整单操作 / Build, regressions and some real whole orders | 十单手感、移动真机、三槽、50 天、全部剧情和设备；不可称完整版 / Ten-order feel, mobile hardware, saves, 50 days, stories and devices |
-| 19. 交付 / Delivery | GitHub 源码/资源、离线 HTML、Pages、双语 README、DEVLOG、总需求与验收表 / Source/assets, offline HTML, Pages, bilingual docs, original scope and quality gates | 存档格式和最终全量报告随系统完成补全 / Save format and final report as systems land |
+| 19. 交付 / Delivery | GitHub 源码/资源、离线 HTML、Pages、双语 README、DEVLOG、CHANGELOG、存档格式与验收表 / Source/assets, offline HTML, Pages, bilingual docs, changelog, save format and quality gates | 最终全量报告；存档格式随新增系统更新 / Final full report; extend save format as systems land |
 | 20. 最终质量 / Final quality | 核心交互分阶段改善 / Core interactions improving in stages | 新鲜感、升级价值、长期目标、真人趣味性反馈；不能以数量代替 / Novelty, upgrade value, long-term goals and human enjoyment |
 
 ## 当前执行顺序 / Current sequence
@@ -49,3 +49,6 @@ A1 batter → A2 eggs → A3 folding → **A4 first working machine** → B scen
 
 这张表记录尚未完成的范围，不取消任何原需求，也不把原型功能改名视为完成。
 This records outstanding scope without cancelling it or treating renamed prototype features as finished.
+
+A4 浏览器检查仅完成开屋、余额不足与暂停状态；继续后连接超时，自动完成/手动对比/购买持久化及线上设备整单待补。\
+A4 browser review observed workshop, insufficient funds and pause. The connection timed out after resume; completion/manual comparison/purchase persistence/live assisted order remain pending.

@@ -331,3 +331,15 @@ Validation: strict build and 51 tests passed, adding equipment cost/idempotence/
 
 仍未完成：另外七类厨具、完整经营中心、三存档、采购成本、自由装修、八熟客/主线/事件/五建筑/连锁/50 天，以及十单真人手感与真机触屏。
 Still pending: seven other devices, full hub, three saves, purchasing/costs, free decoration placement, eight regulars/story/events/five buildings/franchises/fifty days, ten-order human feel and physical touch.
+
+
+### A4 部署与部分线上检查 / A4 deployment and partial browser review
+
+- 提交 5c17f9f203ba014201641c5923e39de2aa2d491c；Pages 40484088459 成功。65 个远端文件的路径、大小和 Git Blob SHA 与本地一致；Chrome 页面版本元信息为 0.13.0。
+  Commit 5c17f9f203ba014201641c5923e39de2aa2d491c; Pages run 40484088459 succeeded. All 65 files matched local paths, sizes and Git blob SHAs. Chrome reported page version 0.13.0.
+- 实际打开独立厨具屋，看到当前 Lv.0、试用 Lv.1、钱包 ¥30、价格 ¥550、差额 ¥520；余额不足时购买和未拥有开关不可用。免费自动试用开始，暂停后出现“试用已暂停，面糊与设备保持当前位置”，继续按钮可见。未购买设备，未重置或改写已有资产。
+  Opened the workshop: current Lv.0, trial Lv.1, wallet ¥30, price ¥550 and shortfall ¥520. Purchase and unowned-device switch were unavailable. Free automatic trial started; pausing showed the frozen-trial status and Resume button. No device was purchased and existing assets were not reset.
+- 点击继续试用后，浏览器连接连续超时，读取排障说明也未返回，因此**自动试用最终完成、手动对比、真实购买后的浏览器持久化和后续整单尚未完成线上验收**。没有把代码测试的通过冒称为这些浏览器操作通过。
+  After resuming, the browser connection repeatedly timed out, including the troubleshooting-document request. Therefore **automatic-trial completion, manual comparison, browser purchase persistence and a subsequent live whole order remain unverified**. Passing code tests is not reported as passing these browser actions.
+- 代码层已通过价格/重复购买/旧档恢复/开关/暂停/收回/设备辅助整单等 51 项测试；A3 双蛋整单、回落与撤回已有上述独立线上记录。真人十单、实体触屏及完整五十天需求仍待完成。恢复浏览器连接后应先补 A4 验收再推进 B。
+  The 51 passing code tests cover cost, duplicates, legacy restore, switches, pause, retraction and machine-assisted whole orders. A3 has its separate live record above. Human ten-order feel, physical touch and the full fifty-day scope remain pending. Finish A4 browser review before stage B once the connection returns.

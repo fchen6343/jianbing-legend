@@ -15,7 +15,7 @@ This changes implementation priority without cancelling scope. The linked Chines
 | Batter / 摊糊 | v0.10.0 introduces angular coverage, local spreading and circular guidance / 改为旋转覆盖、局部铺开、环形引导 | Representative mouse and touch play; user enjoyment / 鼠标触屏代表性试玩、趣味性反馈 |
 | Eggs / 鸡蛋 | v0.11.0: pick, tap, pull shell, settle and spatially spread each egg / 手动拿蛋、敲壳、拉开、落液和逐蛋空间涂抹 | One real double-egg browser order passed; ten-order/human/touch review pending / 一张双蛋浏览器整单通过，十单/真人/触屏待验收 |
 | Folding / 折叠 | v0.12.0: left/right/bottom drag folds, rollback, undo and filling-aware bag / 三边拖折、回落、撤回及按实际馅料装袋 | One double-egg browser order with rollback/undo passed; human/touch review pending / 一张双蛋整单含回落/撤回通过，真人/触屏待验收 |
-| Automation / 设备 | v0.13.0: first working rotor, workshop/trial, ¥550, saved switch / 首台旋转刮板、厨具屋/试用、价格与开关存档 | Live acceptance; seven other devices and human/touch review / 线上验收、另七类设备与真人/触屏 |
+| Automation / 设备 | v0.13.0: first working rotor, workshop/trial, ¥550, saved switch / 首台旋转刮板、厨具屋/试用、价格与开关存档 | Workshop/insufficient-funds/pause observed; completion/manual/purchase persistence blocked by browser timeout; seven other devices pending / 厨具屋/余额不足/暂停已观察；继续/手动/购买持久化因浏览器超时待验；另七类设备待做 |
 | Saves / 存档 | One browser profile, no slots/import/export / 单个本机档案，无三槽导入导出 | Three isolated slots, migration and recovery / 三槽隔离、迁移、恢复 |
 | Screens / 场景 | Cooking, decor dialog and first-device workshop / 制作、装饰弹窗和首台设备厨具屋 | Separate hub, full workshop, decor and other screens / 经营中心、完整厨具屋、装修等 |
 | Long-term / 长线 | Wallet, simple decor/shop and three selectable festivals / 钱包、简易装修升级、三个节日 | 50-day progression, five buildings, story/relationships/economy / 五十天、五建筑、剧情关系、经济 |
@@ -53,3 +53,6 @@ Every increment retains a complete cooking-to-service loop. Future screens/featu
 **当前 A1–A4 首轮增量**：另七类设备、三存档及五十天内容未完成；实体触屏、十单手感和真人趣味性仍待验收。
 
 全文逐项差距 / Full itemized audit: [REQUIREMENTS_STATUS.md](REQUIREMENTS_STATUS.md).
+
+A4 线上完整验收因浏览器连接超时未完成；恢复连接后先补自动继续、手动对比和购买/整单路径，不得标为已通过。\
+A4 full live acceptance is incomplete after browser connection timeouts. Verify automatic resume, manual comparison and purchase/whole-order paths before marking it passed.
