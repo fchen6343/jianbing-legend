@@ -57,3 +57,9 @@ Use case: stylized-concept. Production SPRITE ATLAS for a 2D cartoon cooking gam
 Use case: stylized-concept. Asset type: full-screen 16:9 landscape background for an original Chinese street-food CARTOON cooking game, first-person standing behind a pancake stall. Fully opaque illustration. Strong bold dark brown outlines, simple rounded building shapes, cheerful saturated warm colors, clean flat cel shading, exaggerated cozy casual mobile-game cartoon design. Absolutely no realism, no painterly realistic textures, no 3D, no tiny photographic details. Composition crucial: upper 55 percent shows a cheerful Chinese neighborhood pedestrian street receding to a vanishing point at center, squat cozy storefronts on left and right with yellow awnings, red lanterns and rounded trees; keep central street empty and unobstructed for character sprites to be overlaid. LOWER 45 percent is a continuous warm honey-colored wooden stall countertop, viewed at a mild downward angle, nearly blank, with simple broad wood grain and dark bold front edge along bottom. No characters, no hands, no food, no griddle, no tools, no UI, no legible text, no logos, no watermark. Smooth ink outlines and simplified cartoon colors, daylight, friendly and playful.
 ```
 
+
+项目素材路径 / Final project asset paths:
+- `assets/neighbors-toon.png` — 四位卡通街坊与老板 / cartoon neighbors and owner.
+- `assets/food-toon.png` — 十四种食材与折叠成品、纸袋 / fourteen foods, folded pancake and bag.
+- `assets/hands-toon.png` — 刮板、刷子握持和偷吃手 / spreader/brush grips and sneaky hand.
+- `assets/street-toon.png` — 卡通街景与操作台 / cartoon street and counter.

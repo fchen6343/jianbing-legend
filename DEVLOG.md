@@ -211,3 +211,8 @@ Gesture thresholds change from 1200/700/550 to 600/360/300 to reduce repetition.
 
 十九项测试通过，新增更短手势门槛和连单金额/封顶/重置检查。已用生产渲染器检查卡通人物、食材、手持刮板、馅料和折叠。趣味性仍需玩家实际反馈，不能仅以测试通过作结论。
 All nineteen tests pass, including shorter gesture gates and streak payout/cap/reset. Production-renderer previews cover cartoon neighbors, foods, held spreader, fillings and folding. Enjoyment still requires player feedback; test success does not establish fun.
+
+### v0.8.0 上线检查 / Live check
+
+提交 `89d081473ff6ad3f05790320709a83efe0079269`；Pages 工作流 `40462936481` 成功。51 个文件与本地路径/大小/blob 哈希完全一致。Chrome 确认卡通顾客、街景和食材实际显示；倒面糊后用 16 点拖动完成摊开，进入加双蛋步骤。未声称完成新版整局平衡性或手机实机验收。
+Commit `89d081473ff6ad3f05790320709a83efe0079269`; Pages run `40462936481` succeeded. All 51 paths/sizes/blob hashes matched local output. Chrome displayed the actual cartoon cast/street/food; a 16-point drag spread the batter and advanced to eggs. Full-day balance and physical-phone acceptance are not claimed.
