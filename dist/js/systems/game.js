@@ -61,15 +61,15 @@ export class Cooking {
         return `${foods.find(f => f[0] === id)[1]}，加好了`;
     }
     drag(x, y, distance) { if (this.stage === 'batter') {
-        this.spread = Math.min(1, this.spread + distance / 1200);
+        this.spread = Math.min(1, this.spread + distance / 600);
         if (this.spread >= 1)
             this.stage = 'egg';
     }
     else if (this.stage === 'egg' && this.ingredients.egg) {
-        this.eggSpread = Math.min(1, this.eggSpread + distance / 700);
+        this.eggSpread = Math.min(1, this.eggSpread + distance / 360);
     }
     else if (this.stage === 'flipped' && (this.ingredients.sweet || this.ingredients.chili)) {
-        this.sauce = Math.min(1, this.sauce + distance / 550);
+        this.sauce = Math.min(1, this.sauce + distance / 300);
         this.strokes.push({ x, y, move: this.strokeBreak });
         this.strokeBreak = false;
         if (this.strokes.length > 100)
@@ -96,6 +96,7 @@ export class Game {
         this.time = 180;
         this.money = 0;
         this.served = 0;
+        this.streak = 0;
         this.lost = 0;
         this.ratings = [];
         this.ended = false;
@@ -139,7 +140,7 @@ export class Game {
     serve() { if (this.cooking.stage !== 'bagged' || !this.target) {
         this.message = '先折叠装袋，再点顾客交餐';
         return false;
-    } const c = this.target; const correct = foods.every(([id]) => (c.recipe[id] || 0) === (this.cooking.ingredients[id] || 0)); const quality = Math.max(0, 1 - Math.max(0, this.cooking.heat - 65) / 70); const rating = correct ? Math.round(65 + 25 * c.patience / c.max + 10 * quality) : 20; const base = 8 + Object.values(c.recipe).reduce((a, b) => a + (b || 0), 0); const earned = correct ? Math.round(base * (.8 + .2 * quality)) : 3; if (!this.tutorial) {
+    } const c = this.target; const correct = foods.every(([id]) => (c.recipe[id] || 0) === (this.cooking.ingredients[id] || 0)); const quality = Math.max(0, 1 - Math.max(0, this.cooking.heat - 65) / 70); const rating = correct ? Math.round(65 + 25 * c.patience / c.max + 10 * quality) : 20; const base = 8 + Object.values(c.recipe).reduce((a, b) => a + (b || 0), 0); this.streak = correct && this.cooking.heat < 40 ? this.streak + 1 : 0; const tip = correct && !this.tutorial ? Math.min(5, Math.max(0, this.streak - 1)) : 0; const earned = correct ? Math.round(base * (.8 + .2 * quality)) + tip : 3; if (!this.tutorial) {
         this.money += earned;
         rewardService(this.profile, earned, correct);
     }
@@ -170,6 +171,8 @@ export class Game {
             c.patience -= dt * (c.id === this.next?.valueOf() ? .72 : .38);
         const leaving = this.customers.filter(c => c.patience <= 0);
         this.lost += leaving.length;
+        if (leaving.length)
+            this.streak = 0;
         for (const c of leaving)
             this.ratings.push(0);
         this.customers = this.customers.filter(c => c.patience > 0);

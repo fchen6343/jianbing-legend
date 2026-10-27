@@ -197,3 +197,17 @@ After browser tools returned, completed all twelve tutorial actions in Chrome, i
 
 部署提交 `eb0706342422ad26792e1bc7242f4074d35005fd`，Pages 工作流 `40460164097` 成功；42 个文件的路径、大小与 Git blob 哈希均与本地匹配。Chrome 实际倒糊、拖动摊开、加入双蛋，静音按钮状态切换及暂停正常，未发现游戏来源的控制台错误。动作关键帧由生产渲染器核验。声音接入与生命周期通过自动测试，本轮未完成主观听感评估及手机实机音频验收。
 Release `eb0706342422ad26792e1bc7242f4074d35005fd`, successful Pages run `40460164097`; all 42 file paths, sizes and Git blob hashes matched local output. In Chrome, poured/spread batter and added two eggs; mute-state and pause controls worked, with no game-origin console errors. Production-renderer keyframes cover the motions. Audio integration/lifecycle tests pass; subjective listening and physical-phone audio testing were not completed.
+
+## 2026-10-27 · v0.8.0 · 按反馈重做卡通美术 / Cartoon art rebuild from feedback
+
+用户明确指出写实人物、不清楚的食材和假手仍然影响体验。本次用内置图片生成创建四套原创新素材：卡通街坊、卡通食材、连贯手腕与握持姿势、卡通街景，均实际接入当前版本；透明图保留原 alpha。素材完整提示词记录在 ART_DIRECTION。没有使用商业游戏人物或素材。
+The user identified realistic portraits, unreadable foods and fake hands as ongoing problems. Four original asset sets were generated with the built-in image tool and integrated: cartoon neighbors, illustrated foods, connected hands/grips and cartoon street. Transparent files retain alpha; full prompts are recorded in ART_DIRECTION. No commercial-game characters/assets were used.
+
+源文件为 `assets/neighbors-toon.png`、`food-toon.png`、`hands-toon.png`、`street-toon.png`。按实际图集边界采样并保持比例；油条区域额外用渲染裁切排除相邻格，背景按操作台高度对齐。旧图不覆盖。成品、纸袋也使用统一卡通图。
+Sources are `assets/neighbors-toon.png`, `food-toon.png`, `hands-toon.png` and `street-toon.png`. Sampling follows actual atlas bounds and preserves aspect ratio; a rendering clip excludes the adjacent youtiao cell, and the street aligns to the counter. Old originals are retained. Finished food and bags use matching art.
+
+制作拖动阈值从面糊 1200/鸡蛋 700/酱料 550 调为 600/360/300，减少重复动作。新增连单：40 秒内正确完成制作，第二单起每单 +¥1 递增，最高 +¥5；错误或慢单、顾客流失重置。教学不发小费。重开时清除上次瞬态动作。
+Gesture thresholds change from 1200/700/550 to 600/360/300 to reduce repetition. Correct orders cooked within 40 seconds build a streak; tips rise from ¥1 on the second order to a ¥5 cap. Incorrect/slow orders and departing customers reset it. Tutorials award no tips. Restart clears transient animation state.
+
+十九项测试通过，新增更短手势门槛和连单金额/封顶/重置检查。已用生产渲染器检查卡通人物、食材、手持刮板、馅料和折叠。趣味性仍需玩家实际反馈，不能仅以测试通过作结论。
+All nineteen tests pass, including shorter gesture gates and streak payout/cap/reset. Production-renderer previews cover cartoon neighbors, foods, held spreader, fillings and folding. Enjoyment still requires player feedback; test success does not establish fun.

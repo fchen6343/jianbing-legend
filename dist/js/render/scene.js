@@ -8,6 +8,8 @@ export class Scene {
         this.background = new Image();
         this.neighbors = new Image();
         this.kitchen = new Image();
+        this.foodAtlas = new Image();
+        this.hands = new Image();
         this.hits = [];
         this.clock = 0;
         this.pointer = { x: -100, y: -100 };
@@ -29,8 +31,10 @@ export class Scene {
         this.departures = [];
         this.previousCustomers = [];
         this.ctx = canvas.getContext('2d');
-        this.background.src = './assets/street.png';
-        this.neighbors.src = './assets/neighbors-v2.png';
+        this.background.src = './assets/street-toon.png';
+        this.neighbors.src = './assets/neighbors-toon.png';
+        this.foodAtlas.src = './assets/food-toon.png';
+        this.hands.src = './assets/hands-toon.png';
         this.kitchen.src = './assets/kitchen-v2.png';
     }
     box(x, y, w, h, color, r = 12) { const c = this.ctx; c.fillStyle = color; c.beginPath(); c.roundRect(x, y, w, h, r); c.fill(); }
@@ -58,156 +62,17 @@ export class Scene {
     else {
         this.ellipse(x + w / 2, y + h / 2, w * .3, h * .28, foods[index]?.[2] || '#dcb569');
     } }
-    foodArt(id, x, y, w, h) {
-        const c = this.ctx;
-        c.save();
-        c.translate(x, y);
-        c.scale(w / 100, h / 70);
-        c.shadowColor = '#51371833';
-        c.shadowBlur = 2;
-        c.shadowOffsetY = 2;
-        if (id === 'youtiao') {
-            const grad = c.createLinearGradient(0, 0, 0, 70);
-            grad.addColorStop(0, '#ffe29a');
-            grad.addColorStop(.5, '#d9922f');
-            grad.addColorStop(1, '#9d581f');
-            for (let j = 0; j < 2; j++) {
-                this.box(3, 15 + j * 21, 94, 25, grad, 12);
-                this.box(10, 18 + j * 21, 76, 4, '#ffdda477', 3);
-                for (let k = 0; k < 18; k++) {
-                    this.ellipse(9 + k * 17 % 81, 20 + j * 21 + k * 7 % 13, 3 + k % 3, 2, '#a9632577');
-                    this.ellipse(8 + k * 17 % 81, 19 + j * 21 + k * 7 % 13, 2 + k % 2, 1.5, '#f6cb7c99');
-                }
-            }
-            c.strokeStyle = '#a36b2b';
-            c.lineWidth = 2;
-            c.beginPath();
-            c.moveTo(13, 38);
-            c.lineTo(89, 38);
-            c.stroke();
-        }
-        else if (id === 'crisp') {
-            const gold = c.createLinearGradient(0, 0, 90, 65);
-            gold.addColorStop(0, '#ffe3a0');
-            gold.addColorStop(.4, '#e8b457');
-            gold.addColorStop(1, '#ae702b');
-            this.path([[5, 18], [76, 3], [96, 18], [83, 61], [18, 66], [3, 48]], gold, '#a1692b', 2);
-            this.path([[14, 23], [77, 10], [87, 20], [74, 53], [21, 57]], '#f5ce78', '#c08b3d', 1);
-            for (let n = 0; n < 30; n++) {
-                const px = 17 + n * 19 % 59, py = 19 + n * 13 % 31;
-                this.ellipse(px + 1, py + 1, 2 + n % 3, 1 + n % 2, '#bd843b');
-                this.ellipse(px, py, 2 + n % 3, 1 + n % 2, '#ffe1a0');
-            }
-        }
-        else if (id === 'scallion') {
-            for (let n = 0; n < 24; n++) {
-                const px = 9 + n * 23 % 82, py = 9 + n * 17 % 50;
-                this.ellipse(px, py, 5, 4, '#79ac51');
-                this.ellipse(px, py, 2.8, 2.2, '#e2efab');
-                c.strokeStyle = '#4b7d37';
-                c.lineWidth = .8;
-                c.beginPath();
-                c.moveTo(px - 4, py + 2);
-                c.lineTo(px + 3, py + 3);
-                c.stroke();
-            }
-        }
-        else if (id === 'cilantro' || id === 'lettuce') {
-            for (let n = 0; n < (id === 'cilantro' ? 9 : 5); n++) {
-                const px = 17 + n * 29 % 65, py = 12 + n * 13 % 40;
-                c.strokeStyle = '#467739';
-                c.lineWidth = 2;
-                c.beginPath();
-                c.moveTo(px, py + 16);
-                c.lineTo(px + 6, py);
-                c.stroke();
-                for (let j = 0; j < 3; j++) {
-                    this.ellipse(px + j * 5 - 3, py + j * 3, id === 'lettuce' ? 17 : 7, id === 'lettuce' ? 9 : 5, j % 2 ? '#619843' : '#83b35a');
-                    c.strokeStyle = '#c5da8588';
-                    c.lineWidth = .8;
-                    c.beginPath();
-                    c.moveTo(px - 9 + j * 5, py + j * 3);
-                    c.lineTo(px + 6 + j * 5, py + 2 + j * 3);
-                    c.stroke();
-                }
-            }
-        }
-        else if (id === 'egg') {
-            this.ellipse(52, 37, 22, 29, '#b49364');
-            const shell = c.createRadialGradient(42, 21, 2, 53, 37, 34);
-            shell.addColorStop(0, '#fff5da');
-            shell.addColorStop(.6, '#ead0a4');
-            shell.addColorStop(1, '#ad8354');
-            this.ellipse(50, 33, 21, 28, shell);
-            for (let n = 0; n < 15; n++)
-                this.ellipse(36 + n * 11 % 29, 17 + n * 17 % 34, .5, .5, '#aa805455');
-            this.ellipse(44, 22, 4, 9, '#fff2d5');
-        }
-        else if (id === 'batter') {
-            this.box(21, 7, 52, 54, '#e2e8dc', 8);
-            this.ellipse(47, 12, 25, 9, '#f2d395');
-            this.path([[69, 15], [94, 11], [72, 36]], '#d7ded1', '#8a9d91');
-            c.strokeStyle = '#dce4d7';
-            c.lineWidth = 8;
-            c.beginPath();
-            c.ellipse(20, 32, 15, 18, 0, 1, 5);
-            c.stroke();
-        }
-        else if (id === 'sweet' || id === 'chili') {
-            this.ellipse(50, 35, 43, 24, id === 'sweet' ? '#6f3826' : '#c04229');
-            for (let n = 0; n < 10; n++)
-                this.ellipse(17 + n * 23 % 66, 23 + n * 11 % 25, 2, 1, id === 'sweet' ? '#a56b42' : '#f2c17c');
-        }
-        else if (id === 'sesame') {
-            for (let n = 0; n < 50; n++)
-                this.ellipse(7 + n * 31 % 86, 8 + n * 17 % 53, 2, 1, '#e5c888');
-        }
-        else if (id === 'ham') {
-            for (let n = 0; n < 4; n++) {
-                this.box(12 + n * 17, 15 + n * 4, 26, 36, '#bd6560', 7);
-                const pink = c.createLinearGradient(0, 17 + n * 4, 0, 47 + n * 4);
-                pink.addColorStop(0, '#ffc4ab');
-                pink.addColorStop(1, '#ce8176');
-                this.box(14 + n * 17, 17 + n * 4, 22, 30, pink, 5);
-                for (let j = 0; j < 7; j++)
-                    this.ellipse(17 + n * 17 + j * 7 % 15, 22 + n * 4 + j * 11 % 20, 1, .6, '#ffe0c6');
-            }
-        }
-        else if (id === 'sausage') {
-            for (let n = 0; n < 3; n++) {
-                this.box(8 + n * 28, 10 + n * 4, 24, 47, '#93412a', 11);
-                c.strokeStyle = '#e2a06b';
-                c.lineWidth = 2;
-                for (let j = 0; j < 3; j++) {
-                    c.beginPath();
-                    c.moveTo(13 + n * 28, 20 + j * 11 + n * 4);
-                    c.lineTo(26 + n * 28, 25 + j * 11 + n * 4);
-                    c.stroke();
-                }
-            }
-        }
-        else {
-            for (let n = 0; n < 5; n++) {
-                const top = 10 + n % 2 * 12, left = 6 + n * 17, meat = c.createLinearGradient(left, 0, left + 19, 0);
-                meat.addColorStop(0, id === 'chicken' ? '#f5ce70' : '#e1ab80');
-                meat.addColorStop(.6, id === 'chicken' ? '#dba23e' : '#b77749');
-                meat.addColorStop(1, '#92592d');
-                this.box(left, top, 19, 44, meat, 7);
-                for (let j = 0; j < 9; j++)
-                    if (id === 'chicken')
-                        this.ellipse(left + 3 + j * 7 % 13, top + 4 + j * 13 % 34, 1.5, 1, '#ffe1a4');
-                    else {
-                        c.strokeStyle = '#80503277';
-                        c.lineWidth = 1.5;
-                        c.beginPath();
-                        c.moveTo(left + 3, top + 10 + j * 4);
-                        c.lineTo(left + 15, top + 8 + j * 4);
-                        c.stroke();
-                    }
-            }
-        }
-        c.restore();
-    }
+    atlasFood(index, x, y, w, h) { const im = this.foodAtlas; if (!im.complete || !im.naturalWidth)
+        return; const cells = [[.02, .025, .235, .22], [.28, .035, .18, .21], [.50, .05, .235, .19], [.75, .03, .24, .21], [.01, .28, .24, .18], [.26, .28, .23, .17], [.50, .28, .23, .17], [.75, .25, .24, .225], [0, .49, .245, .18], [.255, .485, .235, .19], [.50, .48, .235, .19], [.75, .475, .24, .21], [0, .70, .25, .24], [.255, .66, .235, .30], [.50, .685, .24, .26], [.75, .70, .24, .25]]; const [sx, sy, sw, sh] = cells[index], scale = Math.min(w / (sw * im.naturalWidth), h / (sh * im.naturalHeight)), dw = sw * im.naturalWidth * scale, dh = sh * im.naturalHeight * scale; const dx = x + (w - dw) / 2, dy = y + (h - dh) / 2, c = this.ctx; c.save(); if (index === 13) {
+        c.beginPath();
+        [[.55, 0], [1, 0], [1, .44], [.35, 1], [0, 1], [0, .68]].forEach(([px, py], i) => i ? c.lineTo(dx + px * dw, dy + py * dh) : c.moveTo(dx + px * dw, dy + py * dh));
+        c.closePath();
+        c.clip();
+    } c.drawImage(im, sx * im.naturalWidth, sy * im.naturalHeight, sw * im.naturalWidth, sh * im.naturalHeight, dx, dy, dw, dh); c.restore(); }
+    foodArt(id, x, y, w, h) { const index = foods.findIndex(f => f[0] === id); if (index >= 0)
+        this.atlasFood(index, x, y, w, h); }
+    handArt(index, x, y, w, h) { const im = this.hands; if (!im.complete || !im.naturalWidth)
+        return; const ranges = [[0, .36], [.36, .32], [.715, .285]], r = ranges[index]; this.ctx.drawImage(im, r[0] * im.naturalWidth, 0, r[1] * im.naturalWidth, im.naturalHeight, x, y, w, h); }
     person(look, x, y, w = 182, h = 208) { const im = this.neighbors, c = this.ctx; if (im.complete && im.naturalWidth) {
         const cw = im.naturalWidth / 2, ch = im.naturalHeight / 2;
         c.drawImage(im, look % 2 * cw, Math.floor(look / 2) * ch, cw, ch, x - w / 2, y, w, h);
@@ -242,8 +107,11 @@ export class Scene {
         this.toastAge = Math.max(0, this.toastAge - dt);
         this.touchAge = Math.max(0, this.touchAge - dt);
         c.clearRect(0, 0, 1280, 720);
-        if (this.background.complete && this.background.naturalWidth)
-            c.drawImage(this.background, 0, 0, 1280, 720);
+        if (this.background.complete && this.background.naturalWidth) {
+            const im = this.background;
+            c.drawImage(im, 0, 0, im.naturalWidth, im.naturalHeight * .595, 0, 0, 1280, 335);
+            c.drawImage(im, 0, im.naturalHeight * .595, im.naturalWidth, im.naturalHeight * .405, 0, 335, 1280, 385);
+        }
         else
             this.box(0, 0, 1280, 720, '#8e724a', 0);
         const shade = c.createLinearGradient(0, 0, 0, 400);
@@ -255,6 +123,8 @@ export class Scene {
         this.text('煎饼摊传奇', 42, 49, 25, '#ffe4b2', 'left', 268);
         this.text((getLanguage() === 'zh' ? `第 ${g.profile.days} 天 · ` : `DAY ${g.profile.days} · `) + (g.profile.mode === 'tianjin' ? t('纯血天津人模式') : t(g.profile.shop ? '街角小店' : '街角煎饼摊')), 43, 69, 11, '#c7b197', 'left', 260);
         this.drawDecor(g);
+        if (g.streak > 1)
+            this.text((getLanguage() === 'zh' ? `连单 ${g.streak} · 连单小费 +¥${Math.min(5, g.streak - 1)}` : `STREAK ${g.streak} · TIP +¥${Math.min(5, g.streak - 1)}`), 42, 113, 13, '#fff1ae', 'left', 280);
         const stats = [['今日收入', '¥ ' + g.money, 567], ['剩余时间', `${Math.floor(Math.ceil(g.time) / 60)}:${String(Math.ceil(g.time) % 60).padStart(2, '0')}`, 716], ['顾客满意', String(g.satisfaction) + '%', 865]];
         for (const [label, value, x] of stats) {
             this.panel(x, 19, 136, 60, '#fff2dceF', 13);
@@ -332,11 +202,11 @@ export class Scene {
         }
         this.ellipse(640, 544, 257, 105, '#2d201bbb');
         this.ellipse(640, 528, 248, 108, '#422c25');
-        this.ellipse(640, 516, 248, 110, '#a6aaa0');
+        this.ellipse(640, 516, 248, 110, '#b7b89a');
         this.ellipse(640, 512, 239, 104, '#646e65');
         const pan = c.createRadialGradient(600, 469, 20, 640, 505, 235);
-        pan.addColorStop(0, '#414d45');
-        pan.addColorStop(1, '#202e2a');
+        pan.addColorStop(0, '#445548');
+        pan.addColorStop(1, '#25372d');
         c.fillStyle = pan;
         c.beginPath();
         c.ellipse(640, 505, 231, 100, 0, 0, 7);
@@ -398,13 +268,9 @@ export class Scene {
             c.translate(-640, -505);
             if (p.stage === 'bagged') {
                 const bag = Math.min(1, p.foldTime / .65);
-                this.box(603, 419 + bag * 37, 74, 65, '#e8b95f', 9);
-                this.ellipse(640, 543, 77, 13, '#0003');
-                this.box(588, 454, 104, 103, '#b4834e', 7);
-                this.box(595, 460, 90, 90, '#e8c58b', 4);
-                this.path([[595, 460], [607, 444], [675, 444], [685, 460]], '#f2d7a0', '#a77a48');
-                this.text('热', 640, 513, 24, '#99653c');
-                this.text('JIANBING', 640, 536, 10, '#99653c');
+                this.ellipse(640, 550, 70, 12, '#0003');
+                this.atlasFood(14, 604, 415 + bag * 35, 72, 80);
+                this.atlasFood(15, 578, 438, 124, 120);
             }
             else if (p.stage === 'folded') {
                 const f = Math.min(1, p.foldTime / .65), leftFold = Math.min(1, f / .33), rightFold = Math.max(0, Math.min(1, (f - .33) / .33)), width = 410 - 114 * leftFold - 114 * rightFold, height = 180 - 96 * Math.max(0, Math.min(1, (f - .6) / .4)), l = 640 - width / 2, r = 640 + width / 2, top = 505 - height / 2, bottom = 505 + height / 2;
@@ -421,22 +287,7 @@ export class Scene {
                     this.path([[r, 499], [r - width * .35 * rightFold, top + 7], [r - width * .35 * rightFold, bottom - 7], [r, 519]], '#e5b461', '#bd8e47');
                 }
                 else {
-                    this.box(l, top + 7, width, height, '#9e642e', 12);
-                    this.box(l + 3, top + 4, width - 6, height, '#f5d48a', 11);
-                    const crust = c.createLinearGradient(0, top, 0, bottom);
-                    crust.addColorStop(0, '#f4d38b');
-                    crust.addColorStop(.6, '#e8b95f');
-                    crust.addColorStop(1, '#c69042');
-                    this.box(l, top, width, height, crust, 12);
-                    this.path([[l + 3, top + 16], [640, top + 43], [r - 3, top + 16], [r - 3, top + 27], [640, top + 49], [l + 3, top + 27]], '#c69249', '#c69249', 1);
-                    for (let n = 0; n < 22; n++)
-                        this.ellipse(l + 12 + (n * 31 % (width - 24)), top + 9 + (n * 17 % (height - 18)), 1 + n % 3, 1, '#aa703966');
-                    c.strokeStyle = '#f8df9e';
-                    c.lineWidth = 2;
-                    c.beginPath();
-                    c.moveTo(l + 9, bottom - 10);
-                    c.lineTo(r - 9, bottom - 10);
-                    c.stroke();
+                    this.atlasFood(14, 543, 446, 194, 121);
                 }
             }
             else {
@@ -484,9 +335,13 @@ export class Scene {
                             c.save();
                             c.translate(fx + k * 28, fy + k % 2 * 13);
                             c.rotate((k - 1) * .3);
-                            this.path([[0, 0], [30, 5], [8, 26]], k % 2 ? '#edc879' : '#dca548', '#aa7736', 1);
-                            for (let z = 0; z < 6; z++)
-                                this.ellipse(6 + z * 7 % 17, 7 + z * 5 % 12, 1.5, 1, '#ffe5a2');
+                            c.beginPath();
+                            c.moveTo(0, 0);
+                            c.lineTo(32, 4);
+                            c.lineTo(9, 28);
+                            c.closePath();
+                            c.clip();
+                            this.foodArt('crisp', -2, -1, 36, 32);
                             c.restore();
                         }
                         if (this.crispAge < .9)
@@ -536,7 +391,10 @@ export class Scene {
         }
         // Tools sit in a single physical rail and reveal names on hover/touch.
         this.panel(349, 614, 582, 66, '#563c2bea', 14);
-        toolIds.forEach((id, i) => { const r = toolRect(i), enabled = toolEnabled(g, id); this.hit(id, r.x, r.y, r.w, r.h); const hover = this.hovered(id); this.ellipse(r.x + 52, r.y + 49, 31, 4, '#25180f66'); c.save(); c.globalAlpha = (enabled || !g.started) ? .98 : .47; this.sprite([13, 14, 15, 16, 17][i], r.x + 20, r.y - 2, 65, 58); c.restore(); if (hover)
+        toolIds.forEach((id, i) => { const r = toolRect(i), enabled = toolEnabled(g, id); this.hit(id, r.x, r.y, r.w, r.h); const hover = this.hovered(id); this.ellipse(r.x + 52, r.y + 49, 31, 4, '#25180f66'); c.save(); c.globalAlpha = (enabled || !g.started) ? .98 : .47; if (id === 'fold' || id === 'bag')
+            this.atlasFood(id === 'fold' ? 14 : 15, r.x + 18, r.y - 2, 68, 58);
+        else
+            this.sprite([13, 14, 15, 16, 17][i], r.x + 20, r.y - 2, 65, 58); c.restore(); if (hover)
             this.focusRing(r); if (action.focus.includes(id) && g.started && !g.ended)
             this.focusRing(r, '#e9c780'); });
         // The selected recipe is a single icon checklist, with the no-cilantro exception explicit.
@@ -569,11 +427,8 @@ export class Scene {
             c.lineWidth = 23;
             c.stroke();
             c.translate(hx, hy);
-            c.rotate(Math.atan2(hy - 288, hx - sx) - Math.PI / 2);
-            this.box(-13, -20, 26, 30, '#efc399', 9);
-            for (let j = 0; j < 4; j++)
-                this.box(-14 + j * 8, -1, 7, 22 - Math.abs(j - 1) * 4, '#efc399', 4);
-            this.box(-20, -10, 8, 19, '#e0a879', 4);
+            c.rotate(Math.atan2(hy - 288, hx - sx) + Math.PI * .75);
+            this.handArt(2, -14, -14, 83, 89);
             c.restore();
             if (th.slapped) {
                 c.strokeStyle = '#fff1be';
@@ -592,13 +447,12 @@ export class Scene {
         }
         if (this.dragging && ['batter', 'egg', 'flipped'].includes(p.stage)) {
             c.save();
+            c.beginPath();
+            c.rect(335, 405, 610, 210);
+            c.clip();
             c.translate(this.pointer.x, this.pointer.y);
-            c.rotate(this.toolAngle);
-            this.sprite(p.stage === 'flipped' ? 18 : 13, -14, -62, 84, 84);
-            this.ellipse(40, -18, 17, 12, '#26332e');
-            for (let n = 0; n < 3; n++)
-                this.box(25 + n * 8, -30, 9, 20, '#35453b', 5);
-            this.ellipse(23, -15, 7, 10, '#435247');
+            c.rotate(this.toolAngle * .45);
+            this.handArt(p.stage === 'flipped' ? 1 : 0, -55, -37, 205, 187);
             c.restore();
         }
         this.effects = this.effects.filter(f => (f.age += dt) < f.life);

@@ -26,3 +26,34 @@ The original English prompts are retained for reproducibility; actual dimensions
 
 本轮直接细化 `Scene.foodArt` 中的向量绘制：暖色渐变、食物表面纹理、起泡与叶脉；没有生成或下载新的位图。敲蛋、脆片碎屑、工具握持和折叠由 Canvas 动画绘制。所有音效在 `Sound` 内通过 Web Audio 噪声过滤、短音与包络合成，不使用第三方录音。
 This iteration refines vector drawing in `Scene.foodArt` with warm gradients, surface textures, blisters and veins, with no generated/downloaded bitmaps. Canvas draws cracking eggs, crumbs, held tools and folding. `Sound` synthesizes effects using Web Audio filtered noise, tones and envelopes, without third-party recordings.
+
+
+## v0.8.0 内置图片生成 / Built-in image generation
+
+四套原创素材以新文件保存，保留已有历史素材。使用内置 image_gen，非 CLI；图集裁切在渲染时完成，未修改生成图像。
+Four original sets are saved as sibling assets using built-in image_gen, not CLI. Atlas sampling occurs in the renderer; generated files are unmodified.
+
+### toon_people_prompt
+
+```text
+Use case: stylized-concept. Asset type: production sprite atlas for a cheerful Chinese street food cooking game. Four original exaggerated 2D cartoon people, NOT realistic and NOT anime. Bold dark-brown ink outlines, chunky silhouettes, big heads, small expressive bodies, flat warm saturated colors, simple cel shading, hand-drawn casual mobile game style. STRICT square 2 by 2 evenly spaced grid on genuinely TRANSPARENT background, no text, no grid lines. Each cell contains exactly one waist-up person fully inside its cell with 12% empty margins. Top-left: goofy bespectacled Chinese male student with huge round head, small torso, green hoodie, excited grin. Top-right: cheerful Chinese female office worker, orange jacket, large playful eyes, round face. Bottom-left: funny elderly Chinese neighbor, bushy white eyebrows, blue jacket, broad round nose and happy smile. Bottom-right: jovial Chinese cook owner in red apron, tiny chef cap, curled moustache, short arms holding a vegetable basket. All face camera, same waist-up scale, simplified hands natural and rounded, readable at 150 pixels. Strongly caricatured cartoon proportions, clean polished outlined illustration. Avoid photographs, realistic skin, painterly rendering, detailed facial anatomy, 3D, gradients, watermarks, lettering.
+```
+
+### toon_food_prompt
+
+```text
+Use case: stylized-concept. Production game sprite atlas, 16 distinct appetizing CARTOON food assets in a STRICT evenly spaced 4 columns by 4 rows square grid, genuinely TRANSPARENT background. No text, no labels, no grid lines, no containers except batter pitcher and sauce bowls. All items entirely inside their own equal square cells with generous 18% transparent margin, no touching neighbors. Warm saturated casual 2D cooking game art, bold dark brown outlines, chunky readable silhouettes, simple cel highlights, hand illustrated, NOT realistic, NOT 3D, NOT tiny geometric placeholders. Readable when reduced to 64 pixels. Exact row-major order: row1 (1) cream batter pitcher with visible pour spout and handle, (2) ONE large uncracked tan chicken egg with shine, (3) pile of chopped green scallion RINGS with hollow pale centers, (4) cilantro bunch with distinct lobed leaves and stems. Row2: (5) mound of sesame seeds, (6) small shallow bowl of glossy dark brown sweet bean sauce, (7) small shallow bowl of red chili sauce with pepper flecks, (8) ONE large paper-thin irregular rectangular golden Chinese guobier fried crisp sheet with big bubbled surface and broken corner. Row3: (9) stacked pink ham slices, (10) browned pork strips with grill marks, (11) three reddish scored grilled sausages, (12) three broad ruffled lettuce leaves. Row4: (13) golden breaded chicken strips with crunchy crumbs, (14) ONE unmistakable YOUTIAO Chinese fried dough: TWO LONG THIN CONNECTED sticks, each 4 times longer than wide, vertical diagonal orientation, puffy bumpy fried surface, central seam; absolutely not biscuits or toast, (15) folded rectangular golden jianbing pancake with scallions and crisp visible at open end, (16) one cute kraft paper food bag with scalloped open mouth, no logo no letters. Uniform illustrated game art and consistent outline weight, warm natural colors, clean alpha edges.
+```
+
+### toon_hands_prompt
+
+```text
+Use case: stylized-concept. Production SPRITE ATLAS for a 2D cartoon cooking game. Wide horizontal image, exactly THREE equal columns in ONE row, generous transparent gutters, truly TRANSPARENT background. No words, no panels, no grid lines, no other objects. Original bold dark brown outlined cartoon art, warm friendly colors and clean cel shading; chunky natural rounded hands like hand-drawn casual mobile games, never photorealistic or 3D. Each column shows ONE correctly drawn hand with a short forearm in a rolled-up cream cook sleeve entering from the BOTTOM RIGHT of its own cell, fingers naturally wrapped around the object, consistent right hand and style across columns. Column1: right hand holding the wooden HANDLE of a traditional Chinese pancake T-shaped wooden spreader; the horizontal wooden scraping blade points toward upper LEFT, fingertips grip the long handle far away from the blade, tool and arm fully fit within cell. Column2: right hand holding the wooden handle of a food basting brush, brush head with short brown bristles pointing toward upper LEFT, thumb and fingers visibly grip handle, wrist connected to sleeve. Column3: empty sneaky hand reaching toward upper LEFT in a loose pinching gesture to grab a snack, visible separated index finger and thumb, playful blue sleeve instead of cream. Natural hand anatomy, exactly five fingers per hand, no disconnected fingers, no floating fist, no black glove, avoid overlapping columns. Large readable silhouettes, simple cartoon material shapes.
+```
+
+### toon_street_prompt
+
+```text
+Use case: stylized-concept. Asset type: full-screen 16:9 landscape background for an original Chinese street-food CARTOON cooking game, first-person standing behind a pancake stall. Fully opaque illustration. Strong bold dark brown outlines, simple rounded building shapes, cheerful saturated warm colors, clean flat cel shading, exaggerated cozy casual mobile-game cartoon design. Absolutely no realism, no painterly realistic textures, no 3D, no tiny photographic details. Composition crucial: upper 55 percent shows a cheerful Chinese neighborhood pedestrian street receding to a vanishing point at center, squat cozy storefronts on left and right with yellow awnings, red lanterns and rounded trees; keep central street empty and unobstructed for character sprites to be overlaid. LOWER 45 percent is a continuous warm honey-colored wooden stall countertop, viewed at a mild downward angle, nearly blank, with simple broad wood grain and dark bold front edge along bottom. No characters, no hands, no food, no griddle, no tools, no UI, no legible text, no logos, no watermark. Smooth ink outlines and simplified cartoon colors, daylight, friendly and playful.
+```
+

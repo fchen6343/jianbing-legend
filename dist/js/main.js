@@ -40,7 +40,7 @@ catch {
     storageFailed = true;
     document.querySelector('#save-status').textContent = t('浏览器无法保存，进度仅在本次打开期间保留');
 } }
-function begin(tutorial = false) { game = new Game(Math.random, profile, tutorial); game.started = true; game.newCustomer(); game.spawn = 9; saved = false; scene.effects = []; scene.toastAge = 0; scene.arrivals.clear(); scene.previousCustomers = []; scene.tutorialDone = profile.tutorial && !tutorial; sound.start(); toolbar(); }
+function begin(tutorial = false) { game = new Game(Math.random, profile, tutorial); game.started = true; game.newCustomer(); game.spawn = 9; saved = false; scene.effects = []; scene.eggAge = 2; scene.crispAge = 2; scene.flipAge = 1; scene.toastAge = 0; scene.arrivals.clear(); scene.previousCustomers = []; scene.tutorialDone = profile.tutorial && !tutorial; sound.start(); toolbar(); }
 const bi = (zh, en) => getLanguage() === 'zh' ? zh : en;
 function renderShop() {
     const active = game.started && !game.ended;
@@ -64,6 +64,8 @@ function renderShop() {
     previewScene.background = scene.background;
     previewScene.neighbors = scene.neighbors;
     previewScene.kitchen = scene.kitchen;
+    previewScene.foodAtlas = scene.foodAtlas;
+    previewScene.hands = scene.hands;
     previewScene.ctx.scale(.5, .5);
     previewGame.started = true;
     previewScene.draw(previewGame, 0);

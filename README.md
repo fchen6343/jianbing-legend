@@ -24,8 +24,8 @@ npm run dev
 - [开发日志 / Development log](DEVLOG.md)
 - [路线图与已知限制 / Roadmap and known limitations](docs/ROADMAP.md)
 
-当前为 v0.7.0 可玩原型，仍在迭代美术、动作与触屏体验。
-v0.7.0 is a playable prototype. Artwork, animation and touch controls are still being refined.
+当前为 v0.8.0 可玩原型，仍在迭代美术、动作与触屏体验。
+v0.8.0 is a playable prototype. Artwork, animation and touch controls are still being refined.
 
 ## v0.4.0 · 暖色手作摊位 / Warm illustrated stall
 
@@ -74,3 +74,12 @@ Cracking shells, breaking crisps, spatula flips, held tools and filling-aware fo
 
 声音均由浏览器本机合成，无需下载录音；真实手机听感和性能仍待测试。
 Audio is generated locally in the browser with no recording downloads. Physical-phone sound and performance remain to be tested.
+
+
+## v0.8.0 · 卡通重绘与更快节奏 / Cartoon rebuild and faster pacing
+
+重新生成并接入卡通顾客、街景、十四种食材和自然握持工具的手；替换写实人物及拼接手掌。原图保留用于历史版本，当前使用 `*-toon.png`。食材采用实际插画并保留中英文标签。
+New cartoon neighbors, street, fourteen ingredients and illustrated tool-holding hands replace realistic characters and assembled palms. Original assets remain for history; the active version uses `*-toon.png`, with bilingual labels.
+
+摊饼/抹蛋/刷酱拖动距离缩短约一半，仍须真实操作完成。连续快速正确出餐获得小费，逐单增加，最高 ¥5；错单、超时制作或顾客离开会中断连单。教学不发钱。
+Spreading/egg/sauce gestures require roughly half the former distance while retaining real action gates. Consecutive correct fast orders earn increasing tips, capped at ¥5; incorrect/slow orders or departing customers reset the streak. Tutorials earn no money.
