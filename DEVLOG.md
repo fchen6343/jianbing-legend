@@ -229,3 +229,8 @@ Commit `89d081473ff6ad3f05790320709a83efe0079269`; Pages run `40462936481` succe
   Replaced long arms with short grips, three telescoping metal sections and moving jaws. Extension, grabbing, retraction and interception are continuous; tip and grip are clickable. Leaving customers take their tool away to prevent off-screen theft.
 - 补充上下文失败提示、补货完成反馈；二十五项测试通过，包括双向切换/资金与队列保留、制作中禁止切换、独立双蛋、五秒库存与暂停、夹子收回连续性和离场取消。生产 Scene 预览检查了蛋液、补货和夹子。真实浏览器上线检查将在发布后补记。
   Added contextual failure hints and restock feedback. All twenty-five tests pass, covering mode preservation/guards, independent eggs, five-second inventory/pause, continuous claw retraction and departure cancellation. Production Scene previews cover eggs, restocking and claws. Live browser checks will be recorded after publishing.
+
+### v0.9.0 真实浏览器检查 / Live browser check
+
+发布提交 `7b0351a367ceacf9507eb8a72a64908769b7486d`，Pages 工作流 `40465517434` 成功；52 个文件路径、大小及 Git blob 哈希匹配本地。Chrome 中完成普通/天津双向切换且钱包保持 ¥156；制作中选项正确禁用。实际调用老板，观察到搬箱阶段，结束后面糊库存由 7 补回 8。双蛋各自落下成形，拖动出现蛋液笔触。正式营业实际触发伸缩夹子，点击握柄阻止，葱花库存保持 8。暂停和中英文界面正常；实体手机和整局平衡仍待验收。
+Release `7b0351a367ceacf9507eb8a72a64908769b7486d`, successful Pages run `40465517434`; all 52 paths/sizes/blob hashes matched. In Chrome, switched Classic/Tianjin both ways while the wallet stayed at ¥156; cooking correctly disabled switching. Observed the owner carrying the crate and batter stock returning from seven to eight. Two eggs settled separately and dragging left egg strokes. Live service triggered the telescoping claw; clicking its grip stopped it and scallion stock remained at eight. Pause and bilingual controls worked; physical-mobile and full-day balance review remain pending.

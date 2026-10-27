@@ -22,7 +22,7 @@ Development: install Node.js, run `npm ci`, then `npm test`. `npm run dev` serve
 | 3 | 按订单重复加鸡蛋和小料，拖动抹匀蛋液后点击铲子翻面。 | Add ordered portions of eggs and herbs, drag to spread the egg, then flip. |
 | 4 | 加入指定酱料、肉类、小料，在饼上拖动刷匀酱料。 | Add the requested sauces, proteins and toppings; drag to spread sauce. |
 | 5 | 折叠，等待动作完成，装袋，点击顾客交餐。 | Fold, wait for the fold to finish, bag, then click a customer to serve. |
-| 6 | 点击老板补货，耗时五秒；拍回伸来的手，否则最多损失两份库存。 | Ask the boss to restock in five seconds. Tap sneaking hands or lose up to two portions. |
+| 6 | 点击老板补货，耗时五秒；点伸来的夹头或握柄，否则最多损失两份库存。 | Ask the boss to restock in five seconds. Tap sneaky claws or lose up to two portions. |
 | 7 | 三分钟收摊；错单只付 ¥3，丢弃不返还食材。右上“声 / SFX”切换声音。 | Each day lasts three minutes. Wrong orders pay ¥3; discarded ingredients are not refunded. Use “声 / SFX” to toggle sound. |
 | 8 | 右上角 English / 中文 随时切换语言，不重置当前游戏。 | Use English / 中文 at top right without resetting the current game. |
 

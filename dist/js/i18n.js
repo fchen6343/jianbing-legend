@@ -110,7 +110,7 @@ const english = {
     "直接按住铁板移动，摊饼或刷酱": "Drag on the griddle to spread batter or brush sauce",
     "不要香菜": "NO cilantro",
     "煎饼摊传奇：点击食材、拖动摊饼、点击工具和顾客": "Jianbing Legend: select ingredients, drag to spread, and click tools or customers",
-    "鼠标或触屏操作。点击面糊，在铁板上拖动摊饼，加蛋后拖动抹匀，再点击铲子翻面，添加订单配料并拖动刷酱，折叠、装袋后点击顾客。点击老板补货，点击偷吃的手阻止偷吃。": "Use a mouse or touchscreen. Click batter and drag on the griddle. Add egg, drag to spread it, flip, add ordered toppings, drag to brush sauce, fold, bag, and serve. Click the boss to restock and tap sneaking hands."
+    "鼠标或触屏操作。点击面糊，在铁板上拖动摊饼，加蛋后拖动抹匀，再点击铲子翻面，添加订单配料并拖动刷酱，折叠、装袋后点击顾客。点击老板补货，点击偷吃的夹子阻止偷吃。": "Use a mouse or touchscreen. Click batter and drag on the griddle. Add egg, drag to spread it, flip, add ordered toppings, drag to brush sauce, fold, bag, and serve. Click the boss to restock and tap sneaky claws."
 };
 const foodEnglish = { batter: 'Batter', egg: 'Egg', scallion: 'Scallions', cilantro: 'Cilantro', sesame: 'Sesame', sweet: 'Sweet sauce', chili: 'Chili sauce', crisp: 'Guobier crisp', ham: 'Ham', pork: 'Pork', sausage: 'Sausage', lettuce: 'Lettuce', chicken: 'Chicken', youtiao: 'Youtiao' };
 const foodChinese = { batter: '面糊', egg: '鸡蛋', scallion: '葱花', cilantro: '香菜', sesame: '芝麻', sweet: '甜面酱', chili: '辣椒酱', crisp: '果篦儿', ham: '火腿', pork: '里脊', sausage: '烤肠', lettuce: '生菜', chicken: '鸡柳', youtiao: '果子' };
