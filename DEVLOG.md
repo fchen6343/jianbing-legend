@@ -234,3 +234,14 @@ Commit `89d081473ff6ad3f05790320709a83efe0079269`; Pages run `40462936481` succe
 
 发布提交 `7b0351a367ceacf9507eb8a72a64908769b7486d`，Pages 工作流 `40465517434` 成功；52 个文件路径、大小及 Git blob 哈希匹配本地。Chrome 中完成普通/天津双向切换且钱包保持 ¥156；制作中选项正确禁用。实际调用老板，观察到搬箱阶段，结束后面糊库存由 7 补回 8。双蛋各自落下成形，拖动出现蛋液笔触。正式营业实际触发伸缩夹子，点击握柄阻止，葱花库存保持 8。暂停和中英文界面正常；实体手机和整局平衡仍待验收。
 Release `7b0351a367ceacf9507eb8a72a64908769b7486d`, successful Pages run `40465517434`; all 52 paths/sizes/blob hashes matched. In Chrome, switched Classic/Tianjin both ways while the wallet stayed at ¥156; cooking correctly disabled switching. Observed the owner carrying the crate and batter stock returning from seven to eight. Two eggs settled separately and dragging left egg strokes. Live service triggered the telescoping claw; clicking its grip stopped it and scallion stock remained at eight. Pause and bilingual controls worked; physical-mobile and full-day balance review remain pending.
+
+## 2026-10-27 · v0.10.0 · A1 操作体验优先 / Interaction-first A1
+
+读取用户完整版总指令，保存在 `docs/MASTER_PLAN.zh-CN.md`，按用户最新要求增加 `AGENTS.md` 与双语 `docs/QUALITY_GATES.md`。将 50 天排在核心手感之后；明确现有打蛋仍点击添加、折叠仍点击触发，自动化与三存档尚未实现，不宣称完整版。
+Preserved the user's full specification and added repository-wide instructions plus bilingual quality gates. Fifty-day expansion follows core feel; existing click-to-add eggs/click-triggered folds, absent automation and missing save slots remain explicitly incomplete.
+
+本阶段 A1 用旋转覆盖替代摊糊距离计数；面糊只在覆盖方向铺开，环形引导显示未铺区域。顺/逆时针可用，原地重复、大距离虚报、直线来回或移出鏊子不能代替绕圈。保留完整教程、配料、刷酱、折叠、装袋、交付与旧进度。
+A1 replaces a distance counter with circular coverage. Batter spreads in covered directions and a ring indicates remaining areas. Either direction works; stationary spam, inflated distance, linear scrubbing and off-griddle motion cannot replace coverage. The complete tutorial/filling/sauce/fold/bag/service loop and existing progress remain.
+
+28 项自动测试通过，包含真实绕圈输入的整单测试和新增手势防绕过检查。测试通过并不证明好玩；十单手感评估、触屏，以及后续打蛋/折叠/设备阶段仍待验收。
+All 28 tests pass, including complete orders using real circular input and gesture misuse checks. This does not establish enjoyment. The ten-order feel review, touch checks and subsequent egg/fold/equipment increments remain pending.

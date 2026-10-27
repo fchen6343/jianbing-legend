@@ -29,6 +29,8 @@ export class Cooking {
         this.eggLayers = [];
         this.eggStrokeBreak = true;
         this.spread = 0;
+        this.batterSectors = Array(16).fill(false);
+        this.batterAngle = null;
         this.sauce = 0;
         this.strokes = [];
         this.strokeBreak = true;
@@ -68,9 +70,7 @@ export class Cooking {
         return `${foods.find(f => f[0] === id)[1]}，加好了`;
     }
     drag(x, y, distance) { if (this.stage === 'batter') {
-        this.spread = Math.min(1, this.spread + distance / 600);
-        if (this.spread >= 1)
-            this.stage = 'egg';
+        this.spreadBatter(x, y, distance);
     }
     else if (this.stage === 'egg' && this.ingredients.egg) {
         for (const egg of this.eggLayers) {
@@ -90,6 +90,19 @@ export class Cooking {
         if (this.strokes.length > 100)
             this.strokes.shift();
     } }
+    spreadBatter(x, y, distance) { const dx = (x - 640) / 205, dy = (y - 505) / 94, r = Math.hypot(dx, dy); if (!Number.isFinite(r) || !Number.isFinite(distance) || distance <= 0 || r < .25 || r > .98) {
+        this.batterAngle = null;
+        return;
+    } const angle = Math.atan2(dy, dx); const mark = (a) => { const positive = (a + Math.PI * 2) % (Math.PI * 2); this.batterSectors[Math.floor(positive / (Math.PI * 2) * 16) % 16] = true; }; mark(angle); if (this.batterAngle !== null) {
+        let delta = angle - this.batterAngle;
+        delta = Math.atan2(Math.sin(delta), Math.cos(delta));
+        if (Math.abs(delta) <= Math.PI / 2) {
+            const steps = Math.ceil(Math.abs(delta) / (Math.PI / 32));
+            for (let i = 1; i <= steps; i++)
+                mark(this.batterAngle + delta * i / steps);
+        }
+    } this.batterAngle = angle; this.spread = this.batterSectors.filter(Boolean).length / 16; if (this.spread === 1)
+        this.stage = 'egg'; }
     flip() { if (this.stage !== 'egg' || !this.ingredients.egg || this.eggSpread < 1)
         return false; this.stage = 'flipped'; return true; }
     fold() { if (this.stage !== 'flipped' || ((this.ingredients.sweet || this.ingredients.chili) && this.sauce < 1))

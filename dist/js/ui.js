@@ -11,7 +11,7 @@ export function nextAction(g) {
     if (p.stage === 'empty')
         return { step: 1, key: '倒入面糊', detail: '点击面糊壶，开始制作', focus: ['food:batter'], progress: 0 };
     if (p.stage === 'batter')
-        return { step: 1, key: '摊开煎饼', detail: '按住铁板，来回拖动摊匀', focus: ['scrape'], progress: p.spread };
+        return { step: 1, key: '摊开煎饼', detail: '按住铁板绕圈移动，让面糊铺满', focus: ['scrape'], progress: p.spread };
     if (p.stage === 'egg') {
         const needed = foods.filter(([id]) => ['egg', 'scallion', 'sesame', 'cilantro'].includes(id) && (c?.recipe[id] || 0) > (p.ingredients[id] || 0)).map(([id]) => 'food:' + id);
         if (!needed.length && p.eggSpread < 1)
@@ -33,7 +33,7 @@ export function customerX(index, shop) { return shop ? 373 + index * 137 : 445 +
 export function tutorialAction(g) {
     const p = g.cooking;
     const steps = [
-        ['倒入面糊', '点击面糊壶，开始制作', 'food:batter'], ['摊开煎饼', '按住铁板，来回拖动摊匀', 'scrape'], ['加入双蛋', '点击鸡蛋两次，订单需要两个蛋', 'food:egg'], ['抹匀鸡蛋', '按住饼面来回拖动，把蛋液抹匀再翻面', 'scrape'], ['撒上葱花', '点击葱花桶，加一份葱花', 'food:scallion'], ['可以翻面了', '点击铲子，把煎饼翻过来', 'flip'], ['加入甜面酱', '点击甜面酱桶，加一份酱', 'food:sweet'], ['刷匀酱料', '按住饼面拖动，将酱料刷匀', 'scrape'], ['放入果篦儿', '点击脆片托盘，加一片果篦儿', 'food:crisp'], ['可以折叠了', '点击折叠，准备打包', 'fold'], ['装进纸袋', '点击纸袋，准备交给顾客', 'bag'], ['交给这位顾客', '点击正在制作的顾客完成交餐', 'customer:' + g.target?.id]
+        ['倒入面糊', '点击面糊壶，开始制作', 'food:batter'], ['摊开煎饼', '按住铁板绕圈移动，让面糊铺满', 'scrape'], ['加入双蛋', '点击鸡蛋两次，订单需要两个蛋', 'food:egg'], ['抹匀鸡蛋', '按住饼面来回拖动，把蛋液抹匀再翻面', 'scrape'], ['撒上葱花', '点击葱花桶，加一份葱花', 'food:scallion'], ['可以翻面了', '点击铲子，把煎饼翻过来', 'flip'], ['加入甜面酱', '点击甜面酱桶，加一份酱', 'food:sweet'], ['刷匀酱料', '按住饼面拖动，将酱料刷匀', 'scrape'], ['放入果篦儿', '点击脆片托盘，加一片果篦儿', 'food:crisp'], ['可以折叠了', '点击折叠，准备打包', 'fold'], ['装进纸袋', '点击纸袋，准备交给顾客', 'bag'], ['交给这位顾客', '点击正在制作的顾客完成交餐', 'customer:' + g.target?.id]
     ];
     let i = p.stage === 'empty' ? 0 : p.stage === 'batter' ? 1 : p.stage === 'egg' ? ((p.ingredients.egg || 0) < 2 ? 2 : p.eggSpread < 1 ? 3 : !p.ingredients.scallion ? 4 : 5) : p.stage === 'flipped' ? (!p.ingredients.sweet ? 6 : p.sauce < 1 ? 7 : !p.ingredients.crisp ? 8 : 9) : p.stage === 'folded' ? 10 : 11;
     return { step: i + 1, key: steps[i][0], detail: steps[i][1], focus: p.stage === 'folded' && p.foldTime < .65 ? [] : [steps[i][2]], progress: i === 1 ? p.spread : i === 3 ? p.eggSpread : i === 7 ? p.sauce : 0 };

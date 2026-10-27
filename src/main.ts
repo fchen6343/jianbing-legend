@@ -72,11 +72,11 @@ canvas.addEventListener('pointerdown',e=>{
   else if(id.startsWith('order:')){scene.touchFocus=id;scene.touchAge=2;return;}
   if(!id.startsWith('order:')){scene.notify(game.message,effect,game);if(!effect&&(id.startsWith('food:')||['scrape','flip','fold','bag','discard'].includes(id))){scene.touchFocus=id;scene.touchAge=1.5;}if(!success)sound.play('error');else if(id.startsWith('food:'))sound.play(id==='food:egg'?'egg':id==='food:crisp'?'crisp':id==='food:batter'||id==='food:sweet'||id==='food:chili'?'pour':'sprinkle');else if(id==='flip'||id==='fold'||id==='bag')sound.play(id);}
  }
- if(insideGriddle(p.x,p.y)&&tutorialAllows(game,'scrape')){game.cooking.strokeBreak=true;game.cooking.eggStrokeBreak=true;dragging=true;canvas.setPointerCapture(e.pointerId);}
+ if(insideGriddle(p.x,p.y)&&tutorialAllows(game,'scrape')){game.cooking.strokeBreak=true;game.cooking.eggStrokeBreak=true;game.cooking.batterAngle=null;dragging=true;canvas.setPointerCapture(e.pointerId);}
 });
 canvas.addEventListener('pointermove',e=>{const p=position(e);scene.pointer=p;if(dragging&&!game.paused&&insideGriddle(p.x,p.y))game.cooking.drag(p.x,p.y,Math.min(65,Math.hypot(p.x-last.x,p.y-last.y)));if(dragging)scene.toolAngle+=((Math.max(-.5,Math.min(.5,(p.x-last.x)*.04)))-scene.toolAngle)*.25;last=p;canvas.style.cursor=scene.hits.some(h=>p.x>=h.x&&p.x<h.x+h.w&&p.y>=h.y&&p.y<h.y+h.h)?'pointer':insideGriddle(p.x,p.y)?'crosshair':'default';});
 canvas.addEventListener('pointerleave',()=>{if(!dragging)scene.pointer={x:-100,y:-100};});
-for(const event of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(event,()=>{dragging=false;game.cooking.strokeBreak=true;game.cooking.eggStrokeBreak=true;});
+for(const event of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(event,()=>{dragging=false;game.cooking.strokeBreak=true;game.cooking.eggStrokeBreak=true;game.cooking.batterAngle=null;});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!shopDialog.open&&game.started&&!game.ended){game.paused=!game.paused;dragging=false;toolbar();}});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)sound.activity(false);if(document.hidden&&game.started&&!game.ended){game.paused=true;dragging=false;toolbar();}});
 let previous=performance.now();

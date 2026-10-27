@@ -233,6 +233,7 @@ canvas.addEventListener('pointerdown', e => {
     if (insideGriddle(p.x, p.y) && tutorialAllows(game, 'scrape')) {
         game.cooking.strokeBreak = true;
         game.cooking.eggStrokeBreak = true;
+        game.cooking.batterAngle = null;
         dragging = true;
         canvas.setPointerCapture(e.pointerId);
     }
@@ -243,7 +244,7 @@ canvas.addEventListener('pointermove', e => { const p = position(e); scene.point
 canvas.addEventListener('pointerleave', () => { if (!dragging)
     scene.pointer = { x: -100, y: -100 }; });
 for (const event of ['pointerup', 'pointercancel', 'lostpointercapture'])
-    canvas.addEventListener(event, () => { dragging = false; game.cooking.strokeBreak = true; game.cooking.eggStrokeBreak = true; });
+    canvas.addEventListener(event, () => { dragging = false; game.cooking.strokeBreak = true; game.cooking.eggStrokeBreak = true; game.cooking.batterAngle = null; });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && !shopDialog.open && game.started && !game.ended) {
     game.paused = !game.paused;
     dragging = false;

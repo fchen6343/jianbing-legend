@@ -24,8 +24,8 @@ npm run dev
 - [开发日志 / Development log](DEVLOG.md)
 - [路线图与已知限制 / Roadmap and known limitations](docs/ROADMAP.md)
 
-当前为 v0.9.0 可玩原型，仍在迭代美术、动作与触屏体验。
-v0.9.0 is a playable prototype. Artwork, animation and touch controls are still being refined.
+当前为 v0.10.0 可玩原型，仍在迭代美术、动作与触屏体验。
+v0.10.0 is a playable prototype. Artwork, animation and touch controls are still being refined.
 
 ## v0.4.0 · 暖色手作摊位 / Warm illustrated stall
 
@@ -91,3 +91,11 @@ The main mode shortcut opens explicit Classic/Tianjin choices. Switch both ways 
 
 老板补货有取货、搬箱、倒料、食材飞入及补满闪光，实际库存仍在五秒结束时补齐。每颗蛋分别绘制蛋白、蛋黄、落下与拖动摊开的笔触；新加蛋不会让旧蛋液重新收回。偷吃使用伸缩金属夹，点击夹头或握柄阻止，顾客离开时工具一起消失。
 Restocking animates fetching, a crate, pouring, ingredient deliveries and full-stock flashes; inventory still refills after five seconds. Each egg has independent whites/yolk, settling and spreading paths; a new egg does not shrink the previous coat. Sneaky customers use telescoping metal claws: tap the tip or grip to stop them, and departing customers take the tool away.
+
+## v0.10.0 · 体验优先 A1 / Experience-first A1
+
+按住鏊子沿环形引导绕圈，逐步铺开面糊；来回刷距离不再直接完成。完整制作交付流程仍可玩。
+Hold and circle the griddle guide to spread batter locally. Distance scrubbing no longer completes spreading. The full cooking-to-service loop remains playable.
+
+[阶段质量门槛与真实差距 / Quality gates and actual gaps](docs/QUALITY_GATES.md)。五十天内容分阶段，核心手感优先；互动折叠、设备自动化与三存档尚未完成。
+Fifty-day content is phased behind core interaction quality. Interactive folding, equipment automation and three-slot saves are not yet complete.

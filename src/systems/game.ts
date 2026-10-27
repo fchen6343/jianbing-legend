@@ -16,7 +16,7 @@ export class Inventory {
 export interface EggLayer {x:number;y:number;age:number;spread:number;strokes:{x:number;y:number;move:boolean}[];}
 export function theftReach(remaining:number){return remaining<.8?Math.max(0,remaining/.8):Math.min(1,(3-remaining)/1.1);}
 export class Cooking {
- stage:Stage='empty'; ingredients:Recipe={}; underside:Recipe={}; eggLayers:EggLayer[]=[]; eggStrokeBreak=true; spread=0; sauce=0; strokes:{x:number,y:number,move?:boolean}[]=[]; strokeBreak=true; heat=0; foldTime=0;
+ stage:Stage='empty'; ingredients:Recipe={}; underside:Recipe={}; eggLayers:EggLayer[]=[]; eggStrokeBreak=true; spread=0; batterSectors=Array<boolean>(16).fill(false); batterAngle:number|null=null; sauce=0; strokes:{x:number,y:number,move?:boolean}[]=[]; strokeBreak=true; heat=0; foldTime=0;
  get eggSpread(){return this.eggLayers.length?Math.min(...this.eggLayers.map(e=>e.spread)):0;}
  add(id:Food,inventory:Inventory):string {
   if(id==='batter'){if(this.stage!=='empty')return '先完成或丢弃这一张';}
@@ -31,7 +31,8 @@ export class Cooking {
   if(this.stage==='egg')this.underside[id]=(this.underside[id]||0)+1;
   return `${foods.find(f=>f[0]===id)![1]}，加好了`;
  }
- drag(x:number,y:number,distance:number){if(this.stage==='batter'){this.spread=Math.min(1,this.spread+distance/600);if(this.spread>=1)this.stage='egg';}else if(this.stage==='egg'&&this.ingredients.egg){for(const egg of this.eggLayers){egg.spread=Math.min(1,egg.spread+distance/360);if(egg.spread<1||egg.strokes.length<2){egg.strokes.push({x,y,move:this.eggStrokeBreak});if(egg.strokes.length>80)egg.strokes.shift();}}this.eggStrokeBreak=false;}else if(this.stage==='flipped'&&(this.ingredients.sweet||this.ingredients.chili)){this.sauce=Math.min(1,this.sauce+distance/300);this.strokes.push({x,y,move:this.strokeBreak});this.strokeBreak=false;if(this.strokes.length>100)this.strokes.shift();}}
+ drag(x:number,y:number,distance:number){if(this.stage==='batter'){this.spreadBatter(x,y,distance);}else if(this.stage==='egg'&&this.ingredients.egg){for(const egg of this.eggLayers){egg.spread=Math.min(1,egg.spread+distance/360);if(egg.spread<1||egg.strokes.length<2){egg.strokes.push({x,y,move:this.eggStrokeBreak});if(egg.strokes.length>80)egg.strokes.shift();}}this.eggStrokeBreak=false;}else if(this.stage==='flipped'&&(this.ingredients.sweet||this.ingredients.chili)){this.sauce=Math.min(1,this.sauce+distance/300);this.strokes.push({x,y,move:this.strokeBreak});this.strokeBreak=false;if(this.strokes.length>100)this.strokes.shift();}}
+ spreadBatter(x:number,y:number,distance:number){const dx=(x-640)/205,dy=(y-505)/94,r=Math.hypot(dx,dy);if(!Number.isFinite(r)||!Number.isFinite(distance)||distance<=0||r<.25||r>.98){this.batterAngle=null;return;}const angle=Math.atan2(dy,dx);const mark=(a:number)=>{const positive=(a+Math.PI*2)%(Math.PI*2);this.batterSectors[Math.floor(positive/(Math.PI*2)*16)%16]=true;};mark(angle);if(this.batterAngle!==null){let delta=angle-this.batterAngle;delta=Math.atan2(Math.sin(delta),Math.cos(delta));if(Math.abs(delta)<=Math.PI/2){const steps=Math.ceil(Math.abs(delta)/(Math.PI/32));for(let i=1;i<=steps;i++)mark(this.batterAngle+delta*i/steps);}}this.batterAngle=angle;this.spread=this.batterSectors.filter(Boolean).length/16;if(this.spread===1)this.stage='egg';}
  flip(){if(this.stage!=='egg'||!this.ingredients.egg||this.eggSpread<1)return false;this.stage='flipped';return true;}
  fold(){if(this.stage!=='flipped'||((this.ingredients.sweet||this.ingredients.chili)&&this.sauce<1))return false;this.stage='folded';this.foldTime=0;return true;}
  bag(){if(this.stage!=='folded'||this.foldTime<.65)return false;this.stage='bagged';this.foldTime=0;return true;}

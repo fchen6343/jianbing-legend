@@ -36,7 +36,7 @@ const english = {
     "倒入面糊": "Pour the batter",
     "点击面糊桶，开始制作": "Tap the batter pail to begin",
     "摊开煎饼": "Spread the pancake",
-    "按住铁板，来回拖动摊匀": "Hold and drag across the griddle to spread evenly",
+    "按住铁板绕圈移动，让面糊铺满": "Hold and circle the griddle to spread the batter",
     "加入蛋与小料": "Add egg and toppings",
     "可以翻面了": "Ready to flip",
     "按订单加入鸡蛋和小料": "Add the ordered eggs and herbs",

@@ -298,9 +298,23 @@ export class Scene {
             }
             else {
                 const rx = p.stage === 'batter' ? 58 + 147 * p.spread : 205;
-                this.ellipse(640, 505, rx, rx * .445, '#b77f3b');
-                this.ellipse(640, 502, rx - 3, rx * .435, '#edca7c');
-                for (let n = 0; n < 90; n++) {
+                if (p.stage === 'batter') {
+                    const points = Array.from({ length: 32 }, (_, j) => { const a = j / 32 * Math.PI * 2, sector = Math.floor(j / 2), coverage = (p.batterSectors[sector] ? .5 : 0) + (p.batterSectors[(sector + 15) % 16] ? .25 : 0) + (p.batterSectors[(sector + 1) % 16] ? .25 : 0), radius = 58 + 144 * coverage; return { x: 640 + Math.cos(a) * radius, y: 502 + Math.sin(a) * radius * .435 }; });
+                    c.beginPath();
+                    c.moveTo((points[31].x + points[0].x) / 2, (points[31].y + points[0].y) / 2);
+                    points.forEach((v, i) => { const next = points[(i + 1) % points.length]; c.quadraticCurveTo(v.x, v.y, (v.x + next.x) / 2, (v.y + next.y) / 2); });
+                    c.closePath();
+                    c.fillStyle = '#edca7c';
+                    c.fill();
+                    c.strokeStyle = '#b77f3b';
+                    c.lineWidth = 2;
+                    c.stroke();
+                }
+                else {
+                    this.ellipse(640, 505, rx, rx * .445, '#b77f3b');
+                    this.ellipse(640, 502, rx - 3, rx * .435, '#edca7c');
+                }
+                for (let n = 0; n < (p.stage === 'batter' ? 0 : 90); n++) {
                     const x = Math.sin(n * 13.3) * rx * .94, y = Math.cos(n * 7.1) * rx * .4;
                     if (x * x / (rx * rx) + y * y / (rx * rx * .2) < .9)
                         this.ellipse(640 + x, 502 + y, 1 + n % 3, 1, '#b4773e44');
@@ -476,6 +490,22 @@ export class Scene {
             this.text(th.slapped ? '夹子收好啦' : '快点夹子！ ' + th.remaining.toFixed(1), labelX, hy - 40, 11, '#663b27', 'center', 132);
             this.hit('slap', hx - 38, hy - 29, 76, 70);
             this.hit('slap', sx - 24, sy - 19, 49, 51);
+        }
+        if (p.stage === 'batter') {
+            c.save();
+            c.lineWidth = 3;
+            for (let i = 0; i < 16; i++) {
+                c.strokeStyle = p.batterSectors[i] ? '#c7e5a0' : '#ffe9b580';
+                c.beginPath();
+                c.ellipse(640, 505, 146, 65, 0, i / 16 * Math.PI * 2 + .035, (i + 1) / 16 * Math.PI * 2 - .035);
+                c.stroke();
+            }
+            const a = this.clock * .9;
+            c.fillStyle = '#fff5c1';
+            c.beginPath();
+            c.arc(640 + Math.cos(a) * 146, 505 + Math.sin(a) * 65, 5, 0, Math.PI * 2);
+            c.fill();
+            c.restore();
         }
         if (this.dragging && ['batter', 'egg', 'flipped'].includes(p.stage)) {
             c.save();

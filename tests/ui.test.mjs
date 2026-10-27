@@ -1,3 +1,4 @@
+import {spreadBatter} from './helpers.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {Game,foods} from '../dist/js/systems/game.js';
@@ -13,7 +14,7 @@ test('coaching follows a real double-egg order through spread, flip, sauce, bag 
  const g=new Game(()=>.2);g.newCustomer();
  assert.deepEqual(nextAction(g).focus,['food:batter']);
  g.cooking.add('batter',g.inventory);assert.deepEqual(nextAction(g).focus,['scrape']);
- g.cooking.drag(640,505,1200);assert.ok(nextAction(g).focus.includes('food:egg'));
+ spreadBatter(g.cooking);assert.ok(nextAction(g).focus.includes('food:egg'));
  for(const id of ['egg','egg','scallion','sesame','cilantro'])g.cooking.add(id,g.inventory);
  g.cooking.drag(640,505,700);assert.equal(ingredientStatus(g,'egg'),'done');assert.deepEqual(nextAction(g).focus,['flip']);
  assert.ok(toolEnabled(g,'flip'));assert.ok(g.cooking.flip());
