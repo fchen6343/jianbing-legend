@@ -1,7 +1,7 @@
 import { charm, patienceMultiplier } from '../systems/progress.js';
 import { t, getLanguage, foodLabel } from '../i18n.js';
 import { foods } from '../systems/game.js';
-import { stationRect, toolRect, toolIds, nextAction, ingredientStatus, toolEnabled, customerX } from '../ui.js';
+import { stationRect, toolRect, toolIds, nextAction, ingredientStatus, toolEnabled, customerX, restockPhase, clawGeometry } from '../ui.js';
 export class Scene {
     constructor(canvas) {
         this.canvas = canvas;
@@ -17,6 +17,8 @@ export class Scene {
         this.toolAngle = 0;
         this.muted = false;
         this.tutorialDone = false;
+        this.refillPrevious = 0;
+        this.refillFlash = 0;
         this.flipAge = 1;
         this.eggAge = 2;
         this.crispAge = 2;
@@ -179,11 +181,15 @@ export class Scene {
             this.person(d.look, d.x + d.age * 90, 135, 174, 191);
             c.restore();
         }
-        const refill = g.inventory.refill, bossX = 1157 - (refill ? Math.sin((5 - refill) / 5 * Math.PI) * 60 : 0);
-        this.person(3, bossX, 179, 166, 156);
+        const refill = g.inventory.refill, phase = restockPhase(refill), elapsed = 5 - refill, bossX = 1157 + (phase === 'fetch' ? Math.sin(elapsed / 1.3 * Math.PI) * 38 : phase === 'carry' ? -Math.sin((elapsed - 1.3) / 1.2 * Math.PI) * 45 : 0), bossBob = refill ? Math.sin(elapsed * 9) * 2 : 0;
+        this.person(3, bossX, 179 + bossBob, 166, 156);
         this.hit('boss', 1068, 177, 184, 186);
         this.panel(1075, 330, 177, 30, '#4b4934ed', 9);
-        this.text(refill ? `补货中 ${refill.toFixed(1)}s` : '老板，补个货！', 1163, 350, 13, '#ffefcd', 'center', 159);
+        const missing = g.availableFoods.filter(([id]) => g.inventory.stock[id] < 8).length;
+        const refillText = refill ? (getLanguage() === 'zh' ? ({ fetch: '老板取货', carry: '搬货回来', pour: '倒料补满', ready: '' }[phase]) : ({ fetch: 'Fetching', carry: 'Carrying', pour: 'Refilling', ready: '' }[phase])) + ' ' + refill.toFixed(1) + 's' : missing ? (getLanguage() === 'zh' ? `补货 · ${missing} 种不足` : `Restock · ${missing} low`) : t('库存充足');
+        this.text(refillText, 1163, 350, 13, '#ffefcd', 'center', 159);
+        if (refill)
+            this.box(1080, 356, 167 * (elapsed / 5), 3, '#e2c77b', 2);
         // Stainless steel worktops and round ingredient pails, inspired by the reference photo.
         for (const x of [16, 952]) {
             const metal = c.createLinearGradient(x, 408, x + 312, 670);
@@ -299,17 +305,8 @@ export class Scene {
                     if (x * x / (rx * rx) + y * y / (rx * rx * .2) < .9)
                         this.ellipse(640 + x, 502 + y, 1 + n % 3, 1, '#b4773e44');
                 }
-                if (p.stage === 'egg' && p.ingredients.egg) {
-                    const spread = p.eggSpread;
-                    this.ellipse(640, 502, 75 + spread * 124, 32 + spread * 54, '#ffd251bb');
-                    for (let n = 0; n < (p.ingredients.egg || 0); n++) {
-                        if (n === this.eggCount - 1 && this.eggAge < .48)
-                            continue;
-                        const x = 585 + (n % 3) * 55, y = 487 + Math.floor(n / 3) * 29;
-                        this.ellipse(x, y, 25 * (1 - spread), 13 * (1 - spread), '#fff0b8');
-                        this.ellipse(x, y, 11 * (1 - spread), 7 * (1 - spread), '#ffb62e');
-                    }
-                }
+                if (p.stage === 'egg')
+                    this.drawEggs(p);
                 // Bounded sauce strokes avoid an unbounded draw loop during long gestures.
                 c.save();
                 c.beginPath();
@@ -367,20 +364,21 @@ export class Scene {
                     c.restore();
                 }
         }
-        if (p.stage === 'egg' && this.eggAge >= .46 && this.eggAge < .9) {
-            const u = (this.eggAge - .46) / .44, x = 585 + ((this.eggCount - 1) % 3) * 55, y = 487 + Math.floor((this.eggCount - 1) / 3) * 29;
-            c.save();
-            c.globalAlpha = 1 - u;
-            for (const sign of [-1, 1]) {
+        for (const egg of p.eggLayers)
+            if (p.stage === 'egg' && egg.age >= .46 && egg.age < .9) {
+                const u = (egg.age - .46) / .44;
                 c.save();
-                c.translate(x + sign * (16 + u * 47), y - 40 - u * 12);
-                c.rotate(sign * u * .8);
-                this.path([[sign * 4, -17], [sign * 20, -10], [sign * 23, 7], [sign * 8, 13], [0, 5], [sign * 6, -1], [0, -7]], '#f1d7ad', '#aa8055', 1.5);
+                c.globalAlpha = 1 - u;
+                for (const sign of [-1, 1]) {
+                    c.save();
+                    c.translate(egg.x + sign * (16 + u * 47), egg.y - 40 - u * 12);
+                    c.rotate(sign * u * .8);
+                    this.path([[sign * 4, -17], [sign * 20, -10], [sign * 23, 7], [sign * 8, 13], [0, 5], [sign * 6, -1], [0, -7]], '#f1d7ad', '#aa8055', 1.5);
+                    c.restore();
+                }
+                this.ellipse(egg.x, egg.y - 27 + u * 27, 5 * (1 - u), 13 * (1 - u), '#ffd05e');
                 c.restore();
             }
-            this.ellipse(x, y - 27 + u * 27, 5 * (1 - u), 13 * (1 - u), '#ffd05e');
-            c.restore();
-        }
         if (this.flipAge < .46) {
             const u = this.flipAge / .46;
             c.save();
@@ -409,26 +407,58 @@ export class Scene {
             const cell = Math.min(46, 535 / Math.max(1, items.length));
             items.forEach(([id], i) => { const x = 374 + i * cell, status = ingredientStatus(g, id), index = id === 'youtiao' ? 20 : foods.findIndex(f => f[0] === id); this.hit('order:' + id, x - 4, 359, cell, 39); this.box(x - 1, 361, cell - 5, 35, status === 'done' ? '#e5ebd2' : status === 'extra' ? '#f5d4c6' : '#efe4c9', 8); this.foodArt(id, x + 2, 359, 30, 25); this.text(`${p.ingredients[id] || 0}/${g.target.recipe[id] || 0}`, x + 18, 393, 10, status === 'extra' ? '#b14e33' : '#3f7446'); });
         }
-        // Bent sleeve + wrist + rotated fingers; a slapped arm retracts along the same route.
-        if (g.theft) {
-            const th = g.theft, ci = g.customers.findIndex(v => v.id === th.customer), sx = customerX(Math.max(0, ci), g.profile.shop), fi = foods.findIndex(v => v[0] === th.food), r = stationRect(fi);
-            const travel = th.slapped ? Math.max(0, th.remaining / .65) * (th.reach ?? 1) : Math.min(1, (3 - th.remaining) / 1.1), e = travel * travel * (3 - 2 * travel);
-            const hx = sx + (r.x + 44 - sx) * e, hy = 288 + (r.y + 26 - 288) * e;
+        // A short hand holds telescoping metal sections. Only the tool extends.
+        const claw = clawGeometry(g);
+        if (g.theft && claw) {
+            const th = g.theft, { sx, sy, hx, hy, extension } = claw, angle = Math.atan2(hy - sy, hx - sx), distance = Math.hypot(hx - sx, hy - sy);
             c.save();
+            c.translate(sx, sy);
+            c.rotate(angle);
             c.lineCap = 'round';
-            c.lineJoin = 'round';
-            c.beginPath();
-            c.moveTo(sx, 266);
-            c.quadraticCurveTo(sx + (hx - sx) * .25, hy - 35, hx, hy);
-            c.strokeStyle = '#47372d';
-            c.lineWidth = 29;
-            c.stroke();
-            c.strokeStyle = ['#66887c', '#c4815d', '#497873'][Math.max(0, ci) % 3];
-            c.lineWidth = 23;
-            c.stroke();
-            c.translate(hx, hy);
-            c.rotate(Math.atan2(hy - 288, hx - sx) + Math.PI * .75);
-            this.handArt(2, -14, -14, 83, 89);
+            for (let i = 0; i < 3; i++) {
+                const end = distance * (i + 1) / 3;
+                c.strokeStyle = '#3f4b48';
+                c.lineWidth = 12 - i * 3;
+                c.beginPath();
+                c.moveTo(i * distance / 3, 0);
+                c.lineTo(end, 0);
+                c.stroke();
+                c.strokeStyle = ['#c8d4ce', '#e3eae3', '#f7f4df'][i];
+                c.lineWidth = 7 - i * 2;
+                c.beginPath();
+                c.moveTo(i * distance / 3, -1);
+                c.lineTo(end, -1);
+                c.stroke();
+            }
+            this.box(-13, -10, 37, 20, '#985537', 6);
+            this.box(-9, -7, 27, 5, '#d58a55', 3);
+            c.translate(distance, 0);
+            const jaw = extension > .8 ? 6 : 13;
+            c.strokeStyle = th.slapped ? '#e3ac63' : '#4a5d55';
+            c.lineWidth = 6;
+            for (const sign of [-1, 1]) {
+                c.beginPath();
+                c.moveTo(-8, sign * 4);
+                c.lineTo(13, sign * jaw);
+                c.lineTo(24, sign * jaw * .55);
+                c.stroke();
+            }
+            c.strokeStyle = '#dce4d7';
+            c.lineWidth = 2;
+            for (const sign of [-1, 1]) {
+                c.beginPath();
+                c.moveTo(-7, sign * 4);
+                c.lineTo(13, sign * jaw);
+                c.lineTo(24, sign * jaw * .55);
+                c.stroke();
+            }
+            if (!th.slapped && th.remaining < 1.4)
+                this.foodArt(th.food, 6, -14, 27, 27);
+            c.restore();
+            c.save();
+            c.translate(sx - 7, sy - 2);
+            c.rotate(angle + Math.PI * .2);
+            this.handArt(2, -5, -8, 45, 47);
             c.restore();
             if (th.slapped) {
                 c.strokeStyle = '#fff1be';
@@ -436,14 +466,16 @@ export class Scene {
                 for (let j = 0; j < 5; j++) {
                     const a = j * 1.25;
                     c.beginPath();
-                    c.moveTo(hx + Math.cos(a) * 29, hy + Math.sin(a) * 29);
-                    c.lineTo(hx + Math.cos(a) * 39, hy + Math.sin(a) * 39);
+                    c.moveTo(hx + Math.cos(a) * 25, hy + Math.sin(a) * 25);
+                    c.lineTo(hx + Math.cos(a) * 35, hy + Math.sin(a) * 35);
                     c.stroke();
                 }
             }
-            this.panel(hx - 62, hy - 56, 124, 23, th.slapped ? '#e2ebc4' : '#ffe3ab', 7);
-            this.text(th.slapped ? '哎哟！不敢啦' : '快拍手！ ' + th.remaining.toFixed(1), hx, hy - 40, 11, '#663b27', 'center', 114);
-            this.hit('slap', hx - 43, hy - 30, 86, 78);
+            const labelX = Math.max(72, Math.min(1208, hx));
+            this.panel(labelX - 70, hy - 56, 140, 23, th.slapped ? '#e2ebc4' : '#ffe3ab', 7);
+            this.text(th.slapped ? '夹子收好啦' : '快点夹子！ ' + th.remaining.toFixed(1), labelX, hy - 40, 11, '#663b27', 'center', 132);
+            this.hit('slap', hx - 38, hy - 29, 76, 70);
+            this.hit('slap', sx - 24, sy - 19, 49, 51);
         }
         if (this.dragging && ['batter', 'egg', 'flipped'].includes(p.stage)) {
             c.save();
@@ -476,6 +508,7 @@ export class Scene {
                 this.sprite(f.index, x - 20, y - 20, 40, 40);
             c.restore();
         }
+        this.drawRestock(g, dt, bossX);
         this.panel(351, 686, 578, 29, '#3c3028ef', 10);
         this.ellipse(370, 700, 8, 8, '#c38345');
         this.text(String(action.step), 370, 704, 10, '#fff4d9');
@@ -520,6 +553,108 @@ export class Scene {
         }
         if (!g.started || g.ended || g.paused)
             this.overlay(g);
+    }
+    drawEggs(p) {
+        const c = this.ctx;
+        c.save();
+        c.beginPath();
+        c.ellipse(640, 502, 199, 85, 0, 0, Math.PI * 2);
+        c.clip();
+        for (const egg of p.eggLayers) {
+            if (egg.age < .48)
+                continue;
+            const settle = Math.min(1, (egg.age - .48) / .26), spread = egg.spread;
+            const whites = c.createRadialGradient(egg.x - 8, egg.y - 5, 2, egg.x, egg.y, 54);
+            whites.addColorStop(0, '#fff9dd');
+            whites.addColorStop(1, '#fff0b5c0');
+            c.fillStyle = whites;
+            const pool = Array.from({ length: 24 }, (_, j) => { const a = j / 24 * Math.PI * 2, wobble = 1 + Math.sin(a * 3) * .06 + Math.cos(a * 5) * .035; return { x: egg.x + Math.cos(a) * (30 + spread * 18) * settle * wobble, y: egg.y + Math.sin(a) * (15 + spread * 12) * settle * wobble }; });
+            c.beginPath();
+            c.moveTo((pool[23].x + pool[0].x) / 2, (pool[23].y + pool[0].y) / 2);
+            for (let j = 0; j < 24; j++) {
+                const p = pool[j], next = pool[(j + 1) % 24];
+                c.quadraticCurveTo(p.x, p.y, (p.x + next.x) / 2, (p.y + next.y) / 2);
+            }
+            c.closePath();
+            c.fill();
+            if (spread > 0) {
+                c.save();
+                c.scale(1, .48);
+                c.strokeStyle = '#ffd34eae';
+                c.lineWidth = 49;
+                c.lineCap = 'round';
+                c.lineJoin = 'round';
+                c.beginPath();
+                egg.strokes.forEach((v, i) => { if (!i || v.move)
+                    c.moveTo(v.x, v.y / .48);
+                else
+                    c.lineTo(v.x, v.y / .48); });
+                c.stroke();
+                c.restore();
+            }
+            if (spread > .5) {
+                c.save();
+                c.globalAlpha = (spread - .5) * 1.7;
+                const coat = c.createRadialGradient(603, 478, 15, 640, 502, 204);
+                coat.addColorStop(0, '#ffe387');
+                coat.addColorStop(1, '#efb93b');
+                this.ellipse(640, 502, 199, 85, coat);
+                for (let j = 0; j < 22; j++)
+                    this.ellipse(492 + j * 43 % 296, 465 + j * 17 % 73, 6 + j % 4, 2, '#fff0bf55');
+                c.restore();
+            }
+            if (spread < 1) {
+                const size = (1 - spread) * settle, yolk = c.createRadialGradient(egg.x - 4, egg.y - 4, 1, egg.x, egg.y, 17);
+                yolk.addColorStop(0, '#fff2a4');
+                yolk.addColorStop(.3, '#ffc83d');
+                yolk.addColorStop(1, '#e79816');
+                this.ellipse(egg.x, egg.y + 2, 17 * size, 10 * size, '#bb841d55');
+                this.ellipse(egg.x, egg.y, 16 * size, 10 * size, yolk);
+                this.ellipse(egg.x - 5 * size, egg.y - 3 * size, 4 * size, 2 * size, '#fff5ce');
+            }
+        }
+        c.restore();
+    }
+    drawRestock(g, dt, bossX) {
+        const remaining = g.inventory.refill, c = this.ctx;
+        if (this.refillPrevious > 0 && !remaining)
+            this.refillFlash = 1;
+        this.refillPrevious = remaining;
+        this.refillFlash = Math.max(0, this.refillFlash - dt);
+        if (remaining) {
+            const elapsed = 5 - remaining, phase = restockPhase(remaining);
+            if (phase !== 'fetch') {
+                c.save();
+                c.translate(bossX, 279);
+                if (phase === 'pour')
+                    c.rotate(-Math.sin((elapsed - 2.5) / 2.5 * Math.PI) * .24);
+                this.panel(-51, -14, 102, 52, '#b87a42', 7);
+                this.box(-43, -6, 86, 8, '#e5bc79', 2);
+                this.box(-43, 20, 86, 5, '#80542f', 2);
+                for (let j = 0; j < 3; j++) {
+                    c.strokeStyle = '#80542f';
+                    c.lineWidth = 3;
+                    c.beginPath();
+                    c.moveTo(-25 + j * 25, -10);
+                    c.lineTo(-25 + j * 25, 36);
+                    c.stroke();
+                }
+                this.text('新鲜食材', 0, 18, 11, '#fff0c0', 'center', 90);
+                c.restore();
+            }
+            const items = g.inventory.refillFoods;
+            items.forEach((id, i) => { const start = 3.3 + i / Math.max(1, items.length) * .9, u = (elapsed - start) / .65; if (u < 0 || u > 1)
+                return; const r = stationRect(foods.findIndex(f => f[0] === id)), ease = 1 - (1 - u) ** 2, x = bossX + (r.x + 44 - bossX) * ease, y = 277 + (r.y + 24 - 277) * ease - Math.sin(u * Math.PI) * 80; c.save(); c.translate(x, y); c.rotate(Math.sin(u * Math.PI) * .2); this.foodArt(id, -22, -20, 44, 40); c.restore(); });
+        }
+        if (this.refillFlash > 0)
+            for (const id of g.inventory.refillFoods) {
+                const r = stationRect(foods.findIndex(f => f[0] === id));
+                c.save();
+                c.globalAlpha = this.refillFlash;
+                this.focusRing(r, '#b6e69e');
+                this.text('补满', r.x + 44, r.y - 3 - (1 - this.refillFlash) * 16, 13, '#eaffc7');
+                c.restore();
+            }
     }
     drawDecor(g) { const p = g.profile, c = this.ctx; const owned = (id) => p.equipped.includes(id); if (p.shop) {
         this.box(333, 86, 609, 13, '#815233', 3);

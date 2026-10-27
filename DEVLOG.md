@@ -216,3 +216,16 @@ All nineteen tests pass, including shorter gesture gates and streak payout/cap/r
 
 提交 `89d081473ff6ad3f05790320709a83efe0079269`；Pages 工作流 `40462936481` 成功。51 个文件与本地路径/大小/blob 哈希完全一致。Chrome 确认卡通顾客、街景和食材实际显示；倒面糊后用 16 点拖动完成摊开，进入加双蛋步骤。未声称完成新版整局平衡性或手机实机验收。
 Commit `89d081473ff6ad3f05790320709a83efe0079269`; Pages run `40462936481` succeeded. All 51 paths/sizes/blob hashes matched local output. Chrome displayed the actual cartoon cast/street/food; a 16-point drag spread the batter and advanced to eggs. Full-day balance and physical-phone acceptance are not claimed.
+
+## 2026-10-27 · v0.9.0 · 模式选择、补货、蛋液与伸缩夹 / Mode choice, restock, eggs and claw
+
+- 普通/天津模式改为明确的两个选项，新增主界面快捷入口。空锅且没有偷吃夹子时可在营业中切换，保留收入、钱包、库存、营业时间、顾客身份/耐心；已有顾客按新菜单重新点单。制作中禁用并解释原因，收摊后可切换。
+  Added explicit Classic/Tianjin options and a main-screen shortcut. Switching during service requires an empty griddle and no sneaky claw, preserving income/wallet, stock, time and customer identity/patience. Customers reorder from the new menu. Cooking disables the choice with an explanation; closing-day switching works.
+- 补货记录本次缺料清单；渲染老板取货、搬箱、倒料、食材飞往正确容器及补满闪光。补货条显示阶段与倒计时，库存充足/缺料数清晰显示；实际五秒补齐规则不变，补货首尾有轻音效。
+  Restocking records missing items and animates fetching, carrying a crate, pouring, targeted item flights and completion flashes. The display shows phase/time and full/low counts. Actual stock refills at five seconds, with light start/end cues.
+- 每颗鸡蛋有独立位置、落下时间、摊开程度和最多八十点笔触；软边蛋白、带高光的蛋黄和渐进蛋液跟随操作，新蛋不回退已摊开的蛋层。翻面门槛仍要求全部摊匀；暂停冻结蛋的落下时间。
+  Each egg tracks its position, landing age, spread and up to eighty stroke points. Soft-edged whites, highlighted yolks and gradual coating follow input without resetting older eggs. Flipping still requires all eggs spread, and pause freezes settling.
+- 取消伸长手臂，改成短手握柄、三段金属伸缩杆和活动夹头。伸出、夹取、收回和被阻止均连续；夹头和握柄都可点击。顾客离开会带走夹子，避免离屏偷料。
+  Replaced long arms with short grips, three telescoping metal sections and moving jaws. Extension, grabbing, retraction and interception are continuous; tip and grip are clickable. Leaving customers take their tool away to prevent off-screen theft.
+- 补充上下文失败提示、补货完成反馈；二十五项测试通过，包括双向切换/资金与队列保留、制作中禁止切换、独立双蛋、五秒库存与暂停、夹子收回连续性和离场取消。生产 Scene 预览检查了蛋液、补货和夹子。真实浏览器上线检查将在发布后补记。
+  Added contextual failure hints and restock feedback. All twenty-five tests pass, covering mode preservation/guards, independent eggs, five-second inventory/pause, continuous claw retraction and departure cancellation. Production Scene previews cover eggs, restocking and claws. Live browser checks will be recorded after publishing.

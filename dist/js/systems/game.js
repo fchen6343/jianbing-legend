@@ -7,11 +7,12 @@ export class Inventory {
     constructor() {
         this.stock = Object.fromEntries(foods.map(([id]) => [id, 8]));
         this.refill = 0;
+        this.refillFoods = [];
     }
     take(id, n = 1) { if (this.stock[id] < n)
         return false; this.stock[id] -= n; return true; }
     request() { if (this.refill || !Object.values(this.stock).some(n => n < 8))
-        return false; this.refill = 5; return true; }
+        return false; this.refillFoods = foods.filter(([id]) => this.stock[id] < 8).map(([id]) => id); this.refill = 5; return true; }
     tick(dt) { if (this.refill > 0) {
         this.refill = Math.max(0, this.refill - dt);
         if (!this.refill)
@@ -19,12 +20,14 @@ export class Inventory {
                 this.stock[id] = 8;
     } }
 }
+export function theftReach(remaining) { return remaining < .8 ? Math.max(0, remaining / .8) : Math.min(1, (3 - remaining) / 1.1); }
 export class Cooking {
     constructor() {
         this.stage = 'empty';
         this.ingredients = {};
         this.underside = {};
-        this.eggSpread = 0;
+        this.eggLayers = [];
+        this.eggStrokeBreak = true;
         this.spread = 0;
         this.sauce = 0;
         this.strokes = [];
@@ -32,6 +35,7 @@ export class Cooking {
         this.heat = 0;
         this.foldTime = 0;
     }
+    get eggSpread() { return this.eggLayers.length ? Math.min(...this.eggLayers.map(e => e.spread)) : 0; }
     add(id, inventory) {
         if (id === 'batter') {
             if (this.stage !== 'empty')
@@ -54,8 +58,11 @@ export class Cooking {
         this.ingredients[id] = (this.ingredients[id] || 0) + 1;
         if (id === 'batter')
             this.stage = 'batter';
-        if (id === 'egg')
-            this.eggSpread = 0;
+        if (id === 'egg') {
+            const n = (this.ingredients.egg || 1) - 1;
+            this.eggLayers.push({ x: 585 + n % 3 * 55, y: 487 + Math.floor(n / 3) * 29, age: 0, spread: 0, strokes: [] });
+            this.eggStrokeBreak = true;
+        }
         if (this.stage === 'egg')
             this.underside[id] = (this.underside[id] || 0) + 1;
         return `${foods.find(f => f[0] === id)[1]}，加好了`;
@@ -66,7 +73,15 @@ export class Cooking {
             this.stage = 'egg';
     }
     else if (this.stage === 'egg' && this.ingredients.egg) {
-        this.eggSpread = Math.min(1, this.eggSpread + distance / 360);
+        for (const egg of this.eggLayers) {
+            egg.spread = Math.min(1, egg.spread + distance / 360);
+            if (egg.spread < 1 || egg.strokes.length < 2) {
+                egg.strokes.push({ x, y, move: this.eggStrokeBreak });
+                if (egg.strokes.length > 80)
+                    egg.strokes.shift();
+            }
+        }
+        this.eggStrokeBreak = false;
     }
     else if (this.stage === 'flipped' && (this.ingredients.sweet || this.ingredients.chili)) {
         this.sauce = Math.min(1, this.sauce + distance / 300);
@@ -81,7 +96,8 @@ export class Cooking {
         return false; this.stage = 'folded'; this.foldTime = 0; return true; }
     bag() { if (this.stage !== 'folded' || this.foldTime < .65)
         return false; this.stage = 'bagged'; this.foldTime = 0; return true; }
-    tick(dt) { if (this.stage !== 'empty' && this.stage !== 'bagged')
+    tick(dt) { for (const egg of this.eggLayers)
+        egg.age += dt; if (this.stage !== 'empty' && this.stage !== 'bagged')
         this.heat += dt; if (this.stage === 'folded' || this.stage === 'bagged')
         this.foldTime += dt; }
 }
@@ -112,7 +128,7 @@ export class Game {
     get availableFoods() { return foods.filter(([id]) => this.profile.mode !== 'tianjin' || ['batter', 'egg', 'scallion', 'cilantro', 'sweet', 'chili', 'crisp', 'youtiao'].includes(id)); }
     addFood(id) { if (!this.availableFoods.some(f => f[0] === id))
         return '天津模式不提供这种配料'; const message = this.cooking.add(id, this.inventory); return this.profile.mode === 'tianjin' ? message.replace('薄脆', '果篦儿') : message; }
-    newCustomer() {
+    makeRecipe() {
         const egg = this.random() < .3 ? 2 : 1;
         const recipe = { batter: 1, egg, sweet: 1 };
         if (this.profile.mode === 'tianjin') {
@@ -128,14 +144,27 @@ export class Game {
                 if (this.random() < .35)
                     recipe[id] = this.random() < .15 ? 3 : 1;
         }
+        return this.tutorial ? { batter: 1, egg: 2, scallion: 1, sweet: 1, crisp: 1 } : recipe;
+    }
+    newCustomer() {
+        const recipe = this.makeRecipe();
         const max = 100 * patienceMultiplier(this.profile);
-        const c = { id: ++this.serial, look: this.serial % 3, recipe: this.tutorial ? { batter: 1, egg: 2, scallion: 1, sweet: 1, crisp: 1 } : recipe, patience: max, max, noCilantro: !recipe.cilantro };
+        const c = { id: ++this.serial, look: this.serial % 3, recipe, patience: max, max, noCilantro: !recipe.cilantro };
         if (this.tutorial)
             c.noCilantro = true;
         this.customers.push(c);
         if (!this.next)
             this.next = c.id;
     }
+    canSwitchMode() { return !this.started || this.ended || (this.cooking.stage === 'empty' && !this.theft); }
+    switchMode(mode) { if (mode === this.profile.mode)
+        return true; if (!this.canSwitchMode()) {
+        this.message = '请先交餐或清空铁板，再切换模式';
+        return false;
+    } this.profile.mode = mode; for (const c of this.customers) {
+        c.recipe = this.makeRecipe();
+        c.noCilantro = !c.recipe.cilantro;
+    } this.message = '模式已切换，顾客已重新点单'; return true; }
     get target() { return this.customers.find(c => c.id === this.next) || this.customers[0]; }
     serve() { if (this.cooking.stage !== 'bagged' || !this.target) {
         this.message = '先折叠装袋，再点顾客交餐';
@@ -147,7 +176,7 @@ export class Game {
     else if (correct)
         this.profile.tutorial = true; this.served++; this.ratings.push(rating); this.message = this.tutorial ? (correct ? '完成练习，准备正式开摊！' : '配料不对哦……请清空铁板重试') : correct ? `真香！收到 ¥${earned}，满意度 ${rating}` : '配料不对哦……只付 ¥3，注意不要香菜和双蛋'; this.customers = this.customers.filter(v => v.id !== c.id); this.next = this.customers[0]?.id || 0; this.cooking = new Cooking(); return correct; }
     slap() { if (!this.theft || this.theft.slapped)
-        return false; this.theft.reach = Math.min(1, (3 - this.theft.remaining) / 1.1); this.theft.slapped = true; this.theft.remaining = .65; this.message = '啪！小手收好，想吃得先点单！'; return true; }
+        return false; this.theft.reach = theftReach(this.theft.remaining); this.theft.slapped = true; this.theft.remaining = .65; this.message = '叮！夹子收回去，想吃得先点单！'; return true; }
     tick(dt) {
         if (!this.started || this.ended || this.paused)
             return;
@@ -176,6 +205,8 @@ export class Game {
         for (const c of leaving)
             this.ratings.push(0);
         this.customers = this.customers.filter(c => c.patience > 0);
+        if (this.theft && !this.customers.some(c => c.id === this.theft.customer))
+            this.theft = null;
         if (!this.customers.some(c => c.id === this.next))
             this.next = this.customers[0]?.id || 0;
         this.theftIn -= dt;
@@ -183,7 +214,7 @@ export class Game {
             const choices = (this.profile.mode === 'tianjin' ? ['crisp', 'scallion', 'youtiao'] : ['crisp', 'scallion', 'ham']).filter(id => this.inventory.stock[id] > 0);
             if (choices.length) {
                 this.theft = { customer: this.customers[0].id, food: choices[Math.floor(this.random() * choices.length)], remaining: 3, slapped: false };
-                this.message = '有人伸手偷吃！快拍回去！';
+                this.message = '有人用夹子偷吃！快点夹子！';
             }
             this.theftIn = 22 + this.random() * 18;
         }

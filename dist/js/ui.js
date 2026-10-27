@@ -1,4 +1,4 @@
-import { foods } from './systems/game.js';
+import { foods, theftReach } from './systems/game.js';
 export const griddle = { x: 640, y: 505, rx: 205, ry: 94 };
 export function insideGriddle(x, y) { return ((x - griddle.x) / griddle.rx) ** 2 + ((y - griddle.y) / griddle.ry) ** 2 <= 1; }
 export function stationRect(index) { const left = index < 7, n = left ? index : index - 7; return { x: (left ? 28 : 964) + (n % 3) * 96, y: 418 + Math.floor(n / 3) * 84, w: 88, h: 74 }; }
@@ -39,3 +39,6 @@ export function tutorialAction(g) {
     return { step: i + 1, key: steps[i][0], detail: steps[i][1], focus: p.stage === 'folded' && p.foldTime < .65 ? [] : [steps[i][2]], progress: i === 1 ? p.spread : i === 3 ? p.eggSpread : i === 7 ? p.sauce : 0 };
 }
 export function tutorialAllows(g, id) { return !g.tutorial || ['discard', 'boss'].includes(id) || tutorialAction(g).focus.includes(id); }
+export function restockPhase(remaining) { return remaining <= 0 ? 'ready' : remaining > 3.7 ? 'fetch' : remaining > 2.5 ? 'carry' : 'pour'; }
+export function clawGeometry(g) { const th = g.theft; if (!th)
+    return null; const ci = g.customers.findIndex(c => c.id === th.customer), sx = customerX(Math.max(0, ci), g.profile.shop), sy = 286, r = stationRect(foods.findIndex(f => f[0] === th.food)); const extension = th.slapped ? Math.max(0, th.remaining / .65) * (th.reach ?? 1) : theftReach(th.remaining), e = extension * extension * (3 - 2 * extension); return { sx, sy, hx: sx + (r.x + 44 - sx) * e, hy: sy + (r.y + 25 - sy) * e, extension }; }

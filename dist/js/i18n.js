@@ -2,6 +2,7 @@ let language = 'zh';
 export function getLanguage() { return language; }
 export function setLanguage(value) { language = value; }
 const english = {
+    "库存充足": "Stock full", "新鲜食材": "FRESH FOOD", "补满": "Full!", "夹子收好啦": "Claw retracted!", "有人用夹子偷吃！快点夹子！": "A sneaky claw! Tap it!", "叮！夹子收回去，想吃得先点单！": "Clink! Retract that claw and order first!", "请先交餐或清空铁板，再切换模式": "Serve or clear the griddle before changing mode", "模式已切换，顾客已重新点单": "Mode changed. Customers have reordered.",
     "点击加一份": "Tap to add one portion", "请先完成箭头指向的步骤": "Follow the arrow to finish this step first", "练习不限时，可丢弃重来": "Untimed practice. Discard to start again.", "跳过教程": "Skip tutorial", "点击面糊壶，开始制作": "Tap the batter pitcher to begin", "加入双蛋": "Add two eggs", "点击鸡蛋两次，订单需要两个蛋": "Tap eggs twice: this order needs two", "撒上葱花": "Add scallions", "点击葱花桶，加一份葱花": "Tap scallions to add one portion", "加入甜面酱": "Add sweet sauce", "点击甜面酱桶，加一份酱": "Tap sweet sauce to add one portion", "放入果篦儿": "Add guobier crisp", "点击脆片托盘，加一片果篦儿": "Tap the crisp tray to add one sheet",
     "配料不对哦……请清空铁板重试": "Wrong recipe. Try another pancake.", "果篦儿，加好了": "Guobier crisp added", "装饰与经营": "Decorate & grow", "新手教程": "Tutorial", "退出教程": "Exit tutorial", "游戏控制": "Game controls", "每种最多五份": "Up to five portions of each ingredient", "天津模式不提供这种配料": "This ingredient is unavailable in Tianjin mode", "纯血天津人模式": "Tianjin Purist Mode", "街角小店": "Neighborhood shop", "街角煎饼摊": "Street stall", "手作热煎饼": "Fresh Jianbing", "实操新手教程": "HANDS-ON TUTORIAL", "抹匀鸡蛋": "Spread the egg", "按住饼面来回拖动，把蛋液抹匀再翻面": "Drag over the pancake to spread the egg before flipping", "先加鸡蛋，并拖动抹匀蛋液": "Add egg, then drag to spread it evenly", "浏览器无法保存，进度仅在本次打开期间保留": "Storage unavailable: progress lasts only while this page is open", "教程完成": "Tutorial complete", "完成练习，准备正式开摊！": "Practice complete. Ready for business!", "练习不计收入，也不消耗顾客耐心": "Practice has no income or patience loss", "进入正式营业": "Start real service", "福": "FU",
     "煎饼摊传奇": "JIANBING LEGEND",
@@ -127,6 +128,8 @@ export function t(text) {
             return foodEnglish[id] + text.slice(label.length);
     }
     let m;
+    if ((m = text.match(/^快点夹子！ ([\d.]+)$/)))
+        return `Tap claw! ${m[1]}s`;
     if ((m = text.match(/^¥ (\d+)   ·   (\d+) 秒   ·   满意 (\d+)$/)))
         return `¥ ${m[1]} · ${m[2]}s · Rating ${m[3]}`;
     if ((m = text.match(/^补货中 ([\d.]+)s$/)))

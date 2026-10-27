@@ -1,4 +1,4 @@
-import {Game,Food,foods} from './systems/game.js';
+import {Game,Food,foods,theftReach} from './systems/game.js';
 export interface Rect {x:number;y:number;w:number;h:number;}
 export const griddle={x:640,y:505,rx:205,ry:94};
 export function insideGriddle(x:number,y:number){return ((x-griddle.x)/griddle.rx)**2+((y-griddle.y)/griddle.ry)**2<=1;}
@@ -33,3 +33,6 @@ export function tutorialAction(g:Game){const p=g.cooking;const steps=[
  return {step:i+1,key:steps[i][0],detail:steps[i][1],focus:p.stage==='folded'&&p.foldTime<.65?[]:[steps[i][2]],progress:i===1?p.spread:i===3?p.eggSpread:i===7?p.sauce:0};
 }
 export function tutorialAllows(g:Game,id:string){return !g.tutorial||['discard','boss'].includes(id)||tutorialAction(g).focus.includes(id);}
+
+export function restockPhase(remaining:number){return remaining<=0?'ready':remaining>3.7?'fetch':remaining>2.5?'carry':'pour';}
+export function clawGeometry(g:Game){const th=g.theft;if(!th)return null;const ci=g.customers.findIndex(c=>c.id===th.customer),sx=customerX(Math.max(0,ci),g.profile.shop),sy=286,r=stationRect(foods.findIndex(f=>f[0]===th.food));const extension=th.slapped?Math.max(0,th.remaining/.65)*(th.reach??1):theftReach(th.remaining),e=extension*extension*(3-2*extension);return {sx,sy,hx:sx+(r.x+44-sx)*e,hy:sy+(r.y+25-sy)*e,extension};}

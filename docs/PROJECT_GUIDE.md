@@ -85,3 +85,11 @@ The twelve-step tutorial supersedes the earlier v0.5.0 double-crisp description:
 
 固定名牌方便触屏识别，点一次加一份。订单中的分数为已加/需要。经营窗口中先点“预览”可免费查看装饰，不消耗钱包；点购买才产生游戏内支出。
 Fixed labels help touch recognition; one tap adds one portion. Order fractions show added/required amounts. Preview in the shop displays decorations for free; only Buy spends game currency.
+
+## v0.9.0 当前模式与动作 / Current modes and actions
+
+主界面模式按钮打开普通/天津两个选项。不同于早期版本只允许局间切换，现在空锅且无偷吃工具时可以营业中切换；顾客按新模式重新点单，耐心、身份、金钱和库存保持。收摊后不受空锅限制。节日主题仍只在局间切换。
+The main mode button opens Classic/Tianjin choices. Unlike earlier versions, modes can change mid-day on an empty griddle with no sneaky tool: customers reorder, keeping identity/patience and money/stock. Closing-day changes do not require an empty griddle. Festivals still change between days.
+
+`Cooking.eggLayers` 保存每颗蛋的状态与有界笔触，`Inventory.refillFoods` 为当前补货的缺料清单，`clawGeometry`/`theftReach` 统一工具显示与被阻止后的收回位置。补货库存仍五秒完成；动画与玩法均服从暂停。
+`Cooking.eggLayers` stores per-egg state and bounded strokes; `Inventory.refillFoods` records missing items. `clawGeometry`/`theftReach` share displayed reach and interrupted retraction positions. Restocking still completes at five seconds; pause governs both animation and rules.

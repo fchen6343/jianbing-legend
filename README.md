@@ -24,8 +24,8 @@ npm run dev
 - [开发日志 / Development log](DEVLOG.md)
 - [路线图与已知限制 / Roadmap and known limitations](docs/ROADMAP.md)
 
-当前为 v0.8.0 可玩原型，仍在迭代美术、动作与触屏体验。
-v0.8.0 is a playable prototype. Artwork, animation and touch controls are still being refined.
+当前为 v0.9.0 可玩原型，仍在迭代美术、动作与触屏体验。
+v0.9.0 is a playable prototype. Artwork, animation and touch controls are still being refined.
 
 ## v0.4.0 · 暖色手作摊位 / Warm illustrated stall
 
@@ -83,3 +83,11 @@ New cartoon neighbors, street, fourteen ingredients and illustrated tool-holding
 
 摊饼/抹蛋/刷酱拖动距离缩短约一半，仍须真实操作完成。连续快速正确出餐获得小费，逐单增加，最高 ¥5；错单、超时制作或顾客离开会中断连单。教学不发钱。
 Spreading/egg/sauce gestures require roughly half the former distance while retaining real action gates. Consecutive correct fast orders earn increasing tips, capped at ¥5; incorrect/slow orders or departing customers reset the streak. Tutorials earn no money.
+
+## v0.9.0 · 双模式与摊位动作 / Modes and stall actions
+
+主界面“普通模式 / 天津模式”入口直接打开两个选择按钮。空锅时可双向切换，顾客重新点单，保留收入、库存、营业时间与队列耐心；有煎饼或偷吃夹子时先完成处理。收摊后也可切换。
+The main mode shortcut opens explicit Classic/Tianjin choices. Switch both ways on an empty griddle: customers reorder while income, stock, time and queue patience remain. Finish the pancake or retract a sneaky claw first; switching also works after closing.
+
+老板补货有取货、搬箱、倒料、食材飞入及补满闪光，实际库存仍在五秒结束时补齐。每颗蛋分别绘制蛋白、蛋黄、落下与拖动摊开的笔触；新加蛋不会让旧蛋液重新收回。偷吃使用伸缩金属夹，点击夹头或握柄阻止，顾客离开时工具一起消失。
+Restocking animates fetching, a crate, pouring, ingredient deliveries and full-stock flashes; inventory still refills after five seconds. Each egg has independent whites/yolk, settling and spreading paths; a new egg does not shrink the previous coat. Sneaky customers use telescoping metal claws: tap the tip or grip to stop them, and departing customers take the tool away.
