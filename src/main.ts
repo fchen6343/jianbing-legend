@@ -23,7 +23,7 @@ const shopDialog=document.querySelector<HTMLDialogElement>('#shop-dialog')!;
 let previewItem='';
 let resumeAfterShop=false,lastProgress='',storageFailed=false;
 function saveProgress(){const raw=JSON.stringify(profile);if(raw===lastProgress)return;try{localStorage.setItem('jianbing-legend:progress',raw);lastProgress=raw;storageFailed=false;}catch{storageFailed=true;document.querySelector('#save-status')!.textContent=t('浏览器无法保存，进度仅在本次打开期间保留');}}
-function stopGesture(){dragging=false;eggDragging=false;foldDragging=false;game.cooking.releaseFold();activePointer=null;game.cooking.endStroke();}
+function stopGesture(){dragging=false;eggDragging=false;foldDragging=false;game.cooking.releaseFold();game.cooking.releaseEgg();activePointer=null;game.cooking.endStroke();}
 function begin(tutorial=false){stopGesture();game=new Game(Math.random,profile,tutorial);game.started=true;game.newCustomer();game.spawn=9;saved=false;scene.effects=[];scene.eggAge=2;scene.crispAge=2;scene.flipAge=1;scene.toastAge=0;scene.arrivals.clear();scene.previousCustomers=[];scene.tutorialDone=profile.tutorial&&!tutorial;sound.start();toolbar();}
 const bi=(zh:string,en:string)=>getLanguage()==='zh'?zh:en;
 function renderShop(){
@@ -88,7 +88,7 @@ canvas.addEventListener('pointerdown',e=>{
  if(!game.started||game.ended||game.paused){if(hit?.id==='start'){begin(!profile.tutorial);}else if(hit?.id==='resume'){game.paused=false;toolbar();}return;}
  if(hit?.id==='skip'){begin(false);return;}
  sound.start();
- if(game.cooking.heldEgg&&insideGriddle(p.x,p.y)){
+ if(game.cooking.heldEgg&&(insideGriddle(p.x,p.y)||game.cooking.heldEgg.phase==='cracked'&&Math.abs(p.x-game.cooking.heldEgg.x)<=85&&Math.abs(p.y-(game.cooking.heldEgg.y-20))<=65)){
   const held=game.cooking.heldEgg,focus=held.phase==='held'?'egg:crack':'egg:open';
   if(!tutorialAllows(game,focus))return;
   if(game.cooking.beginEgg(p.x,p.y)){
@@ -98,7 +98,7 @@ canvas.addEventListener('pointerdown',e=>{
   }else scene.notify(held.phase==='held'?'点饼面中央敲蛋，边缘容易滑落':'按住蛋壳，向左或右拉开');
   return;
  }
- if(game.cooking.stage==='folding'&&insideGriddle(p.x,p.y)){
+ if(game.cooking.stage==='folding'&&(hit?.id==='fold:edge'||insideGriddle(p.x,p.y))){
   if(game.cooking.beginFold(p.x,p.y)){foldDragging=true;activePointer=e.pointerId;canvas.setPointerCapture(e.pointerId);}
   else scene.notify('按住发光的饼边，沿箭头拖到圆点');
   return;
